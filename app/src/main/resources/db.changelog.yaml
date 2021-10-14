@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20211014_init.sql
+      author: Rafał Kreft
+      sqlFile:
+        relativeToChangelogFile: true
+        stripComments: true
+        splitStatements: false
+        path: db.changelog/20211014_init.sql
