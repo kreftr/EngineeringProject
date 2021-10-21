@@ -39,4 +39,18 @@ public class UserRepository {
         return user;
     }
 
+    public Optional<User> findByEmail(String email){
+        Optional user;
+        try {
+            user = Optional.of(
+                    entityManager.createQuery(
+                                    "SELECT user FROM User user WHERE user.email = :email", User.class)
+                            .setParameter("email", email).getSingleResult()
+            );
+        } catch (NoResultException noResultException){
+            user = Optional.empty();
+        }
+        return user;
+    }
+
 }
