@@ -1,15 +1,12 @@
-package edu.pjatk.app.repository;
+package edu.pjatk.app.user;
 
-import edu.pjatk.app.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.transaction.Transactional;
 import java.util.Optional;
 
-@Transactional
 @Repository
 public class UserRepository {
 
@@ -23,6 +20,10 @@ public class UserRepository {
 
     public void save(User user){
         entityManager.persist(user);
+    }
+
+    public void update(User user){
+        entityManager.merge(user);
     }
 
     public Optional<User> findByUsername(String username){

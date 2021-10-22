@@ -1,6 +1,6 @@
 package edu.pjatk.app.security;
 
-import edu.pjatk.app.service.UserService;
+import edu.pjatk.app.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

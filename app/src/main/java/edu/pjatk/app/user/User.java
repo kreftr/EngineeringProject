@@ -1,4 +1,4 @@
-package edu.pjatk.app.model;
+package edu.pjatk.app.user;
 
 import com.sun.istack.Nullable;
 import lombok.Getter;
@@ -38,11 +38,11 @@ public class User implements UserDetails {
     private Boolean enabled;
 
 
-    public User(String username, String email, String password, UserRole userRole){
+    public User(String username, String email, String password, LocalDateTime creationDate, UserRole userRole){
         this.username = username;
         this.email = email;
         this.password = password;
-        this.creationDate = LocalDateTime.now();
+        this.creationDate = creationDate;
         this.userRole = userRole;
         this.locked = false;
         this.enabled = false;
