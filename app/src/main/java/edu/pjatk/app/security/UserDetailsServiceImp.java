@@ -1,5 +1,6 @@
 package edu.pjatk.app.security;
 
+import edu.pjatk.app.user.User;
 import edu.pjatk.app.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,8 +21,9 @@ public class UserDetailsServiceImp implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userService.findUserByUsername(username).orElseThrow(
+        User user = userService.findUserByUsername(username).orElseThrow(
                 () -> new UsernameNotFoundException("User not found")
         );
+        return new UserPrincipal(user);
     }
 }
