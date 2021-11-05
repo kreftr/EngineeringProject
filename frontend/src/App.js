@@ -1,15 +1,10 @@
 import './App.css';
-import Appbar from './components/Appbar'
-import Student from './components/Student'
-
-function App() {
-    return (
-        <div className="App">
-            <Appbar/>
-            <Student/>
-
-        </div>
-    );
+import React, {Component} from 'react';
+import Register from './Register.js';
+class App extends Component {
+    render() {
+        return <Register />
+    }
 }
 
 export default App;
