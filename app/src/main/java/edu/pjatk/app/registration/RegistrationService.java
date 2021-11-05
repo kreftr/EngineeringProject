@@ -61,14 +61,4 @@ public class RegistrationService {
         userService.activateUser(activationToken.getUser());
     }
 
-    public boolean thatUsernameAlreadyExists(String username){
-        if (userService.findUserByUsername(username).isPresent()) return true;
-        else return false;
-    }
-
-    public boolean thatEmailAlreadyExists(String email){
-        if (userService.findUserByEmail(email).isPresent()) return true;
-        else return false;
-    }
-
 }
