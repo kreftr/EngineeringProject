@@ -2,6 +2,7 @@ package edu.pjatk.app.photo;
 
 import liquibase.util.file.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,6 +18,9 @@ public class PhotoService {
 
     private final PhotoRepository photoRepository;
 
+    @Value("${uploads.photo.path}")
+    private String pathToPhotos;
+
     @Autowired
     public PhotoService(PhotoRepository photoRepository){
         this.photoRepository = photoRepository;
@@ -25,27 +29,22 @@ public class PhotoService {
     @Transactional
     public boolean uploadPhoto(MultipartFile file){
 
-        //TODO: Path should be loaded from properties file
-        String pathToUploadFolder = "uploads/photo/";
-
         try {
             byte[] data = file.getBytes();
+            //TODO: Find a way to associate the photo with the user in case of database corruption
             String randomName = UUID.randomUUID()+"."+FilenameUtils.getExtension(file.getOriginalFilename());
-            Path path = Paths.get(pathToUploadFolder + randomName);
+            Path path = Paths.get(pathToPhotos + randomName);
             Files.write(path, data);
-
-            photoRepository.save(new Photo(pathToUploadFolder + randomName));
-
+            photoRepository.save(new Photo(randomName));
             return true;
         } catch (Exception e){
-
             return false;
         }
 
     }
 
     public boolean isPhoto(MultipartFile file){
-        //TODO: Find better way to check if uploaded file is an image
+        //TODO: Find a better way to check if uploaded file is an image
         if (file.getContentType().split("/")[0].equals("image")) return true;
         else return false;
     }
@@ -54,8 +53,8 @@ public class PhotoService {
         return photoRepository.findById(id);
     }
 
-    public Optional<Photo> findPhotoByUrl(String url) {
-        return photoRepository.findByUrl(url);
+    public Optional<Photo> findPhotoByFileName(String fileName) {
+        return photoRepository.findByFileName(fileName);
     }
 
 }

@@ -3,11 +3,13 @@ package edu.pjatk.app.photo;
 import edu.pjatk.app.response.ResponseMessage;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.Optional;
 
 
@@ -16,6 +18,9 @@ import java.util.Optional;
 public class PhotoController {
 
     private final PhotoService photoService;
+
+    @Value("${uploads.photo.path}")
+    private String pathToPhotos;
 
     @Autowired
     public PhotoController(PhotoService photoService){
@@ -47,13 +52,12 @@ public class PhotoController {
                 );
             }
         }
-
     }
 
     @GetMapping
     public ResponseEntity<byte[]> getPhoto(@RequestParam String filename) throws IOException {
 
-        Optional<Photo> photo = photoService.findPhotoByUrl("uploads/photo/"+filename);
+        Optional<Photo> photo = photoService.findPhotoByFileName(filename);
 
         if (photo.isEmpty()){
             return new ResponseEntity(
@@ -61,15 +65,13 @@ public class PhotoController {
             );
         }
         else {
-            String pathToUploadFolder = "uploads/photo/";
-            File file = new File(pathToUploadFolder+filename);
+            File file = new File(pathToPhotos+filename);
             HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.IMAGE_PNG);
-            InputStream in = new FileInputStream(file);
-            byte[] media = IOUtils.toByteArray(in);
+            headers.setContentType(MediaType.valueOf(Files.probeContentType(file.toPath())));
             headers.setCacheControl(CacheControl.noCache().getHeaderValue());
+            InputStream in = new FileInputStream(file);
             return new ResponseEntity(
-                    media, headers, HttpStatus.OK
+                    IOUtils.toByteArray(in), headers, HttpStatus.OK
             );
         }
 }

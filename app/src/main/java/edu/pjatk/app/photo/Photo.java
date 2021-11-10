@@ -13,17 +13,16 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name="photo")
 public class Photo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @NotNull
-    private String url;
+    private String fileName;
 
-    public Photo(String url) {
-        this.url = url;
+    public Photo(String fileName) {
+        this.fileName = fileName;
     }
 
 }

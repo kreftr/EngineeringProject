@@ -36,13 +36,13 @@ public class PhotoRepository {
         return photo;
     }
 
-    public Optional<Photo> findByUrl(String url){
+    public Optional<Photo> findByFileName(String fileName){
         Optional photo;
         try {
             photo = Optional.of(
                     entityManager.createQuery(
-                                    "SELECT photo FROM Photo photo WHERE photo.url = :url", Photo.class)
-                            .setParameter("url", url).getSingleResult()
+                                    "SELECT photo FROM Photo photo WHERE photo.fileName = :fileName", Photo.class)
+                            .setParameter("fileName", fileName).getSingleResult()
             );
         } catch (NoResultException noResultException){
             photo = Optional.empty();
