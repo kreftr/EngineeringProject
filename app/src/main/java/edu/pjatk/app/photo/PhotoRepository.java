@@ -22,6 +22,11 @@ public class PhotoRepository {
         entityManager.persist(photo);
     }
 
+    public void remove(Photo photo){
+        Photo photoToRemove = entityManager.find(Photo.class, photo.getId());
+        entityManager.remove(photoToRemove);
+    }
+
     public Optional<Photo> findById(Long id){
         Optional photo;
         try {

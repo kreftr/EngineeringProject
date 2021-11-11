@@ -41,7 +41,7 @@ public class PhotoController {
             );
         }
         else {
-            if (photoService.uploadPhoto(file)) {
+            if (photoService.uploadPhoto(file) != null) {
                 return new ResponseEntity(
                         new ResponseMessage("Photo uploaded!"), HttpStatus.OK
                 );
@@ -70,10 +70,12 @@ public class PhotoController {
             headers.setContentType(MediaType.valueOf(Files.probeContentType(file.toPath())));
             headers.setCacheControl(CacheControl.noCache().getHeaderValue());
             InputStream in = new FileInputStream(file);
+            byte[] bytesToReturn = IOUtils.toByteArray(in);
+            in.close();
             return new ResponseEntity(
-                    IOUtils.toByteArray(in), headers, HttpStatus.OK
+                    bytesToReturn , headers, HttpStatus.OK
             );
         }
-}
+    }
 
 }

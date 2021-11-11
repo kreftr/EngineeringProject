@@ -39,3 +39,19 @@ databaseChangeLog:
         stripComments: true
         splitStatements: false
         path: db.changelog/20211110_photo_column_name_edit.sql
+  - changeSet:
+      id: 20211110_20211110_profile
+      author: Rafał Kreft
+      sqlFile:
+        relativeToChangelogFile: true
+        stripComments: true
+        splitStatements: false
+        path: db.changelog/20211110_profile.sql
+  - changeSet:
+      id: 20211110_user_drop_columns_fkey_profile
+      author: Rafał Kreft
+      sqlFile:
+        relativeToChangelogFile: true
+        stripComments: true
+        splitStatements: false
+        path: db.changelog/20211110_user_drop_columns_fkey_profile.sql

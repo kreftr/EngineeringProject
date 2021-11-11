@@ -2,7 +2,7 @@ package edu.pjatk.app.security.filter;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import edu.pjatk.app.security.JwtProperties;
+import edu.pjatk.app.security.config.JwtProperties;
 import edu.pjatk.app.security.UserPrincipal;
 import edu.pjatk.app.user.User;
 import edu.pjatk.app.user.UserService;

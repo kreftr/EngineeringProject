@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -27,7 +28,7 @@ public class PhotoService {
     }
 
     @Transactional
-    public boolean uploadPhoto(MultipartFile file){
+    public Photo uploadPhoto(MultipartFile file){
 
         try {
             byte[] data = file.getBytes();
@@ -35,12 +36,26 @@ public class PhotoService {
             String randomName = UUID.randomUUID()+"."+FilenameUtils.getExtension(file.getOriginalFilename());
             Path path = Paths.get(pathToPhotos + randomName);
             Files.write(path, data);
-            photoRepository.save(new Photo(randomName));
-            return true;
+            Photo photo = new Photo(randomName);
+            photoRepository.save(photo);
+            return photo;
         } catch (Exception e){
-            return false;
+            return null;
         }
 
+    }
+
+    @Transactional
+    public void removePhoto(Photo photo){
+        try {
+            photoRepository.remove(photo);
+            File file = new File(pathToPhotos+photo.getFileName());
+            //TODO: Handling the case when the photo is not deleted
+            file.delete();
+        }
+        catch (Exception e){
+            System.out.println(e);
+        }
     }
 
     public boolean isPhoto(MultipartFile file){

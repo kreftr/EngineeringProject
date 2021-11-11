@@ -7,7 +7,6 @@ import edu.pjatk.app.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -44,7 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
                 .antMatchers("/", "/registration", "/registration/*", "/photo").permitAll()
-                .antMatchers("/test/user").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/test/user", "/profile").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/test/admin").hasRole("ADMIN")
                 .anyRequest().authenticated();
     }

@@ -1,6 +1,5 @@
 package edu.pjatk.app.email;
 
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -45,7 +44,7 @@ public class EmailService implements EmailSender {
 
     public String emailBuilder(String username, String activationLink, String htmlName){
         try{
-            URL res = getClass().getClassLoader().getResource("templates/"+htmlName);
+            URL res = getClass().getClassLoader().getResource("templates/emails/"+htmlName);
             File htmlFile = Paths.get(res.toURI()).toFile();
             String htmlToString = Files.readString(Paths.get(htmlFile.getAbsolutePath()), StandardCharsets.UTF_8);
             htmlToString = htmlToString.replace("%USERNAME%", username);

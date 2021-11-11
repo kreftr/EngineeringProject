@@ -4,7 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.pjatk.app.security.LoginRequest;
-import edu.pjatk.app.security.JwtProperties;
+import edu.pjatk.app.security.config.JwtProperties;
 import edu.pjatk.app.security.UserPrincipal;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
