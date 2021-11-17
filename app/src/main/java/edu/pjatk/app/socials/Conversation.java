@@ -1,0 +1,24 @@
+package edu.pjatk.app.socials;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.persistence.*;
+import java.util.List;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@Entity
+@Table(name = "`conversation`")
+public class Conversation {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    private Long first_user_id;
+    private Long second_user_id;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    private List<Message> messages;
+}
