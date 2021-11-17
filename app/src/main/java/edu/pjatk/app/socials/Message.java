@@ -18,7 +18,6 @@ public class Message {
     private Long id;
     private String message;
     private Date date;
-    private Long conversation_id;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "conversation_id")
