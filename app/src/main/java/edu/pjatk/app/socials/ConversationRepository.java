@@ -18,7 +18,14 @@ public class ConversationRepository {
         this.entityManager = entityManager;
     }
 
-    public void addMessage(Message message){ entityManager.persist(message); }
+    public void addMessage(Message message){
+        entityManager.persist(message);
+    }
+
+    public void deleteById(Long id){
+        Conversation conversation = entityManager.find(Conversation.class, id);
+        entityManager.remove(conversation);
+    }
 
     public Optional<List<Message>> getAllMessages(){
         Optional<List<Message>> allMessages;
@@ -47,10 +54,5 @@ public class ConversationRepository {
             recentMessage = Optional.empty();
         }
         return recentMessage;
-    }
-
-    public void deleteById(Long id){
-        Conversation conversation = entityManager.find(Conversation.class, id);
-        entityManager.remove(conversation);
     }
 }

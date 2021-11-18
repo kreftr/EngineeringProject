@@ -22,6 +22,8 @@ public class ConversationService {
         conversationRepository.addMessage(message);
     }
 
+    public void deleteById(Long id){ conversationRepository.deleteById(id); }
+
     public Optional<List<Message>> getAllMessages(){
         return conversationRepository.getAllMessages();
     }
@@ -29,6 +31,4 @@ public class ConversationService {
     public Optional<Message> getRecentMessage(){
         return conversationRepository.getRecentMessage();
     }
-
-    public void deleteById(Long id){ conversationRepository.deleteById(id); }
 }
