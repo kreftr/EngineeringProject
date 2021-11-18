@@ -3,6 +3,7 @@ import {Button, ButtonGroup} from "@material-ui/core";
 import SearchBar from "./SearchBar";
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup'
 import {ToggleButton} from "react-bootstrap";
+import ConversationList from "./ConversationList";
 
 function handleClick()
 {
@@ -17,6 +18,7 @@ function Chat() {
     const searchScopeFriendsButtonStyle = {width: 125, height: 45, background: "red", marginRight: "9px"}
     const searchScopeAllButtonStyle = {width: 125, height: 45, background: "green", marginLeft: "9px"}
     const searchBarStyle = {margin: "0 auto", marginTop: "20px", display: "flex", justifyContent: "center"}
+    const conversationWindowStyle = {marginTop: "20px"}
 
     let searchScopeValue = 1
 
@@ -31,6 +33,10 @@ function Chat() {
 
             <div style={searchBarStyle}>
                 <SearchBar/>
+            </div>
+
+            <div style={conversationWindowStyle}>
+                <ConversationList/>
             </div>
         </div>
     );
