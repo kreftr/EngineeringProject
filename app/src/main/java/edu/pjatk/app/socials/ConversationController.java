@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/conversation")
+@RequestMapping(path = "http://localhost:3000/conversation")
 public class ConversationController {
     private final ConversationService conversationService;
 
@@ -19,12 +19,12 @@ public class ConversationController {
         this.conversationService = conversationService;
     }
 
-    @PostMapping
-    public ResponseEntity<?> addMessage(@RequestPart Message message) {
-        String trimmedMessage = message.getMessage().trim();
-        if (trimmedMessage.length() > 0)  // disables sending empty messages
+    @PostMapping(value = "/addMessage/{text}/")
+    public ResponseEntity<?> addMessage(@PathVariable String text) {
+        String trimmedText = text.trim();
+        if (trimmedText.length() > 0)  // disables sending empty messages
         {
-            conversationService.addMessage(message);
+            conversationService.addMessage(text);
             return new ResponseEntity<>(
                     new ResponseMessage("Message uploaded!"), HttpStatus.OK
             );
@@ -36,15 +36,15 @@ public class ConversationController {
         }
     }
 
-    @DeleteMapping
-    public ResponseEntity<?> deleteById(@RequestPart long id) {
+    @DeleteMapping(value = "/deleteById/{id}/")
+    public ResponseEntity<?> deleteById(@PathVariable long id) {
         conversationService.deleteById(id);
         return new ResponseEntity<>(
                 new ResponseMessage("Message deleted!"), HttpStatus.OK
         );
     }
 
-    @GetMapping
+    @GetMapping(value = "/getAllMessages/")
     public ResponseEntity<?> getAllMessages(){
         Optional<List<Message>> messages;
         messages = conversationService.getAllMessages();
@@ -61,7 +61,7 @@ public class ConversationController {
         }
     }
 
-    @GetMapping
+    @GetMapping(value = "/getRecentMessage/")
     public ResponseEntity<?> getRecentMessage(){
         Optional<Message> message = conversationService.getRecentMessage();
         if (message.isPresent())

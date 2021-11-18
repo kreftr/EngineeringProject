@@ -18,8 +18,8 @@ public class ConversationService {
         this.conversationRepository = conversationRepository;
     }
 
-    public void addMessage(Message message){
-        conversationRepository.addMessage(message);
+    public void addMessage(String text){
+        conversationRepository.addMessage(text);
     }
 
     public void deleteById(Long id){ conversationRepository.deleteById(id); }

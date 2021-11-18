@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +19,9 @@ public class ConversationRepository {
         this.entityManager = entityManager;
     }
 
-    public void addMessage(Message message){
+    public void addMessage(String text){
+        Date date = java.util.Calendar.getInstance().getTime();
+        Message message = new Message(text, date);
         entityManager.persist(message);
     }
 

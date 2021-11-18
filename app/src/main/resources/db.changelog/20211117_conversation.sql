@@ -1,4 +1,4 @@
-CREATE TABLE "conversation"(
+CREATE TABLE IF NOT EXISTS "conversation"(
     id               BIGINT NOT NULL,
 
     first_user_id    BIGINT NOT NULL,
@@ -9,7 +9,7 @@ CREATE TABLE "conversation"(
     FOREIGN KEY (second_user_id) REFERENCES "user" (id)
 );
 
-CREATE TABLE "message"(
+CREATE TABLE IF NOT EXISTS "message"(
     id               BIGINT NOT NULL,
     message          VARCHAR,
     date             DATE,
