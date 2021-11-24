@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 
 function ConversationList() {
-    const conversationListStyle = { width: 300, height: 260, background: "#e0e0e0" }
+    const conversationListStyle = { width: 300, height: "100vh", background: "#e0e0e0" }
 
     const [messages, setMessages] = useState("");
     useEffect(() => {

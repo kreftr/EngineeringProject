@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(path = "http://localhost:3000/conversation")
+@RequestMapping("/conversation")
 public class ConversationController {
     private final ConversationService conversationService;
 
@@ -19,7 +19,7 @@ public class ConversationController {
         this.conversationService = conversationService;
     }
 
-    @PostMapping(value = "/addMessage/{text}/")
+    @PostMapping(value = "/addMessage/{text}")
     public ResponseEntity<?> addMessage(@PathVariable String text) {
         String trimmedText = text.trim();
         if (trimmedText.length() > 0)  // disables sending empty messages
@@ -36,7 +36,7 @@ public class ConversationController {
         }
     }
 
-    @DeleteMapping(value = "/deleteById/{id}/")
+    @DeleteMapping(value = "/deleteById/{id}")
     public ResponseEntity<?> deleteById(@PathVariable long id) {
         conversationService.deleteById(id);
         return new ResponseEntity<>(
@@ -44,7 +44,7 @@ public class ConversationController {
         );
     }
 
-    @GetMapping(value = "/getAllMessages/")
+    @GetMapping(value = "/getAllMessages")
     public ResponseEntity<?> getAllMessages(){
         Optional<List<Message>> messages;
         messages = conversationService.getAllMessages();
@@ -61,7 +61,7 @@ public class ConversationController {
         }
     }
 
-    @GetMapping(value = "/getRecentMessage/")
+    @GetMapping(value = "/getRecentMessage")
     public ResponseEntity<?> getRecentMessage(){
         Optional<Message> message = conversationService.getRecentMessage();
         if (message.isPresent())

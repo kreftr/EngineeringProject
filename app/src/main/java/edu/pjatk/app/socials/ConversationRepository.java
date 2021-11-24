@@ -35,7 +35,7 @@ public class ConversationRepository {
         try {
             allMessages = Optional.of(
                     entityManager.createQuery(
-                                    "SELECT conversation.messages FROM Conversation conversation",
+                            "SELECT conversation.messages FROM Conversation conversation",
                             Message.class).getResultList()
             );
         } catch (NoResultException noResultException) {

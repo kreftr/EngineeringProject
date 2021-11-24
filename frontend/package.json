@@ -37,6 +37,8 @@
   },
   "devDependencies": {
     "@material-ui/core": "^4.12.3",
+    "@material-ui/icons": "^4.11.2",
+    "@mui/icons-material": "^5.1.1",
     "react-bootstrap": "^2.0.2"
   }
 }
