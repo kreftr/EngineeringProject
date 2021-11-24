@@ -6,6 +6,7 @@ import edu.pjatk.app.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +20,10 @@ public class ConversationService {
     }
 
     public void addMessage(String text){
-        conversationRepository.addMessage(text);
+        Date date = java.util.Calendar.getInstance().getTime();
+        Message message = new Message(text, date);
+        conversationRepository.addMessage(message);
+
     }
 
     public void deleteById(Long id){ conversationRepository.deleteById(id); }

@@ -19,9 +19,7 @@ public class ConversationRepository {
         this.entityManager = entityManager;
     }
 
-    public void addMessage(String text){
-        Date date = java.util.Calendar.getInstance().getTime();
-        Message message = new Message(text, date);
+    public void addMessage(Message message){
         entityManager.persist(message);
     }
 
