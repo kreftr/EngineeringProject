@@ -1,5 +1,6 @@
 package edu.pjatk.app.user;
 
+import edu.pjatk.app.user.profile.Profile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -24,6 +25,20 @@ public class UserRepository {
 
     public void update(User user){
         entityManager.merge(user);
+    }
+
+    public Optional<User> findById(Long id){
+        Optional user;
+        try {
+            user = Optional.of(
+                    entityManager.createQuery(
+                                    "SELECT user FROM User user WHERE user.id = :id", User.class)
+                            .setParameter("id", id).getSingleResult()
+            );
+        } catch (NoResultException noResultException){
+            user = Optional.empty();
+        }
+        return user;
     }
 
     public Optional<User> findByUsername(String username){

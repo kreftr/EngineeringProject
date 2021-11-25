@@ -55,6 +55,7 @@ public class PhotoController {
     }
 
     @GetMapping
+    @CrossOrigin("http://localhost:3000")
     public ResponseEntity<byte[]> getPhoto(@RequestParam String filename) throws IOException {
 
         Optional<Photo> photo = photoService.findPhotoByFileName(filename);

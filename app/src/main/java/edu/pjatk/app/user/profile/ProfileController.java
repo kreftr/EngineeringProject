@@ -1,5 +1,6 @@
 package edu.pjatk.app.user.profile;
 
+import edu.pjatk.app.response.ProfileResponse;
 import edu.pjatk.app.response.ResponseMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,8 +23,9 @@ public class ProfileController {
 
 
     @GetMapping
+    @CrossOrigin("http://localhost:3000")
     public ResponseEntity getProfile(@RequestParam Long id){
-        Optional<Profile> profile = profileService.findProfileById(id);
+        Optional<ProfileResponse> profile = profileService.returnProfileResponse(id);
         if (profile.isEmpty()){
             return new ResponseEntity(
                     new ResponseMessage("Profile not found"), HttpStatus.NOT_FOUND

@@ -2,6 +2,8 @@ package edu.pjatk.app.user.profile;
 
 import edu.pjatk.app.photo.Photo;
 import edu.pjatk.app.photo.PhotoService;
+import edu.pjatk.app.response.ProfileResponse;
+import edu.pjatk.app.user.User;
 import edu.pjatk.app.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -50,8 +52,24 @@ public class ProfileService {
         profileRepository.update(userProfile);
     }
 
-    public Optional<Profile> findProfileById(Long id){
-        return profileRepository.findById(id);
+    @Transactional
+    public Optional<ProfileResponse> returnProfileResponse(Long user_id){
+        Optional<User> user = userService.findUserById(user_id);
+        if (user.isEmpty()){
+            return Optional.empty();
+        }
+        else {
+            String photoFileName;
+            //TODO: find better way of handling hibernate null photo reference exception
+            Profile profile = user.get().getProfile();
+            try {
+                photoFileName = profile.getPhoto().getFileName();
+            } catch (Exception e) {
+                photoFileName = null;
+            }
+            return Optional.of(new ProfileResponse(user.get().getUsername(), profile.getName(),
+                    profile.getSurname(), profile.getBio(), photoFileName));
+        }
     }
 
 }

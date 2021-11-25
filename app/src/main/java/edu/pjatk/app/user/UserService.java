@@ -1,5 +1,6 @@
 package edu.pjatk.app.user;
 
+import edu.pjatk.app.user.profile.Profile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,10 @@ public class UserService {
     public void activateUser(User user){
         user.setEnabled(true);
         userRepository.update(user);
+    }
+
+    public Optional<User> findUserById(Long id){
+        return userRepository.findById(id);
     }
 
     public Optional<User> findUserByUsername(String username){

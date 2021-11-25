@@ -1,25 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import Profile from "./profile/Profile";
+import React, {Component} from "react";
+import {Container, Nav, Navbar} from "react-bootstrap";
+import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+class App extends Component{
+  render() {
+    return (
+        <Router>
+          <Navbar bg="light" expand="lg">
+            <Container>
+              <Navbar.Brand href="#home">ProjectName</Navbar.Brand>
+              <Navbar.Toggle aria-controls="basic-navbar-nav" />
+              <Navbar.Collapse id="basic-navbar-nav">
+                <Nav className="me-auto">
+                  <Nav.Link href="#home">My profile</Nav.Link>
+                  <Nav.Link href="#link">Friends</Nav.Link>
+                  <Nav.Link href="#link">Chat</Nav.Link>
+                  <Nav.Link href="/search">Search</Nav.Link>
+                </Nav>
+              </Navbar.Collapse>
+            </Container>
+          </Navbar>
+          <Routes>
+            <Route path={"profile/:id"} element={<Profile/>}/>
+
+          </Routes>
+        </Router>
+    )
+  };
 }
 
 export default App;
