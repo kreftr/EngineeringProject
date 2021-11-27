@@ -1,11 +1,11 @@
 package edu.pjatk.app.user;
 
-import edu.pjatk.app.user.profile.Profile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -67,6 +67,20 @@ public class UserRepository {
             user = Optional.empty();
         }
         return user;
+    }
+
+    public Optional<List<User>> findBySimilarUsername(String username){
+        Optional users;
+        try {
+            users = Optional.of(
+                    entityManager.createQuery(
+                                    "SELECT user FROM User user WHERE user.username LIKE :username", User.class)
+                            .setParameter("username", username+"%").getResultList()
+            );
+        } catch (NoResultException noResultException){
+            users = Optional.empty();
+        }
+        return users;
     }
 
 }

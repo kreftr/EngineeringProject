@@ -1,9 +1,9 @@
 package edu.pjatk.app.user;
 
-import edu.pjatk.app.user.profile.Profile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -36,6 +36,10 @@ public class UserService {
 
     public Optional<User> findUserByEmail(String email){
         return userRepository.findByEmail(email);
+    }
+
+    public Optional<List<User>> findUsersBySimilarUsername(String username){
+        return userRepository.findBySimilarUsername(username);
     }
 
 }

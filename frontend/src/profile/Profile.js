@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Container, Nav, Row, Col, Image} from "react-bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css"
-import default_profile_picture from "./assets/images/default_profile_picture.jpg"
+import default_profile_picture from "../assets/images/default_profile_picture.jpg"
 import "./Profile.css"
 import axios from "axios";
 import {useParams} from "react-router-dom";
@@ -34,20 +33,20 @@ function Profile(){
 
 
     return(
-        <Container className={"profile-container"}>
+        <Container className={"PROFILE-profile-container"}>
             {responseCode === 200 && !loadingContent ?
                 <Row>
-                    <Col className={"col-4 info-col"}>
+                    <Col className={"col-4 PROFILE-info-col"}>
                         {!profile.profile_photo  ?
-                            <Image className={"profile-pic"} src={default_profile_picture} roundedCircle={true}/>
+                            <Image className={"PROFILE-profile-pic"} src={default_profile_picture} roundedCircle={true}/>
                             :
-                            <Image className={"profile-pic"}
+                            <Image className={"PROFILE-profile-pic"}
                                    src={`http://localhost:8080/photo?filename=${profile.profile_photo}`}
                                    roundedCircle={true}/>
                         }
-                        <span className={"username"}>{profile.username}</span>
-                        <span className={"name-surname"}>{profile.name} {profile.surname}</span>
-                        <div className={"bio"}>{profile.bio}</div>
+                        <span className={"PROFILE-username"}>{profile.username}</span>
+                        <span className={"PROFILE-name-surname"}>{profile.name} {profile.surname}</span>
+                        <div className={"PROFILE-bio"}>{profile.bio}</div>
                     </Col>
                     <Col className={"col-8"}>
                         <Nav fill variant="tabs" defaultActiveKey="/home">
@@ -62,9 +61,9 @@ function Profile(){
                 </Row>
                 :
                 <Row>
-                    <Col className={"info-col"}>
+                    <Col className={"PROFILE-info-col"}>
                         {!loadingContent ?
-                            <Image className={"profile-pic"}
+                            <Image className={"PROFILE-profile-pic"}
                                    src={"https://c.tenor.com/kHcmsxlKHEAAAAAC/rock-one-eyebrow-raised-rock-staring.gif"}
                                    roundedCircle={true}/> : <span/>
                         }

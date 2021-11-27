@@ -1,7 +1,9 @@
+import "bootstrap/dist/css/bootstrap.min.css"
 import Profile from "./profile/Profile";
 import React, {Component} from "react";
 import {Container, Nav, Navbar} from "react-bootstrap";
 import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
+import Search from "./search/Search";
 
 
 class App extends Component{
@@ -24,7 +26,7 @@ class App extends Component{
           </Navbar>
           <Routes>
             <Route path={"profile/:id"} element={<Profile/>}/>
-
+            <Route path={"search"} element={<Search/>}/>
           </Routes>
         </Router>
     )

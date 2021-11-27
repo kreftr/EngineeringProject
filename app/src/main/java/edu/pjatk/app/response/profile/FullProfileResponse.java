@@ -1,4 +1,4 @@
-package edu.pjatk.app.response;
+package edu.pjatk.app.response.profile;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ProfileResponse {
+public class FullProfileResponse {
 
     private String username;
     private String name;

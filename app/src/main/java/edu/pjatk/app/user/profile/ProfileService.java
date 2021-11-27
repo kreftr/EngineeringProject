@@ -2,7 +2,8 @@ package edu.pjatk.app.user.profile;
 
 import edu.pjatk.app.photo.Photo;
 import edu.pjatk.app.photo.PhotoService;
-import edu.pjatk.app.response.ProfileResponse;
+import edu.pjatk.app.response.profile.FullProfileResponse;
+import edu.pjatk.app.response.profile.MiniProfileResponse;
 import edu.pjatk.app.user.User;
 import edu.pjatk.app.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -52,8 +55,7 @@ public class ProfileService {
         profileRepository.update(userProfile);
     }
 
-    @Transactional
-    public Optional<ProfileResponse> returnProfileResponse(Long user_id){
+    public Optional<FullProfileResponse> findProfileById(Long user_id){
         Optional<User> user = userService.findUserById(user_id);
         if (user.isEmpty()){
             return Optional.empty();
@@ -67,8 +69,31 @@ public class ProfileService {
             } catch (Exception e) {
                 photoFileName = null;
             }
-            return Optional.of(new ProfileResponse(user.get().getUsername(), profile.getName(),
+            return Optional.of(new FullProfileResponse(user.get().getUsername(), profile.getName(),
                     profile.getSurname(), profile.getBio(), photoFileName));
+        }
+    }
+
+    public Optional<List<MiniProfileResponse>> findProfilesByUsername(String username){
+        Optional<List<User>> users = userService.findUsersBySimilarUsername(username);
+        List<MiniProfileResponse> profilesResponse = new ArrayList<>();
+        String photoFileName;
+        if (users.get().isEmpty()){
+            return Optional.empty();
+        }
+        else {
+            for (User user : users.get()){
+                try {
+                    photoFileName = user.getProfile().getPhoto().getFileName();
+                } catch (Exception e) {
+                    photoFileName = null;
+                }
+                profilesResponse.add(new MiniProfileResponse(
+                        user.getId(), user.getUsername(), user.getProfile().getName(),
+                        user.getProfile().getSurname(), photoFileName
+                ));
+            }
+            return Optional.of(profilesResponse);
         }
     }
 

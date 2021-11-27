@@ -28,7 +28,7 @@ public class User {
     private Boolean locked;
     private Boolean enabled;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "profile_id")
     private Profile profile;
 
