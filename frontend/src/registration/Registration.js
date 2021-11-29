@@ -33,6 +33,7 @@ function Registration(){
             })
     }
 
+    //TODO: Add tooltips for form inputs
     return(
         <Container className={"REGISTRATION-container"}>
             <Row>
@@ -43,21 +44,33 @@ function Registration(){
                             <Form.Label>Username</Form.Label>
                             <Form.Control type="text" placeholder="Enter username" value={username}
                                           onChange={(e) => setUsername(e.target.value)} required/>
+                            <Form.Text className="text-danger" hidden={true}>
+                                *We'll never share your email with anyone else.
+                            </Form.Text>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formEmail">
                             <Form.Label>Email address</Form.Label>
                             <Form.Control type="email" placeholder="Enter email" value={email}
                                           onChange={(e) => setEmail(e.target.value)} required/>
+                            <Form.Text className="text-danger" hidden={true}>
+                                We'll never share your email with anyone else.
+                            </Form.Text>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formPassword">
                             <Form.Label>Password</Form.Label>
                             <Form.Control type="password" placeholder="Enter Password" value={password}
                                           onChange={(e) => setPassword(e.target.value)} required/>
+                            <Form.Text className="text-danger" hidden={true}>
+                                We'll never share your email with anyone else.
+                            </Form.Text>
                         </Form.Group>
                         <Form.Group className="mb-5" controlId="formConfirmPassword">
                             <Form.Label>Confirm password</Form.Label>
                             <Form.Control type="password" placeholder="Confirm password" value={confirmPassword}
                                           onChange={(e) => setConfirmPassword(e.target.value)} required/>
+                            <Form.Text className="text-danger" hidden={true}>
+                                We'll never share your email with anyone else.
+                            </Form.Text>
                         </Form.Group>
                         <Button className={"mb-5"} variant="primary" type="submit">
                             Sign In
