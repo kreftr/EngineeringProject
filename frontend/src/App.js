@@ -3,9 +3,10 @@ import Profile from "./profile/Profile";
 import React, {Component} from "react";
 import {Container, Nav, Navbar, Button} from "react-bootstrap";
 import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
+
 import Search from "./search/Search";
 import Registration from "./registration/Registration";
-
+import Verification from "./registration/Verification";
 
 class App extends Component{
   render() {
@@ -33,6 +34,7 @@ class App extends Component{
             <Route path={"profile/:id"} element={<Profile/>}/>
             <Route path={"search"} element={<Search/>}/>
             <Route path={"registration"} element={<Registration/>}/>
+            <Route path={"verification/:token"} element={<Verification/>}/>
           </Routes>
         </Router>
     )

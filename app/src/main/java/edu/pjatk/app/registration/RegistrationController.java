@@ -54,23 +54,25 @@ public class RegistrationController {
 
     @GetMapping
     @RequestMapping("/verify")
+    @CrossOrigin("http://localhost:3000")
     public ResponseEntity verifyToken(@RequestParam String token){
 
         Optional<ActivationToken> activationToken = activationTokenService.findActivationTokenByToken(token);
 
         if (activationToken.isEmpty()){
             return new ResponseEntity(
-                    new ResponseMessage("Bad token"), HttpStatus.BAD_REQUEST
-            );
-        }
-        else if (LocalDateTime.now().isAfter(activationToken.get().getExpired())){
-            return new ResponseEntity(
-                    new ResponseMessage("Token expired"), HttpStatus.GONE
+                    new ResponseMessage("Invalid token"), HttpStatus.BAD_REQUEST
             );
         }
         else if (activationToken.get().getConfirmed() != null){
             return new ResponseEntity(
                     new ResponseMessage("Token has been already verified"), HttpStatus.CONFLICT
+            );
+        }
+        else if (LocalDateTime.now().isAfter(activationToken.get().getExpired())){
+            //TODO: Add possibility to refresh token
+            return new ResponseEntity(
+                    new ResponseMessage("Token expired"), HttpStatus.GONE
             );
         }
         else {
