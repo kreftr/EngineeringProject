@@ -19,12 +19,12 @@ public class ConversationController {
         this.conversationService = conversationService;
     }
 
-    @PostMapping(value = "/addMessage/{text}")
-    public ResponseEntity<?> addMessage(@PathVariable String text) {
+    @PostMapping(value = "/addMessage/{conversation_id}/{text}")
+    public ResponseEntity<?> addMessage(@PathVariable Long conversation_id, @PathVariable String text) {
         String trimmedText = text.trim();
         if (trimmedText.length() > 0)  // disables sending empty messages
         {
-            conversationService.addMessage(text);
+            conversationService.addMessage(conversation_id, text);
             return new ResponseEntity<>(
                     new ResponseMessage("Message uploaded!"), HttpStatus.OK
             );
@@ -44,10 +44,10 @@ public class ConversationController {
         );
     }
 
-    @GetMapping(value = "/getAllMessages")
-    public ResponseEntity<?> getAllMessages(){
+    @GetMapping(value = "/getAllMessages/{id}")
+    public ResponseEntity<?> getAllMessages(@PathVariable long id){
         Optional<List<Message>> messages;
-        messages = conversationService.getAllMessages();
+        messages = conversationService.getAllMessages(id);
         if (messages.isPresent())
         {
             return new ResponseEntity<>(

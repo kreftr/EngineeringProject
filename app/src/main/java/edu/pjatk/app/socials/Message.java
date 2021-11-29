@@ -11,20 +11,21 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "`message`")
+@Table(name = "message")
 public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String message;
-    private Date date;
+    private String content;
+    private Date message_date;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "conversation_id")
     private Conversation conversation;
 
-    public Message(String message, Date date){
-        this.message = message;
-        this.date = date;
+    public Message(String content, Date message_date, Conversation conversation){
+        this.content = content;
+        this.message_date = message_date;
+        this.conversation = conversation;
     }
 }

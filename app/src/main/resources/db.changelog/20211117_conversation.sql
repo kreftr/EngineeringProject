@@ -11,8 +11,8 @@ CREATE TABLE IF NOT EXISTS "conversation"(
 
 CREATE TABLE IF NOT EXISTS "message"(
     id               BIGINT NOT NULL,
-    message          VARCHAR,
-    date             DATE,
+    content          VARCHAR,
+    message_date     DATE,
 
     conversation_id  BIGINT NOT NULL,
 

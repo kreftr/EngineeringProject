@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "`conversation`")
+@Table(name = "conversation")
 public class Conversation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,6 +19,4 @@ public class Conversation {
     private Long first_user_id;
     private Long second_user_id;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    private List<Message> messages;
 }

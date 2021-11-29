@@ -19,17 +19,21 @@ public class ConversationService {
         this.conversationRepository = conversationRepository;
     }
 
-    public void addMessage(String text){
+    public void addMessage(Long conversation_id, String text){
         Date date = java.util.Calendar.getInstance().getTime();
-        Message message = new Message(text, date);
-        conversationRepository.addMessage(message);
+        Optional<Conversation> conversation = conversationRepository.findById(conversation_id);
+        if (conversation.isPresent())
+        {
+            Message message = new Message(text, date, conversation.get());
+            conversationRepository.addMessage(message);
+        }
 
     }
 
     public void deleteById(Long id){ conversationRepository.deleteById(id); }
 
-    public Optional<List<Message>> getAllMessages(){
-        return conversationRepository.getAllMessages();
+    public Optional<List<Message>> getAllMessages(Long id){
+        return conversationRepository.getAllMessages(id);
     }
 
     public Optional<Message> getRecentMessage(){

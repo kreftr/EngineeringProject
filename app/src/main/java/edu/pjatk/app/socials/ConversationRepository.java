@@ -1,5 +1,6 @@
 package edu.pjatk.app.socials;
 
+import edu.pjatk.app.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -19,22 +20,38 @@ public class ConversationRepository {
         this.entityManager = entityManager;
     }
 
+    @Transactional
     public void addMessage(Message message){
         entityManager.persist(message);
     }
 
+    @Transactional
     public void deleteById(Long id){
-        Conversation conversation = entityManager.find(Conversation.class, id);
-        entityManager.remove(conversation);
+        Message message = entityManager.find(Message.class, id);
+        entityManager.remove(message);
     }
 
-    public Optional<List<Message>> getAllMessages(){
+    public Optional<Conversation> findById(Long id) {
+        Optional<Conversation> conversation;
+        try{
+            conversation = Optional.of(
+                    entityManager.createQuery(
+                            "SELECT conversation from Conversation conversation",
+                            Conversation.class).getSingleResult()
+            );
+        } catch (NoResultException noResultException) {
+            conversation = Optional.empty();
+        }
+        return conversation;
+    }
+
+    public Optional<List<Message>> getAllMessages(Long id){
         Optional<List<Message>> allMessages;
         try {
             allMessages = Optional.of(
                     entityManager.createQuery(
-                            "SELECT conversation.messages FROM Conversation conversation",
-                            Message.class).getResultList()
+                            "SELECT message from Message message where message.conversation.id=:conversationId",
+                            Message.class).setParameter("conversationId", id).getResultList()
             );
         } catch (NoResultException noResultException) {
             allMessages = Optional.empty();
@@ -47,8 +64,7 @@ public class ConversationRepository {
         try {
             recentMessage = Optional.of(
                     entityManager.createQuery(
-                            "SELECT messages FROM Conversation.messages messages JOIN FETCH messages.date " +
-                                    "ORDER BY messages.date DESC",
+                            "SELECT message.content from Message message order by message.message_date DESC",
                             Message.class).setMaxResults(1).getSingleResult()
             );
         } catch (NoResultException noResultException) {
