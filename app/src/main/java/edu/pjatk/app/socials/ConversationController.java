@@ -61,9 +61,9 @@ public class ConversationController {
         }
     }
 
-    @GetMapping(value = "/getRecentMessage")
-    public ResponseEntity<?> getRecentMessage(){
-        Optional<Message> message = conversationService.getRecentMessage();
+    @GetMapping(value = "/getRecentMessage/{id}")
+    public ResponseEntity<?> getRecentMessage(@PathVariable long id){
+        Optional<Message> message = conversationService.getRecentMessage(id);
         if (message.isPresent())
         {
             return new ResponseEntity<>(

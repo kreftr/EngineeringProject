@@ -1,13 +1,11 @@
 package edu.pjatk.app.socials;
 
-import edu.pjatk.app.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.transaction.Transactional;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +18,20 @@ public class ConversationRepository {
         this.entityManager = entityManager;
     }
 
+    public Optional<Conversation> findConversationById(Long id) {
+        Optional<Conversation> conversation;
+        try{
+            conversation = Optional.of(
+                    entityManager.createQuery(
+                            "SELECT conversation from Conversation conversation where conversation.id=:conversationId",
+                            Conversation.class).setParameter("conversationId", id).getSingleResult()
+            );
+        } catch (NoResultException noResultException) {
+            conversation = Optional.empty();
+        }
+        return conversation;
+    }
+
     @Transactional
     public void addMessage(Message message){
         entityManager.persist(message);
@@ -29,20 +41,6 @@ public class ConversationRepository {
     public void deleteById(Long id){
         Message message = entityManager.find(Message.class, id);
         entityManager.remove(message);
-    }
-
-    public Optional<Conversation> findById(Long id) {
-        Optional<Conversation> conversation;
-        try{
-            conversation = Optional.of(
-                    entityManager.createQuery(
-                            "SELECT conversation from Conversation conversation",
-                            Conversation.class).getSingleResult()
-            );
-        } catch (NoResultException noResultException) {
-            conversation = Optional.empty();
-        }
-        return conversation;
     }
 
     public Optional<List<Message>> getAllMessages(Long id){
@@ -59,13 +57,14 @@ public class ConversationRepository {
         return allMessages;
     }
 
-    public Optional<Message> getRecentMessage(){
+    public Optional<Message> getRecentMessage(Long id){
         Optional<Message> recentMessage;
         try {
             recentMessage = Optional.of(
                     entityManager.createQuery(
-                            "SELECT message.content from Message message order by message.message_date DESC",
-                            Message.class).setMaxResults(1).getSingleResult()
+                            "SELECT message from Message message where message.conversation.id=:conversationId " +
+                                    "order by message.message_date DESC",
+                            Message.class).setParameter("conversationId", id).setMaxResults(1).getSingleResult()
             );
         } catch (NoResultException noResultException) {
             recentMessage = Optional.empty();

@@ -1,8 +1,5 @@
 package edu.pjatk.app.socials;
 
-
-import edu.pjatk.app.user.User;
-import edu.pjatk.app.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,13 +18,12 @@ public class ConversationService {
 
     public void addMessage(Long conversation_id, String text){
         Date date = java.util.Calendar.getInstance().getTime();
-        Optional<Conversation> conversation = conversationRepository.findById(conversation_id);
+        Optional<Conversation> conversation = conversationRepository.findConversationById(conversation_id);
         if (conversation.isPresent())
         {
             Message message = new Message(text, date, conversation.get());
             conversationRepository.addMessage(message);
         }
-
     }
 
     public void deleteById(Long id){ conversationRepository.deleteById(id); }
@@ -36,7 +32,7 @@ public class ConversationService {
         return conversationRepository.getAllMessages(id);
     }
 
-    public Optional<Message> getRecentMessage(){
-        return conversationRepository.getRecentMessage();
+    public Optional<Message> getRecentMessage(Long id){
+        return conversationRepository.getRecentMessage(id);
     }
 }

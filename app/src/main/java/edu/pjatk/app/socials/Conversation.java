@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Getter
 @Setter
@@ -18,5 +17,4 @@ public class Conversation {
     private Long id;
     private Long first_user_id;
     private Long second_user_id;
-
 }
