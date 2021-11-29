@@ -1,9 +1,9 @@
 import './App.css';
 import React, {Component} from 'react';
-import Register from './Auth/Register/Register.js';
+import Registration from './Auth/Register/Registration.js';
 class App extends Component {
     render() {
-        return <Register />
+        return <Registration />
     }
 }
 

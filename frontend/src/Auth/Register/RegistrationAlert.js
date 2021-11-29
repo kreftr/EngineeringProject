@@ -1,9 +1,9 @@
 import React, {Component} from "react";
 import {Alert} from "react-bootstrap";
 
-import "./RegisterAlert.css"
+import "./RegistrationAlert.css"
 
-class RegisterAlert extends Component {
+class RegistrationAlert extends Component {
 
     constructor(props) {
         super(props);
@@ -36,7 +36,7 @@ class RegisterAlert extends Component {
     render() {
         if(this.state.visible){
             return (
-                <div className={"RegisterAlert"}>
+                <div className={"RegistrationAlert"}>
                     <Alert variant={this.state.variant} onClose={() => this.setState({visible: false})} dismissible={true}>
                         <Alert.Heading>{this.state.heading}</Alert.Heading>
                         <p>
@@ -50,4 +50,4 @@ class RegisterAlert extends Component {
     }
 }
 
-export default RegisterAlert
+export default RegistrationAlert
