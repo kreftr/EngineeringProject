@@ -1,0 +1,9 @@
+
+.REGISTRATION-container {
+    margin-top: 2%;
+}
+
+.REGISTRATION-form {
+    display: flex;
+    flex-direction: column;
+}

@@ -31,6 +31,7 @@ public class RegistrationController {
 
 
     @PostMapping
+    @CrossOrigin("http://localhost:3000")
     public ResponseEntity registerUser(@RequestBody RegistrationRequest request){
         if (userService.findUserByUsername(request.getUsername()).isPresent()){
             return new ResponseEntity(
