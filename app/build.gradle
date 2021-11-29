@@ -7,7 +7,7 @@ plugins {
 
 group = 'edu.pjatk'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = "16"
+sourceCompatibility = "17"
 
 configurations {
     compileOnly {
@@ -40,4 +40,4 @@ dependencies {
 test {
     useJUnitPlatform()
 }
-targetCompatibility = JavaVersion.VERSION_16
+targetCompatibility = JavaVersion.VERSION_17
