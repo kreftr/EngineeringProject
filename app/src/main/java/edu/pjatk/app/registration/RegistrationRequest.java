@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
 public class RegistrationRequest {
 
     @Size(min = 6, max = 12, message = "{validation.username.message.size}")
-    @Pattern(regexp = "^[a-zA-Z0-9]",message ="{validation.username.message.regex}")
+    @Pattern(regexp = "^[a-zA-Z0-9]+$",message ="{validation.username.message.regex}")
     private String username;
     //https://emailregex.com/
     @NotBlank(message ="{validation.email.message.notBlank}")
