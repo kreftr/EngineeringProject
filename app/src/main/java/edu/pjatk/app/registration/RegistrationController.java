@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -31,7 +32,8 @@ public class RegistrationController {
 
 
     @PostMapping
-    public ResponseEntity registerUser(@RequestBody RegistrationRequest request){
+    public ResponseEntity registerUser(@Valid @RequestBody RegistrationRequest request){
+
         if (userService.findUserByUsername(request.getUsername()).isPresent()){
             return new ResponseEntity(
                     new ResponseMessage("User with username "+request.getUsername()+" already exists"),
