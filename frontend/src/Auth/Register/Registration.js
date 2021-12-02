@@ -1,6 +1,6 @@
-import './Registration.css';
 import React, {Component} from 'react';
 import {Row, Col, Container, Form, Button} from "react-bootstrap";
+import './Registration.css';
 import RegisterAlert from "./RegisterAlert.js";
 
 class Registration extends Component {
@@ -55,14 +55,14 @@ class Registration extends Component {
     }
 
     render() {
-        return(
+        return <div className="Register">
             <Container className={"h-100"} fluid>
                 <Row className={"h-100"}>
                     <Col sm={4} className={"registration-col"}>
 
                         <h1>Registration</h1>
 
-                        <Form className={"registration-form"} onSubmit={this.submit}>
+                        <Form className={"registration-form"} onSubmit={this.handleSubmit}>
                             <Form.Group className={"form-group"} controlId={"username"} size={"lg"}>
                                 <Form.Label>Username</Form.Label>
                                 <Form.Control name={"username"} required/>
@@ -92,11 +92,11 @@ class Registration extends Component {
                             </div>
                         </Form>
 
-                        <RegisterAlert ref={this.registerAlert}/>
+                        <RegisterAlert ref={this.RegisterAlert}/>
                     </Col>
                 </Row>
             </Container>
-        )
+        </div>
     }
 }
 
