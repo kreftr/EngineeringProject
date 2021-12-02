@@ -4,6 +4,8 @@ import React, {Component} from "react";
 import {Container, Nav, Navbar} from "react-bootstrap";
 import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import Search from "./search/Search";
+import Registration from "./Auth/Register/Registration";
+import Login from "./Auth/Login/Login";
 
 
 class App extends Component{
@@ -20,6 +22,8 @@ class App extends Component{
                   <Nav.Link href="#link">Friends</Nav.Link>
                   <Nav.Link href="#link">Chat</Nav.Link>
                   <Nav.Link href="/search">Search</Nav.Link>
+                  <Nav.Link href="/registration">Register</Nav.Link>
+                  <Nav.Link href="/login">Login</Nav.Link>
                 </Nav>
               </Navbar.Collapse>
             </Container>
@@ -27,6 +31,8 @@ class App extends Component{
           <Routes>
             <Route path={"profile/:id"} element={<Profile/>}/>
             <Route path={"search"} element={<Search/>}/>
+            <Route path={"registration"} element={<Registration/>}/>
+            <Route path={"login"} element={<Login/>}/>
           </Routes>
         </Router>
     )

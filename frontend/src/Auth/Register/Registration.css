@@ -1,8 +1,25 @@
-.Register {
-    padding: 60px 0;
+html, body, #root {
+    height: 100%;
 }
 
-.Register Form {
-    margin: 0 auto;
-    max-width: 320px;
+h1 {
+    text-align: center;
+    font-size: 48px;
+}
+
+.registration-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 10%;
+}
+
+.registration-form {
+    padding-right: 15%;
+    padding-left: 15%;
+}
+
+.form-group {
+    padding-top: 1%;
+    padding-bottom: 1%;
 }

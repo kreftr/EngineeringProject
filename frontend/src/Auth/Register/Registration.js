@@ -1,21 +1,20 @@
 import './Registration.css';
 import React, {Component} from 'react';
-import {Row, Col, Container, Form, Button, Carousel, Image} from "react-bootstrap";
-
-import RegistrationAlert from "./RegistrationAlert.js";
+import {Row, Col, Container, Form, Button} from "react-bootstrap";
+import RegisterAlert from "./RegisterAlert.js";
 
 class Registration extends Component {
 
     constructor(props) {
         super(props);
-        this.registerAlert = React.createRef();
+        this.RegisterAlert = React.createRef();
     }
 
     showRegisterAlert(variant, heading, message) {
-        this.registerAlert.current.setVariant(variant)
-        this.registerAlert.current.setHeading(heading)
-        this.registerAlert.current.setMessage(message)
-        this.registerAlert.current.setVisible(true)
+        this.RegisterAlert.current.setVariant(variant)
+        this.RegisterAlert.current.setHeading(heading)
+        this.RegisterAlert.current.setMessage(message)
+        this.RegisterAlert.current.setVisible(true)
     }
 
     handleSubmit = event => {
@@ -23,11 +22,12 @@ class Registration extends Component {
         this.registerUser(
             event.target.username.value,
             event.target.email.value,
-            event.target.password.value
+            event.target.password.value,
+            event.target.matchingPassword.value
         );
     }
 
-    registerUser(username, password) {
+    registerUser(username, email, password, matchingPassword) {
         fetch('http://localhost:8080/registration', {
             method: 'POST',
             headers: {
@@ -37,19 +37,20 @@ class Registration extends Component {
             body: JSON.stringify({
                 username: username,
                 email: email,
-                password: password
+                password: password,
+                matchingPassword: matchingPassword
             })
         }).then(function(response) {
             if(response.status === 201) {
                 this.showRegisterAlert("success!", "User created.", response.message);
             } else if (response.status === 409) {
-                this.showRegistrationAlert("danger!!", "User already exists.", "response.message")
+                this.showRegisterAlert("danger!!", "User already exists.", response.message)
             }
             else {
-                this.showRegistrationAlert("danger!!", "Something went wrong..", response.status)
+                this.showRegisterAlert("danger!!", "Something went wrong..", response.status)
             }
         }.bind(this)).catch(function(error){
-            this.showRegistrationAlert("danger", "Something went wrong", "!!!!!")
+            this.showRegisterAlert("danger", "Something went wrong", "!!!!!")
         }.bind(this));
     }
 
@@ -91,33 +92,7 @@ class Registration extends Component {
                             </div>
                         </Form>
 
-                        <RegistrationAlert ref={this.registrationAlert}/>
-                    </Col>
-
-                    <Col sm={8}>
-                        <Carousel controls={false}>
-                            <Carousel.Item className={"h-100 w-100"} interval={4000}>
-                                <Image className={"d-block w-100 h-100"} src={require("./images/team.jpg")}/>
-                                <Carousel.Caption>
-                                    <h1>Slide 1</h1>
-                                    <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-                                </Carousel.Caption>
-                            </Carousel.Item>
-                            <Carousel.Item className={"h-100 w-100"} interval={4000}>
-                                <Image className={"d-block w-100 h-100"} src={require("./images/creative.jpg")}/>
-                                <Carousel.Caption>
-                                    <h1>Slide 2</h1>
-                                    <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-                                </Carousel.Caption>
-                            </Carousel.Item>
-                            <Carousel.Item className={"h-100 w-100"} interval={4000}>
-                                <Image className={"d-block w-100 h-100"} src={require("./images/problem.jpg")}/>
-                                <Carousel.Caption>
-                                    <h1>Slide 3</h1>
-                                    <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-                                </Carousel.Caption>
-                            </Carousel.Item>
-                        </Carousel>
+                        <RegisterAlert ref={this.registerAlert}/>
                     </Col>
                 </Row>
             </Container>
