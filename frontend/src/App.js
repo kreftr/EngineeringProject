@@ -1,11 +1,15 @@
-import logo from './logo.svg';
 import './App.css';
 import HomePage from "./components/HomePage";
+import {Component} from "react";
 
-function App() {
-  return (
-     <HomePage/>
-  );
+class App extends Component {
+  render() {
+    return (
+        <div>
+          <HomePage/>
+        </div>
+    );
+  }
 }
 
 export default App;
