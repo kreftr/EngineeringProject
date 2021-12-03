@@ -3,11 +3,13 @@ package edu.pjatk.app.registration;
 import edu.pjatk.app.email.token.ActivationToken;
 import edu.pjatk.app.email.token.ActivationTokenService;
 import edu.pjatk.app.response.ResponseMessage;
+import edu.pjatk.app.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -16,24 +18,29 @@ import java.util.Optional;
 public class RegistrationController {
 
     private final RegistrationService registrationService;
+    private final UserService userService;
     private final ActivationTokenService activationTokenService;
 
     @Autowired
-    public RegistrationController(RegistrationService registrationService, ActivationTokenService activationTokenService) {
+    public RegistrationController(RegistrationService registrationService,
+                                  UserService userService,
+                                  ActivationTokenService activationTokenService) {
         this.registrationService = registrationService;
+        this.userService = userService;
         this.activationTokenService = activationTokenService;
     }
 
 
     @PostMapping
-    public ResponseEntity registerUser(@RequestBody RegistrationRequest request){
-        if (registrationService.thatUsernameAlreadyExists(request.getUsername())){
+    public ResponseEntity registerUser(@Valid @RequestBody RegistrationRequest request){
+
+        if (userService.findUserByUsername(request.getUsername()).isPresent()){
             return new ResponseEntity(
                     new ResponseMessage("User with username "+request.getUsername()+" already exists"),
                             HttpStatus.CONFLICT
             );
         }
-        else if (registrationService.thatEmailAlreadyExists(request.getEmail())){
+        else if (userService.findUserByEmail(request.getEmail()).isPresent()){
             return new ResponseEntity(
                     new ResponseMessage("User with email "+request.getEmail()+" already exists"),
                     HttpStatus.CONFLICT

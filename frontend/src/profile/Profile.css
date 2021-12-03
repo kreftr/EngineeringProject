@@ -1,0 +1,30 @@
+.PROFILE-profile-container {
+    margin-top: 2%;
+    font-size: 16px;
+}
+
+.PROFILE-info-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.PROFILE-username {
+    font-size: 200%;
+    font-weight: bold;
+}
+
+.PROFILE-name-surname {
+    font-size: 150%;
+    color: darkgray;
+}
+
+.PROFILE-bio {
+    text-align: center;
+    padding: 3% 6%;
+}
+
+.PROFILE-profile-pic {
+    height: 256px;
+    width: 256px;
+}

@@ -6,6 +6,8 @@ import edu.pjatk.app.email.token.ActivationTokenService;
 import edu.pjatk.app.user.User;
 import edu.pjatk.app.user.UserRole;
 import edu.pjatk.app.user.UserService;
+import edu.pjatk.app.user.profile.Profile;
+import edu.pjatk.app.user.profile.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,14 +20,17 @@ import java.util.UUID;
 public class RegistrationService {
 
     private final UserService userService;
+    private final ProfileService profileService;
     private final ActivationTokenService activationTokenService;
     private final EmailService emailService;
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public RegistrationService(UserService userService, ActivationTokenService activationTokenService,
-                               EmailService emailService, BCryptPasswordEncoder passwordEncoder) {
+    public RegistrationService(UserService userService, ProfileService profileService,
+                               ActivationTokenService activationTokenService, EmailService emailService,
+                               BCryptPasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.profileService = profileService;
         this.activationTokenService = activationTokenService;
         this.emailService = emailService;
         this.passwordEncoder = passwordEncoder;
@@ -35,8 +40,11 @@ public class RegistrationService {
     @Transactional
     public void registerUser(RegistrationRequest request){
 
+        Profile profile = new Profile();
+        profileService.saveProfile(profile);
+
         User user = new User(request.getUsername(), request.getEmail(), passwordEncoder.encode(request.getPassword()),
-                LocalDateTime.now(), UserRole.USER);
+                LocalDateTime.now(), UserRole.USER, profile);
 
         userService.saveUser(user);
 
@@ -59,16 +67,6 @@ public class RegistrationService {
     public void verifyAccount(ActivationToken activationToken){
         activationTokenService.confirmActivationToken(activationToken);
         userService.activateUser(activationToken.getUser());
-    }
-
-    public boolean thatUsernameAlreadyExists(String username){
-        if (userService.findUserByUsername(username).isPresent()) return true;
-        else return false;
-    }
-
-    public boolean thatEmailAlreadyExists(String email){
-        if (userService.findUserByEmail(email).isPresent()) return true;
-        else return false;
     }
 
 }

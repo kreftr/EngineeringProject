@@ -2,7 +2,9 @@ package edu.pjatk.app.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -15,14 +17,19 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-
+    @CrossOrigin(origins = "http://localhost:3000")
     public void saveUser(User user){
         userRepository.save(user);
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     public void activateUser(User user){
         user.setEnabled(true);
         userRepository.update(user);
+    }
+
+    public Optional<User> findUserById(Long id){
+        return userRepository.findById(id);
     }
 
     public Optional<User> findUserByUsername(String username){
@@ -31,6 +38,10 @@ public class UserService {
 
     public Optional<User> findUserByEmail(String email){
         return userRepository.findByEmail(email);
+    }
+
+    public Optional<List<User>> findUsersBySimilarUsername(String username){
+        return userRepository.findBySimilarUsername(username);
     }
 
 }

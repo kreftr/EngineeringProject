@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -24,6 +25,20 @@ public class UserRepository {
 
     public void update(User user){
         entityManager.merge(user);
+    }
+
+    public Optional<User> findById(Long id){
+        Optional user;
+        try {
+            user = Optional.of(
+                    entityManager.createQuery(
+                                    "SELECT user FROM User user WHERE user.id = :id", User.class)
+                            .setParameter("id", id).getSingleResult()
+            );
+        } catch (NoResultException noResultException){
+            user = Optional.empty();
+        }
+        return user;
     }
 
     public Optional<User> findByUsername(String username){
@@ -52,6 +67,20 @@ public class UserRepository {
             user = Optional.empty();
         }
         return user;
+    }
+
+    public Optional<List<User>> findBySimilarUsername(String username){
+        Optional users;
+        try {
+            users = Optional.of(
+                    entityManager.createQuery(
+                                    "SELECT user FROM User user WHERE user.username LIKE :username", User.class)
+                            .setParameter("username", username+"%").getResultList()
+            );
+        } catch (NoResultException noResultException){
+            users = Optional.empty();
+        }
+        return users;
     }
 
 }

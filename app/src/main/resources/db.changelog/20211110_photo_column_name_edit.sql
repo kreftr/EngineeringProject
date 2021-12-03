@@ -1,0 +1,1 @@
+ALTER TABLE photo RENAME COLUMN url TO file_name;
