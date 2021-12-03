@@ -3,7 +3,6 @@ import React, {Component} from "react";
 import {Button, Col, Container, Form, Row} from "react-bootstrap";
 import LoginAlert from "./LoginAlert.js";
 
-
 class Login extends Component {
 
     constructor(props) {
@@ -38,18 +37,17 @@ class Login extends Component {
                 password: password
             })
         }).then(function(response) {
-            if(response.status === 200) {
+            if (response.status === 200) {
                 this.showLoginAlert("success!", "Logged in.", response.message);
             } else if (response.status === 409) {
                 this.showLoginAlert("Danger!", "Unauthorized Access.", response.message);
             } else if (response.status === 403) {
                 this.showLoginAlert("Forbidden!", "Forbidden. I REFUSE!", response.message);
-            }
-            else {
+            } else {
                 this.showLoginAlert("Danger.", "Something went wrong.", response.status);
             }
-        }.bind(this)).catch(function(error){
-            this.showLoginAlert("Danger.", "Something went wrong", "!!!!!")
+        }.bind(this)).catch(error => {
+                this.showLoginAlert("Danger.", "Something went wrong", "!!!!!")
         });
     }
 
@@ -63,7 +61,7 @@ class Login extends Component {
                         <h2>Login</h2>
 
                         <Form className={"login-form"} onSubmit={this.handleSubmit}>
-                            <Form.Group className={"form-groupp"} controlID={"username"} size={"lg"}>
+                            <Form.Group className={"form-groupp"} controlId={"username"} size={"lg"}>
                                 <Form.Label>Username</Form.Label>
                                 <Form.Control name={"username"} required/>
                             </Form.Group>
