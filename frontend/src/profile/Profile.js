@@ -1,22 +1,25 @@
 import React, {useEffect, useState} from "react";
-import {Container, Nav, Row, Col, Image} from "react-bootstrap";
+import {Container, Nav, Row, Col, Image, Button} from "react-bootstrap";
 import default_profile_picture from "../assets/images/default_profile_picture.jpg"
-import "./Profile.css"
+import {FaFlag, FaUserEdit, FaUserPlus} from "react-icons/fa"
 import axios from "axios";
+import Cookies from "js-cookie"
 import {useParams} from "react-router-dom";
+
+import "./Profile.css"
 
 function Profile(){
 
     const {id} = useParams();
 
-    const [profile,setProfile] = useState([]);
+    const [profile, setProfile] = useState([]);
     const [responseCode,setCode] = useState();
     const [loadingContent, setLoading] = useState(true);
     const [responseMessage, setMessage]  = useState("Loading content...");
 
     useEffect(() => {
-        //TODO: FIX React Hook useEffect has a missing dependency: 'id'.
-        // Either include it or remove the dependency array  react-hooks/exhaustive-deps
+        // TODO: FIX React Hook useEffect has a missing dependency: 'id'.
+
         axios.get(`http://localhost:8080/profile?id=${id}`)
             .then(response => {
                 setCode(response.status);
@@ -47,14 +50,44 @@ function Profile(){
                         <span className={"PROFILE-username"}>{profile.username}</span>
                         <span className={"PROFILE-name-surname"}>{profile.name} {profile.surname}</span>
                         <div className={"PROFILE-bio"}>{profile.bio}</div>
+                        <ul className={"PROFILE-ul-actions"}>
+                            { Cookies.get("userId")===id && Cookies.get("authorization") ?
+                                <li>
+                                    <Button className={"PROFILE-icon-placeholder"}>
+                                        <FaUserEdit className={"PROFILE-icon"}/>
+                                        <h4>Edit profile</h4>
+                                    </Button>
+                                </li>
+                                :
+                                <></>
+                            }
+                            { Cookies.get("userId")!==id && Cookies.get("authorization") ?
+                                <>
+                                    <li>
+                                        <Button className={"PROFILE-icon-placeholder"}>
+                                            <FaUserPlus className={"PROFILE-icon"}/>
+                                            <h4>Add friend</h4>
+                                        </Button>
+                                    </li>
+                                    <li>
+                                    <Button className={"PROFILE-icon-placeholder"}>
+                                    <FaFlag className={"PROFILE-icon"}/>
+                                    <h4>Report</h4>
+                                    </Button>
+                                    </li>
+                                </>
+                                :
+                                <></>
+                            }
+                        </ul>
                     </Col>
                     <Col className={"col-8"}>
                         <Nav fill variant="tabs" defaultActiveKey="/home">
                             <Nav.Item>
-                                <Nav.Link href="/home" active>Projekty</Nav.Link>
+                                <Nav.Link href="/home" active>Projects</Nav.Link>
                             </Nav.Item>
                             <Nav.Item>
-                                <Nav.Link eventKey="link-1">Aktywność</Nav.Link>
+                                <Nav.Link eventKey="link-1">Activity</Nav.Link>
                             </Nav.Item>
                         </Nav>
                     </Col>

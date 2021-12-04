@@ -57,7 +57,7 @@ public class RegistrationService {
 
         emailService.send(request.getEmail(), emailService.emailBuilder(
                 request.getUsername(),
-                "http://localhost:8080/registration/verify?token="+token,
+                "http://localhost:3000/verification/"+token,
                 "email_verification.html"
                 )
         );

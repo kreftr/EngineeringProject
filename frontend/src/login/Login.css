@@ -1,0 +1,9 @@
+
+.LOGIN-container {
+    margin-top: 2%;
+}
+
+.LOGIN-form {
+    display: flex;
+    flex-direction: column;
+}

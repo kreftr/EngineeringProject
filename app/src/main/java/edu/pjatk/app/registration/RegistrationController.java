@@ -15,6 +15,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/registration")
+@CrossOrigin("http://localhost:3000")
 public class RegistrationController {
 
     private final RegistrationService registrationService;
@@ -33,7 +34,6 @@ public class RegistrationController {
 
     @PostMapping
     public ResponseEntity registerUser(@Valid @RequestBody RegistrationRequest request){
-
         if (userService.findUserByUsername(request.getUsername()).isPresent()){
             return new ResponseEntity(
                     new ResponseMessage("User with username "+request.getUsername()+" already exists"),
@@ -61,17 +61,18 @@ public class RegistrationController {
 
         if (activationToken.isEmpty()){
             return new ResponseEntity(
-                    new ResponseMessage("Bad token"), HttpStatus.BAD_REQUEST
-            );
-        }
-        else if (LocalDateTime.now().isAfter(activationToken.get().getExpired())){
-            return new ResponseEntity(
-                    new ResponseMessage("Token expired"), HttpStatus.GONE
+                    new ResponseMessage("Invalid token"), HttpStatus.BAD_REQUEST
             );
         }
         else if (activationToken.get().getConfirmed() != null){
             return new ResponseEntity(
                     new ResponseMessage("Token has been already verified"), HttpStatus.CONFLICT
+            );
+        }
+        else if (LocalDateTime.now().isAfter(activationToken.get().getExpired())){
+            //TODO: Add possibility to refresh token
+            return new ResponseEntity(
+                    new ResponseMessage("Token expired"), HttpStatus.GONE
             );
         }
         else {
