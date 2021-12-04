@@ -28,3 +28,25 @@
     height: 256px;
     width: 256px;
 }
+
+.PROFILE-ul-actions{
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.PROFILE-icon-placeholder{
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    height: 60px;
+    width: 225px;
+    margin: 10px 0px;
+    border-radius: 25px;
+}
+
+.PROFILE-icon{
+    margin: 0px 15px;
+    height: 40px;
+    width: 40px;
+}

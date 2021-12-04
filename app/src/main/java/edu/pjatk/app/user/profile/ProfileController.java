@@ -14,6 +14,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/profile")
+@CrossOrigin("http://localhost:3000")
 public class ProfileController {
 
     private final ProfileService profileService;
@@ -24,7 +25,6 @@ public class ProfileController {
     }
 
 
-    @CrossOrigin("http://localhost:3000")
     @RequestMapping(params = "id", method = RequestMethod.GET)
     public ResponseEntity getProfile(@RequestParam Long id){
         Optional<FullProfileResponse> profile = profileService.findProfileById(id);
@@ -38,7 +38,6 @@ public class ProfileController {
         }
     }
 
-    @CrossOrigin("http://localhost:3000")
     @RequestMapping(params = "username", method = RequestMethod.GET)
     public ResponseEntity getProfile(@RequestParam String username){
         Optional<List<MiniProfileResponse>> profiles = profileService.findProfilesByUsername(username);
@@ -50,6 +49,11 @@ public class ProfileController {
         else {
             return new ResponseEntity(profiles.get(), HttpStatus.OK);
         }
+    }
+
+    @RequestMapping(value = "/my", params = "id", method = RequestMethod.GET)
+    public boolean isMyProfile(@RequestParam Long id){
+        return profileService.isMyProfile(id);
     }
 
     @PostMapping
