@@ -1,7 +1,7 @@
 import React, {useEffect, useLayoutEffect, useState, Suspense} from 'react';
 import {Container, Nav, Image, ListGroup, ListGroupItem, Button, Spinner, Row, Col} from "react-bootstrap";
 import axios, { AxiosRequestConfig } from "axios";
-import "./Chat.css"
+// import "./Chat.css"
 
 function Chat() {
     // TODO add conversation id to baseURL and delete it from requests below

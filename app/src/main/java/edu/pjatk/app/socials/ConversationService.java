@@ -16,6 +16,10 @@ public class ConversationService {
         this.conversationRepository = conversationRepository;
     }
 
+    public Optional<Conversation> findConversationById(Long id) {
+        return conversationRepository.findConversationById(id);
+    }
+
     public void addMessage(Long conversation_id, String text){
         Date date = java.util.Calendar.getInstance().getTime();
         Optional<Conversation> conversation = conversationRepository.findConversationById(conversation_id);
@@ -34,5 +38,9 @@ public class ConversationService {
 
     public Optional<Message> getRecentMessage(Long id){
         return conversationRepository.getRecentMessage(id);
+    }
+
+    public Optional<List<Conversation>> getAllUserConversations(Long userId) {
+        return conversationRepository.getAllUserConversations(userId);
     }
 }

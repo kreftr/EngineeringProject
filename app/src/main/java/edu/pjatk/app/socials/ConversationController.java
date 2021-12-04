@@ -16,8 +16,24 @@ public class ConversationController {
     private final ConversationService conversationService;
 
     @Autowired
-    public ConversationController(ConversationService conversationService){
+    public ConversationController(ConversationService conversationService) {
         this.conversationService = conversationService;
+    }
+
+    @GetMapping(value = "/findConversationById/{id}")
+    public ResponseEntity<?> findConversationById(@PathVariable Long id) {
+        Optional<Conversation> conversation = conversationService.findConversationById(id);
+        if (conversation.isPresent())
+        {
+            return new ResponseEntity<>(
+                    conversation, HttpStatus.OK
+            );
+        }
+        else {
+            return new ResponseEntity<>(
+                    new ResponseMessage("There are no conversations!"), HttpStatus.NOT_FOUND
+            );
+        }
     }
 
     @PostMapping(value = "/addMessage/{conversation_id}/{text}")
@@ -46,7 +62,7 @@ public class ConversationController {
     }
 
     @GetMapping(value = "/getAllMessages/{id}")
-    public ResponseEntity<?> getAllMessages(@PathVariable long id){
+    public ResponseEntity<?> getAllMessages(@PathVariable long id) {
         Optional<List<Message>> messages;
         messages = conversationService.getAllMessages(id);
         if (messages.isPresent())
@@ -57,13 +73,13 @@ public class ConversationController {
         }
         else {
             return new ResponseEntity<>(
-                    new ResponseMessage("There are no messages"), HttpStatus.NOT_FOUND
+                    new ResponseMessage("There are no messages!"), HttpStatus.NOT_FOUND
             );
         }
     }
 
     @GetMapping(value = "/getRecentMessage/{id}")
-    public ResponseEntity<?> getRecentMessage(@PathVariable long id){
+    public ResponseEntity<?> getRecentMessage(@PathVariable long id) {
         Optional<Message> message = conversationService.getRecentMessage(id);
         if (message.isPresent())
         {
@@ -73,7 +89,23 @@ public class ConversationController {
         }
         else {
             return new ResponseEntity<>(
-                    new ResponseMessage("There are no messages"), HttpStatus.NOT_FOUND
+                    new ResponseMessage("There are no messages!"), HttpStatus.NOT_FOUND
+            );
+        }
+    }
+
+    @GetMapping(value = "/getAllUserConversations/{userId}")
+    public ResponseEntity<?> getAllUserConversations(@PathVariable long userId) {
+        Optional<List<Conversation>> conversations = conversationService.getAllUserConversations(userId);
+        if (conversations.isPresent())
+        {
+            return new ResponseEntity<>(
+                    conversations, HttpStatus.OK
+            );
+        }
+        else {
+            return new ResponseEntity<>(
+                    new ResponseMessage("There are no conversations!"), HttpStatus.NOT_FOUND
             );
         }
     }

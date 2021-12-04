@@ -6,6 +6,8 @@ import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import Search from "./search/Search";
 import Registration from "./Auth/Register/Registration";
 import Login from "./Auth/Login/Login";
+import Chat from "./chat/Chat"
+import Friends from "./friends/Friends"
 
 
 class App extends Component{
@@ -19,8 +21,8 @@ class App extends Component{
               <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto">
                   <Nav.Link href="#home">My profile</Nav.Link>
-                  <Nav.Link href="#link">Friends</Nav.Link>
-                  <Nav.Link href="#link">Chat</Nav.Link>
+                  <Nav.Link href="/friends">Friends</Nav.Link>
+                  <Nav.Link href="/chat">Chat</Nav.Link>
                   <Nav.Link href="/search">Search</Nav.Link>
                   <Nav.Link href="/registration">Register</Nav.Link>
                   <Nav.Link href="/login">Login</Nav.Link>
@@ -30,6 +32,8 @@ class App extends Component{
           </Navbar>
           <Routes>
             <Route path={"profile/:id"} element={<Profile/>}/>
+            <Route path={"friends"} element={<Friends/>}/>
+            <Route path={"chat"} element={<Chat/>}/>
             <Route path={"search"} element={<Search/>}/>
             <Route path={"registration"} element={<Registration/>}/>
             <Route path={"login"} element={<Login/>}/>

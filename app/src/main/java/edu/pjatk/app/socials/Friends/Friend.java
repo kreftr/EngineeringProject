@@ -1,29 +1,36 @@
 package edu.pjatk.app.socials.Friends;
 
-import edu.pjatk.app.socials.Conversation;
-import edu.pjatk.app.socials.Message;
+import edu.pjatk.app.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.List;
+
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "`friend`")
+@Table(name = "friend")
 public class Friend {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Boolean pending;
-    private Long first_user_id;
-    private Long second_user_id;
 
-//    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-//    @JoinColumn(name = "second_user_id")
-//    private User user;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "first_user_id", referencedColumnName = "id")
+    User firstUser;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "second_user_id", referencedColumnName = "id")
+    User secondUser;
+
+    public Friend(User firstUser, User secondUser){
+        this.firstUser = firstUser;
+        this.secondUser = secondUser;
+        this.pending = true;
+    }
 }

@@ -20,7 +20,7 @@ public class ConversationRepository {
 
     public Optional<Conversation> findConversationById(Long id) {
         Optional<Conversation> conversation;
-        try{
+        try {
             conversation = Optional.of(
                     entityManager.createQuery(
                             "SELECT conversation from Conversation conversation where conversation.id=:conversationId",
@@ -43,7 +43,7 @@ public class ConversationRepository {
         entityManager.remove(message);
     }
 
-    public Optional<List<Message>> getAllMessages(Long id){
+    public Optional<List<Message>> getAllMessages(Long id) {
         Optional<List<Message>> allMessages;
         try {
             allMessages = Optional.of(
@@ -57,7 +57,7 @@ public class ConversationRepository {
         return allMessages;
     }
 
-    public Optional<Message> getRecentMessage(Long id){
+    public Optional<Message> getRecentMessage(Long id) {
         Optional<Message> recentMessage;
         try {
             recentMessage = Optional.of(
@@ -70,5 +70,21 @@ public class ConversationRepository {
             recentMessage = Optional.empty();
         }
         return recentMessage;
+    }
+
+    // TODO test it
+    public Optional<List<Conversation>> getAllUserConversations(Long userId) {
+        Optional<List<Conversation>> allConversations;
+        try {
+            allConversations = Optional.of(
+                    entityManager.createQuery(
+                            "SELECT conversation from Conversation conversation where " +
+                                    "conversation.first_user_id=:userId or conversation.second_user_id=:userId",
+                            Conversation.class).setParameter("userId", userId).getResultList()
+            );
+        } catch (NoResultException noResultException) {
+            allConversations = Optional.empty();
+        }
+        return allConversations;
     }
 }
