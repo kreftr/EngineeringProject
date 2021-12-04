@@ -24,6 +24,8 @@ public class UserPrincipal implements UserDetails {
         return Collections.singletonList(authority);
     }
 
+    public long getId() { return user.getId(); }
+
     @Override
     public String getPassword() {
         return user.getPassword();

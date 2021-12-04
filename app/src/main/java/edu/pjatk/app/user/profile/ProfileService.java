@@ -4,9 +4,11 @@ import edu.pjatk.app.photo.Photo;
 import edu.pjatk.app.photo.PhotoService;
 import edu.pjatk.app.response.profile.FullProfileResponse;
 import edu.pjatk.app.response.profile.MiniProfileResponse;
+import edu.pjatk.app.security.UserPrincipal;
 import edu.pjatk.app.user.User;
 import edu.pjatk.app.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -94,6 +96,15 @@ public class ProfileService {
                 ));
             }
             return Optional.of(profilesResponse);
+        }
+    }
+
+    public boolean isMyProfile(Long id){
+        Optional<User> user = userService.findUserById(id);
+        if (user.isEmpty()) return false;
+        else {
+            String currentLoggedUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+            return currentLoggedUsername.equals(user.get().getUsername());
         }
     }
 

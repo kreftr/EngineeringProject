@@ -15,6 +15,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/photo")
+@CrossOrigin("http://localhost:3000")
 public class PhotoController {
 
     private final PhotoService photoService;
@@ -55,7 +56,6 @@ public class PhotoController {
     }
 
     @GetMapping
-    @CrossOrigin("http://localhost:3000")
     public ResponseEntity<byte[]> getPhoto(@RequestParam String filename) throws IOException {
 
         Optional<Photo> photo = photoService.findPhotoByFileName(filename);

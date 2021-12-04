@@ -1,0 +1,17 @@
+
+.REGISTRATION-container {
+    margin-top: 2%;
+}
+
+.REGISTRATION-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.REGISTRATION-tooltip-button {
+    margin-left: 5px;
+    width: 25px;
+    height: 25px;
+    border-radius: 12px;
+    text-align: center;
+}
