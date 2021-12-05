@@ -15,27 +15,34 @@ function Registration(){
 
     async function handleSubmit(e){
         e.preventDefault()
+        setResponseMessage(null)
 
-        await axios.post("http://localhost:8080/registration", {
-            "username": username,
-            "email": email,
-            "password": password,
-            "confirmPassword": confirmPassword
-        })
+        if (password !== confirmPassword){
+            setResponseMessage("*Passwords are not the same")
+            return;
+        }
+        else {
+            await axios.post("http://localhost:8080/registration", {
+                "username": username,
+                "email": email,
+                "password": password,
+                "confirmPassword": confirmPassword
+            })
             .then(response => {
                 setResponseMessage(response.data.message)
                 setResponseCode(response.status)
             })
             .catch(err => {
+                console.log(err.response.data.error)
                 if(err.response.status === 409) setResponseMessage(err.response.data.message)
-                else if (err.response.status === 400) setResponseMessage("TODO: BAD REQUEST!")
+                else if (err.response.status === 400) setResponseMessage("*"+err.response.data.error)
                 else setResponseMessage("SERVER ERROR!")
                 setResponseCode(err.response.status)
             })
+        }
     }
 
-    //TODO: Check if password and confirmPasswords are the same
-    //TODO: Bad request handling
+
     return(
         <Container className={"REGISTRATION-container"}>
             <Row>
@@ -67,9 +74,6 @@ function Registration(){
                             <Form.Label>Confirm password</Form.Label>
                             <Form.Control type="password" placeholder="Confirm password" value={confirmPassword}
                                           onChange={(e) => setConfirmPassword(e.target.value)} required/>
-                            <Form.Text className="text-danger" hidden={true}>
-                                We'll never share your email with anyone else.
-                            </Form.Text>
                         </Form.Group>
                         <Button className={"mb-5"} variant="primary" type="submit">
                             Sign In

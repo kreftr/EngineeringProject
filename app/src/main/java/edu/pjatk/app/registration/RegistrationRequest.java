@@ -17,7 +17,7 @@ public class RegistrationRequest {
     @Size(min = 6, max = 12, message = "{validation.username.message.size}")
     @Pattern(regexp = "^[a-zA-Z0-9]+$",message ="{validation.username.message.regex}")
     private String username;
-    //https://emailregex.com/
+    //  https://emailregex.com/
     @NotBlank(message ="{validation.email.message.notBlank}")
     @Pattern(regexp = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b" +
             "\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0" +
@@ -29,7 +29,7 @@ public class RegistrationRequest {
     //  Minimum eight and maximum 24 characters, at least one uppercase letter,
     //  one lowercase letter, one number and one special character:
     @Size(min = 8, max = 24,message ="{validation.password.message.size}")
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,24}$",
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{1,100}$",
             message ="{validation.password.message.regex}")
     private String password;
     @NotBlank(message ="{validation.password-confirmation.notBlank}")
