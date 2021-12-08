@@ -3,8 +3,11 @@ package edu.pjatk.app.socials.Friends;
 import edu.pjatk.app.user.User;
 import edu.pjatk.app.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,8 +35,8 @@ public class FriendService {
         }
     }
 
-    public void deleteFriendById(Long id) {
-        friendRepository.deleteFriendById(id);
+    public void deleteFriendById(Long friend_id) {
+        friendRepository.deleteFriendById(friend_id);
     }
 
     public void acceptFriend(Long id) {
@@ -41,6 +44,14 @@ public class FriendService {
         if (friend.isPresent()) {
             friendRepository.acceptFriend(friend.get());
         }
+    }
+
+    public Optional<List<Friend>> getAllFriends(Long id) {
+        return friendRepository.getAllFriends(id);
+    }
+
+    public Optional<List<Friend>> getAllPending(Long id) {
+        return friendRepository.getAllPending(id);
     }
 
 }

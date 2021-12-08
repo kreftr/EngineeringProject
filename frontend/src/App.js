@@ -11,7 +11,7 @@ import Verification from "./registration/Verification";
 import Login from "./login/Login";
 import Chat from "./chat/Chat"
 import ConversationList from "./chat/ConversationList"
-import Friends from "./friends/Friends"
+import FriendsList from "./friends/FriendsList"
 
 
 class App extends Component{
@@ -60,7 +60,7 @@ class App extends Component{
                 <Routes>
                     <Route path={"profile/:id"} element={<Profile/>}/>
                     <Route path={"chat/:conversation_id"} element={<Chat/>}/>
-                    <Route path={"friends"} element={<Friends/>}/>
+                    <Route path={"friends"} element={<FriendsList/>}/>
                     <Route path={"conversations/:conversation_id"} element={<ConversationList/>}/>
                     <Route path={"search"} element={<Search/>}/>
                     <Route path={"registration"} element={<Registration/>}/>

@@ -1,10 +1,13 @@
 package edu.pjatk.app.socials.Friends;
 
+import edu.pjatk.app.socials.chat.Conversation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -16,8 +19,7 @@ public class FriendRepository {
         this.entityManager = entityManager;
     }
 
-
-    // TODO test it
+    // TODO przywroc
     public Optional<Friend> findById(Long id) {
 //        Optional<Friend> friend;
 //        try {
@@ -47,5 +49,35 @@ public class FriendRepository {
     public void acceptFriend(Friend friend) {
         friend.setPending(false);
         entityManager.persist(friend);
+    }
+
+    Optional<List<Friend>> getAllFriends(Long id) {
+        Optional<List<Friend>> allFriends;
+        try {
+            allFriends = Optional.of(
+                    entityManager.createQuery(
+                            "SELECT friend from Friend friend where " +
+                                    "friend.firstUser.id=:friendId or friend.secondUser.id=:friendId and friend.pending=false",
+                            Friend.class).setParameter("friendId", id).getResultList()
+            );
+        } catch (NoResultException noResultException) {
+            allFriends = Optional.empty();
+        }
+        return allFriends;
+    }
+
+    Optional<List<Friend>> getAllPending(Long id) {
+        Optional<List<Friend>> allPending;
+        try {
+            allPending = Optional.of(
+                    entityManager.createQuery(
+                            "SELECT friend from Friend friend where " +
+                                    "friend.firstUser.id=:friendId or friend.secondUser.id=:friendId and friend.pending=true",
+                            Friend.class).setParameter("friendId", id).getResultList()
+            );
+        } catch (NoResultException noResultException) {
+            allPending = Optional.empty();
+        }
+        return allPending;
     }
 }

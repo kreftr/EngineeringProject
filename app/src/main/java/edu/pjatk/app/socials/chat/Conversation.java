@@ -1,5 +1,6 @@
 package edu.pjatk.app.socials.chat;
 
+import edu.pjatk.app.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,6 +16,12 @@ public class Conversation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Long first_user_id;
-    private Long second_user_id;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "first_user_id")
+    private User first_user;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "second_user_id")
+    private User second_user;
 }

@@ -72,14 +72,13 @@ public class ConversationRepository {
         return recentMessage;
     }
 
-    // TODO test it
     public Optional<List<Conversation>> getAllUserConversations(Long userId) {
         Optional<List<Conversation>> allConversations;
         try {
             allConversations = Optional.of(
                     entityManager.createQuery(
                             "SELECT conversation from Conversation conversation where " +
-                                    "conversation.first_user_id=:userId or conversation.second_user_id=:userId",
+                                    "conversation.first_user.id=:userId or conversation.second_user.id=:userId",
                             Conversation.class).setParameter("userId", userId).getResultList()
             );
         } catch (NoResultException noResultException) {

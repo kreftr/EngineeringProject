@@ -6,25 +6,24 @@ import {Link} from "react-router-dom";
 
 export default function Conversation(props) {
     const conversation_id = props.conversation.id
-    let conversation_friend_id = null  // who are we talking with
+    let friend_user_data = null
 
-    const first_user_id = props.conversation.first_user_id
-    const second_user_id = props.conversation.second_user_id
+    const first_user_id = props.conversation.first_user.id
+    const second_user_id = props.conversation.second_user.id
     const cookie_user_id = Number(Cookies.get("userId"))
 
-    // find out which id in conversation is associated with our friend
+    // find out which id is associated with our friend
     if (first_user_id === cookie_user_id) {
-        conversation_friend_id = second_user_id
+        friend_user_data = props.conversation.second_user
     } else if (second_user_id === cookie_user_id) {
-        conversation_friend_id = first_user_id
+        friend_user_data = props.conversation.first_user
     }
 
-    const friend_user_data = useAxiosGet(`http://localhost:8080/user/findUserById/${conversation_friend_id}`)
     let friend_avatar_path = null
     let friend_username = null
-    if (friend_user_data.data) {
-        friend_avatar_path = friend_user_data.data.profile.photo.fileName
-        friend_username = friend_user_data.data.profile.name
+    if (friend_user_data) {
+        friend_avatar_path = friend_user_data.profile.photo.fileName
+        friend_username = friend_user_data.profile.name
     }
 
     const recent_message = useAxiosGet(`http://localhost:8080/conversation/getRecentMessage/${conversation_id}`)

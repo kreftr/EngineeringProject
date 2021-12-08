@@ -6,11 +6,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin("http://localhost:3000")
 @RestController
-@RequestMapping("/friend")
+@RequestMapping("/friends")
 public class FriendController {
     private final FriendService friendService;
 
@@ -43,21 +44,54 @@ public class FriendController {
         );
     }
 
-    @DeleteMapping(value = "/deleteById/{id}")
-    public ResponseEntity<?> deleteById(@PathVariable long id) {
-        friendService.deleteFriendById(id);
+    @DeleteMapping(value = "/deleteById/{friend_id}")
+    public ResponseEntity<?> deleteById(@PathVariable Long friend_id) {
+        friendService.deleteFriendById(friend_id);
         return new ResponseEntity<>(
                 new ResponseMessage("Message deleted!"), HttpStatus.OK
         );
     }
 
-    @PostMapping(value = "/acceptFriend/{id}")
-    public ResponseEntity<?> acceptFriend(@PathVariable Long id) {
-        friendService.acceptFriend(id);
+    @PostMapping(value = "/acceptFriend/{friend_id}")
+    public ResponseEntity<?> acceptFriend(@PathVariable Long friend_id) {
+        friendService.acceptFriend(friend_id);
         return new ResponseEntity<>(
                 new ResponseMessage("Friend accepted!"), HttpStatus.OK
         );
     }
 
+    // TODO przetestuj
+    @GetMapping(value = "/getAllFriends/{friend_id}")
+    public ResponseEntity<?> getAllFriends(@PathVariable Long friend_id) {
+        Optional<List<Friend>> friends = friendService.getAllFriends(friend_id);
+        if (friends.isPresent())
+        {
+            return new ResponseEntity<>(
+                    friends, HttpStatus.OK
+            );
+        }
+        else {
+            return new ResponseEntity<>(
+                    new ResponseMessage("There are no friends!"), HttpStatus.NOT_FOUND
+            );
+        }
+    }
+
+    // TODO przetestuj
+    @GetMapping(value = "/getAllPending/{friend_id}")
+    public ResponseEntity<?> getAllPending(@PathVariable Long friend_id) {
+        Optional<List<Friend>> pending_friends = friendService.getAllPending(friend_id);
+        if (pending_friends.isPresent())
+        {
+            return new ResponseEntity<>(
+                    pending_friends, HttpStatus.OK
+            );
+        }
+        else {
+            return new ResponseEntity<>(
+                    new ResponseMessage("There are no pending friends!"), HttpStatus.NOT_FOUND
+            );
+        }
+    }
 
 }
