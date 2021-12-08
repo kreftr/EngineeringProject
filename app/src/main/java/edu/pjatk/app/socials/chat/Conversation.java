@@ -1,4 +1,4 @@
-package edu.pjatk.app.socials;
+package edu.pjatk.app.socials.chat;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

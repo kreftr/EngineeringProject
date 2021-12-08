@@ -1,4 +1,4 @@
-package edu.pjatk.app.socials;
+package edu.pjatk.app.socials.chat;
 
 import edu.pjatk.app.response.ResponseMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,12 +36,12 @@ public class ConversationController {
         }
     }
 
-    @PostMapping(value = "/addMessage/{conversation_id}/{text}")
-    public ResponseEntity<?> addMessage(@PathVariable Long conversation_id, @PathVariable String text) {
+    @PostMapping(value = "/addMessage/{conversation_id}/{author_id}/{text}")
+    public ResponseEntity<?> addMessage(@PathVariable Long conversation_id, @PathVariable Long author_id, @PathVariable String text) {
         String trimmedText = text.trim();
         if (trimmedText.length() > 0)  // disables sending empty messages
         {
-            conversationService.addMessage(conversation_id, text);
+            conversationService.addMessage(conversation_id, author_id, text);
             return new ResponseEntity<>(
                     new ResponseMessage("Message uploaded!"), HttpStatus.OK
             );

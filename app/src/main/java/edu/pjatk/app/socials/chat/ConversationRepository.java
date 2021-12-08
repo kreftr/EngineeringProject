@@ -1,4 +1,4 @@
-package edu.pjatk.app.socials;
+package edu.pjatk.app.socials.chat;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

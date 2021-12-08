@@ -10,6 +10,7 @@ import Registration from "./registration/Registration";
 import Verification from "./registration/Verification";
 import Login from "./login/Login";
 import Chat from "./chat/Chat"
+import ConversationList from "./chat/ConversationList"
 import Friends from "./friends/Friends"
 
 
@@ -33,7 +34,7 @@ class App extends Component{
                                     <>
                                         <Nav.Link href={"/profile/"+Cookies.get("userId")}>My profile</Nav.Link>
                                         <Nav.Link href="/friends">Friends</Nav.Link>
-                                        <Nav.Link href="/chat">Chat</Nav.Link>
+                                        <Nav.Link href={"/conversations/"+Cookies.get("userId")}>Chat</Nav.Link>
                                     </>
                                     :
                                     <></>
@@ -58,8 +59,9 @@ class App extends Component{
                 </Navbar>
                 <Routes>
                     <Route path={"profile/:id"} element={<Profile/>}/>
+                    <Route path={"chat/:conversation_id"} element={<Chat/>}/>
                     <Route path={"friends"} element={<Friends/>}/>
-                    <Route path={"chat"} element={<Chat/>}/>
+                    <Route path={"conversations/:conversation_id"} element={<ConversationList/>}/>
                     <Route path={"search"} element={<Search/>}/>
                     <Route path={"registration"} element={<Registration/>}/>
                     <Route path={"verification/:token"} element={<Verification/>}/>

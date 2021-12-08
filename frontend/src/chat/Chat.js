@@ -1,28 +1,26 @@
-import React from 'react';
-import {Container, Image, ListGroup, ListGroupItem} from "react-bootstrap";
+import React, {useState} from 'react';
+import {Container, ListGroup, ListGroupItem} from "react-bootstrap";
 import Message from "./Message"
 import useAxiosGet from "../hooks/HttpRequests";
+import {useParams} from "react-router-dom";
+import Cookies from "js-cookie";
+import axios from "axios";
 // import "./Chat.css"
 
 export default function Chat() {
-    const url = "http://localhost:8080/conversation/getAllMessages/1"
-    let messages = useAxiosGet(url)
     let content = null
+    let [inputValue, setInputValue] = useState("");
+    const {conversation_id} = useParams();
+    let messages = useAxiosGet(`http://localhost:8080/conversation/getAllMessages/${conversation_id}`)
 
-    if (messages.error) {
-        content = <p>
-            Error occured
-        </p>
+    const sendNewMessage = (event) => {
+        if (event.key === 'Enter') {
+            let author_id = Cookies.get("userId")
+            axios.post(`http://localhost:8080/conversation/addMessage/${conversation_id}/${author_id}/${inputValue}`)
+            // TODO reload these messages without reloading whole page
+        }
     }
 
-    if (messages.loading) {
-        content = <p>
-            Loading, please wait...
-        </p>
-    }
-
-    // TODO put avatar on the left of the image
-    // TODO replace placeholder name with actual name from conversation
     if (messages.data) {
         content =
             <Container className={"container"}>
@@ -30,14 +28,15 @@ export default function Chat() {
                     {
                         messages.data.map((message, key) =>
                             <ListGroupItem key={key}>
-                                <div className={"message"}><Image className={"message_avatar"}/>
-                                    <Message message={message}/>
-                                </div>
+                                <Message message={message}/>
                             </ListGroupItem>
                         )
                     }
                 </ListGroup>
-                <div id={"message_sender"}><input id={"message_sender_input"} type="text"/></div>
+                <div id={"message_sender"}>
+                    <input id={"message_sender_input"} type="text"
+                           onChange={event => setInputValue(event.target.value)} onKeyDown={sendNewMessage}/>
+                </div>
             </Container>
     }
 

@@ -1,12 +1,12 @@
-import React, {useEffect, useLayoutEffect, useState, Suspense} from 'react';
-import {Container, Nav, Image, ListGroup, ListGroupItem, Button, Spinner, Row, Col} from "react-bootstrap";
-import axios, { AxiosRequestConfig } from "axios";
+import React from 'react';
+import {Container} from "react-bootstrap";
+import {Link} from "react-router-dom";
 // import "./Friends.css"
 
 function Friends() {
     return (
         <Container>
-
+            <Link></Link>
         </Container>
     );
 }

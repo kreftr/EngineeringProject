@@ -1,0 +1,1 @@
+ALTER TABLE message RENAME COLUMN author_profile_id TO author_id;
