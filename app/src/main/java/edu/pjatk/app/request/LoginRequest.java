@@ -1,4 +1,4 @@
-package edu.pjatk.app.security;
+package edu.pjatk.app.request;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -2,6 +2,7 @@ package edu.pjatk.app.registration;
 
 import edu.pjatk.app.email.token.ActivationToken;
 import edu.pjatk.app.email.token.ActivationTokenService;
+import edu.pjatk.app.request.RegistrationRequest;
 import edu.pjatk.app.response.ResponseMessage;
 import edu.pjatk.app.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

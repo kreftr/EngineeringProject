@@ -2,13 +2,12 @@ package edu.pjatk.app.user.profile;
 
 import edu.pjatk.app.photo.Photo;
 import edu.pjatk.app.photo.PhotoService;
+import edu.pjatk.app.request.ProfileEditRequest;
 import edu.pjatk.app.response.profile.FullProfileResponse;
 import edu.pjatk.app.response.profile.MiniProfileResponse;
-import edu.pjatk.app.security.UserPrincipal;
 import edu.pjatk.app.user.User;
 import edu.pjatk.app.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,16 +41,16 @@ public class ProfileService {
         Profile userProfile = userService.findUserByUsername(
                 SecurityContextHolder.getContext().getAuthentication().getName()).get().getProfile();
 
-        Photo newProfilePhoto;
-        if (!profilePhoto.isEmpty()) newProfilePhoto = photoService.uploadPhoto(profilePhoto);
-        else newProfilePhoto = null;
+        userProfile.setName(editRequest.getName());
+        userProfile.setSurname(editRequest.getSurname());
+        userProfile.setBio(editRequest.getBio());
 
-        if (editRequest.getName() != null) userProfile.setName(editRequest.getName());
-        if (editRequest.getSurname() != null) userProfile.setSurname(editRequest.getSurname());
-        if (editRequest.getBio() != null) userProfile.setBio(editRequest.getBio());
-        if (newProfilePhoto != null) {
-            if (userProfile.getPhoto() != null) photoService.removePhoto(userProfile.getPhoto());
-            userProfile.setPhoto(newProfilePhoto);
+        if (profilePhoto != null){
+            Photo newProfilePhoto = photoService.uploadPhoto(profilePhoto);
+            if (newProfilePhoto != null) {
+                if (userProfile.getPhoto() != null) photoService.removePhoto(userProfile.getPhoto());
+                userProfile.setPhoto(newProfilePhoto);
+            }
         }
 
         profileRepository.update(userProfile);
@@ -96,15 +95,6 @@ public class ProfileService {
                 ));
             }
             return Optional.of(profilesResponse);
-        }
-    }
-
-    public boolean isMyProfile(Long id){
-        Optional<User> user = userService.findUserById(id);
-        if (user.isEmpty()) return false;
-        else {
-            String currentLoggedUsername = SecurityContextHolder.getContext().getAuthentication().getName();
-            return currentLoggedUsername.equals(user.get().getUsername());
         }
     }
 

@@ -1,4 +1,4 @@
-import {Col, Row, Container, Form, Button, Alert} from "react-bootstrap";
+import {Col, Row, Container, Form, Button, Alert, Spinner} from "react-bootstrap";
 import "./Registration.css"
 import {useState} from "react";
 import axios from "axios";
@@ -10,11 +10,13 @@ function Registration(){
     const [password,setPassword] = useState();
     const [confirmPassword,setConfirmPassword] = useState();
 
+    const [loading, setLoading] = useState(false);
     const [responseMessage,setResponseMessage] = useState();
     const [responseCode, setResponseCode] = useState();
 
     async function handleSubmit(e){
         e.preventDefault()
+        setLoading(true);
         setResponseMessage(null)
 
         if (password !== confirmPassword){
@@ -31,6 +33,7 @@ function Registration(){
             .then(response => {
                 setResponseMessage(response.data.message)
                 setResponseCode(response.status)
+                setLoading(false)
             })
             .catch(err => {
                 console.log(err.response.data.error)
@@ -38,6 +41,7 @@ function Registration(){
                 else if (err.response.status === 400) setResponseMessage("*"+err.response.data.error)
                 else setResponseMessage("SERVER ERROR!")
                 setResponseCode(err.response.status)
+                setLoading(false)
             })
         }
     }
@@ -75,15 +79,21 @@ function Registration(){
                             <Form.Control type="password" placeholder="Confirm password" value={confirmPassword}
                                           onChange={(e) => setConfirmPassword(e.target.value)} required/>
                         </Form.Group>
-                        <Button className={"mb-5"} variant="primary" type="submit">
-                            Sign In
-                        </Button>
+                        { !loading ?
+                            <Button className={"mb-5"} variant="primary" type="submit">
+                                Sign In
+                            </Button>
+                            :
+                            <center>
+                                <Spinner animation="border"/>
+                            </center>
+                        }
                     </Form>
                     {responseMessage && responseCode === 201 ?
                         <Alert variant={"success"}>
                             <center>
                                 Your account has been successfully created!<br/>
-                                Check your email, activate your account and<br/>
+                                Check your email and activate your account<br/>
                                 <Alert.Link href="/login">LOG IN</Alert.Link>
                             </center>
                         </Alert>

@@ -3,6 +3,7 @@ package edu.pjatk.app.registration;
 import edu.pjatk.app.email.EmailService;
 import edu.pjatk.app.email.token.ActivationToken;
 import edu.pjatk.app.email.token.ActivationTokenService;
+import edu.pjatk.app.request.RegistrationRequest;
 import edu.pjatk.app.user.User;
 import edu.pjatk.app.user.UserRole;
 import edu.pjatk.app.user.UserService;

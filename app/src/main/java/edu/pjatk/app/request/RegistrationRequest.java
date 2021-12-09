@@ -1,7 +1,6 @@
-package edu.pjatk.app.registration;
+package edu.pjatk.app.request;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
@@ -11,7 +10,6 @@ import javax.validation.constraints.Size;
 
 @Getter
 @Setter
-@NoArgsConstructor
 public class RegistrationRequest {
 
     @Size(min = 6, max = 12, message = "{validation.username.message.size}")

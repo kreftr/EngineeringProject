@@ -1,0 +1,33 @@
+.SETTINGS-profile-container {
+    margin-top: 2%;
+    font-size: 16px;
+}
+
+.SETTINGS-info-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.SETTINGS-name-surname {
+    font-size: 150%;
+    color: darkgray;
+}
+
+.SETTINGS-profile-pic {
+    height: 256px;
+    width: 256px;
+}
+
+.SETTINGS-textarea{
+    resize: none;
+}
+
+.SETTINGS-save-button-col {
+    display: flex;
+    justify-content: center;
+}
+
+.SETTINGS-save-button {
+    width: 100%;
+}

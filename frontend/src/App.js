@@ -9,6 +9,7 @@ import Search from "./search/Search";
 import Registration from "./registration/Registration";
 import Verification from "./registration/Verification";
 import Login from "./login/Login";
+import Settings from "./settings/Settings";
 
 
 class App extends Component{
@@ -56,6 +57,7 @@ class App extends Component{
                 </Navbar>
                 <Routes>
                     <Route path={"profile/:id"} element={<Profile/>}/>
+                    <Route path={"profile/settings"} element={<Settings/>}/>
                     <Route path={"search"} element={<Search/>}/>
                     <Route path={"registration"} element={<Registration/>}/>
                     <Route path={"verification/:token"} element={<Verification/>}/>

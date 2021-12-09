@@ -28,7 +28,7 @@ public class User {
     private Boolean locked;
     private Boolean enabled;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JoinColumn(name = "profile_id")
     private Profile profile;
 

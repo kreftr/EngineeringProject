@@ -1,5 +1,7 @@
 package edu.pjatk.app.user.profile;
 
+import edu.pjatk.app.photo.PhotoService;
+import edu.pjatk.app.request.ProfileEditRequest;
 import edu.pjatk.app.response.profile.FullProfileResponse;
 import edu.pjatk.app.response.ResponseMessage;
 import edu.pjatk.app.response.profile.MiniProfileResponse;
@@ -9,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -18,10 +22,12 @@ import java.util.Optional;
 public class ProfileController {
 
     private final ProfileService profileService;
+    private final PhotoService photoService;
 
     @Autowired
-    public ProfileController(ProfileService profileService){
+    public ProfileController(ProfileService profileService, PhotoService photoService){
         this.profileService = profileService;
+        this.photoService = photoService;
     }
 
 
@@ -51,16 +57,19 @@ public class ProfileController {
         }
     }
 
-    @RequestMapping(value = "/my", params = "id", method = RequestMethod.GET)
-    public boolean isMyProfile(@RequestParam Long id){
-        return profileService.isMyProfile(id);
-    }
-
-    @PostMapping
-    public ResponseEntity editProfile(@RequestPart(required = false) ProfileEditRequest editRequest,
+    @PostMapping(consumes = {"multipart/form-data"})
+    public ResponseEntity editProfile(@Valid @RequestPart ProfileEditRequest editRequest,
                                       @RequestPart(required = false) MultipartFile profilePhoto){
-
-        profileService.updateProfile(editRequest, profilePhoto);
-        return new ResponseEntity(HttpStatus.OK);
+        if (profilePhoto == null){
+            profileService.updateProfile(editRequest, null);
+            return new ResponseEntity(HttpStatus.OK);
+        }
+        else if (photoService.isPhoto(profilePhoto)){
+            profileService.updateProfile(editRequest, profilePhoto);
+            return new ResponseEntity(HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity(Map.of("error", "Unsupported photo format"), HttpStatus.BAD_REQUEST);
+        }
     }
 }

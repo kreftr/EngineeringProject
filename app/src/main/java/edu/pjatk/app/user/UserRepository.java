@@ -23,6 +23,10 @@ public class UserRepository {
         entityManager.persist(user);
     }
 
+    public void remove(User user){
+        entityManager.remove(user);
+    }
+
     public void update(User user){
         entityManager.merge(user);
     }

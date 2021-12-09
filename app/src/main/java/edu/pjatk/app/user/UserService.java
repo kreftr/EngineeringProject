@@ -1,9 +1,15 @@
 package edu.pjatk.app.user;
 
+import edu.pjatk.app.email.token.ActivationTokenService;
+import edu.pjatk.app.photo.Photo;
+import edu.pjatk.app.photo.PhotoService;
+import edu.pjatk.app.request.ChangePasswordRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,20 +17,40 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final ActivationTokenService activationTokenService;
+    private final PhotoService photoService;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository){
+    public UserService(UserRepository userRepository, ActivationTokenService activationTokenService,
+                       PhotoService photoService, BCryptPasswordEncoder passwordEncoder){
         this.userRepository = userRepository;
+        this.activationTokenService = activationTokenService;
+        this.photoService = photoService;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
     public void saveUser(User user){
         userRepository.save(user);
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
     public void activateUser(User user){
         user.setEnabled(true);
+        userRepository.update(user);
+    }
+
+    @Transactional
+    public void removeCurrentlyLoggedUser(){
+        User user = findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).get();
+        if (user.getProfile().getPhoto() != null) photoService.removePhoto(user.getProfile().getPhoto());
+        activationTokenService.removeActivationTokenByUser(user);
+        userRepository.remove(user);
+    }
+
+    @Transactional
+    public void changeUserPassword(ChangePasswordRequest passwordRequest){
+        User user = findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).get();
+        user.setPassword(passwordEncoder.encode(passwordRequest.getNewPassword()));
         userRepository.update(user);
     }
 

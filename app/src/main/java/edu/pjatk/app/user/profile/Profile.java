@@ -21,7 +21,7 @@ public class Profile {
     private String surname;
     private String bio;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "photo_id")
     private Photo photo;
 

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
-import {Container, Nav, Row, Col, Image, Button} from "react-bootstrap";
+import {Container, Tabs, Nav, Row, Col, Image, Button, Tab} from "react-bootstrap";
 import default_profile_picture from "../assets/images/default_profile_picture.jpg"
-import {FaFlag, FaUserEdit, FaUserPlus} from "react-icons/fa"
+import {FaFlag, FaCog, FaUserPlus} from "react-icons/fa"
 import axios from "axios";
 import Cookies from "js-cookie"
 import {useParams} from "react-router-dom";
@@ -49,14 +49,16 @@ function Profile(){
                         }
                         <span className={"PROFILE-username"}>{profile.username}</span>
                         <span className={"PROFILE-name-surname"}>{profile.name} {profile.surname}</span>
-                        <div className={"PROFILE-bio"}>{profile.bio}</div>
+                        <span className={"PROFILE-bio mt-2 mb-3"}>{profile.bio}</span>
                         <ul className={"PROFILE-ul-actions"}>
                             { Cookies.get("userId")===id && Cookies.get("authorization") ?
                                 <li>
-                                    <Button className={"PROFILE-icon-placeholder"}>
-                                        <FaUserEdit className={"PROFILE-icon"}/>
-                                        <h4>Edit profile</h4>
-                                    </Button>
+                                    <a href={"/profile/settings"}>
+                                        <Button className={"PROFILE-icon-placeholder"}>
+                                            <FaCog className={"PROFILE-icon"}/>
+                                            <h4>Settings</h4>
+                                        </Button>
+                                    </a>
                                 </li>
                                 :
                                 <></>
@@ -82,14 +84,12 @@ function Profile(){
                         </ul>
                     </Col>
                     <Col className={"col-8"}>
-                        <Nav fill variant="tabs" defaultActiveKey="/home">
-                            <Nav.Item>
-                                <Nav.Link href="/home" active>Projects</Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                                <Nav.Link eventKey="link-1">Activity</Nav.Link>
-                            </Nav.Item>
-                        </Nav>
+                        <Tabs defaultActiveKey="Projects" className="mb-5" fill>
+                            <Tab eventKey="Projects" title="Projects">
+                            </Tab>
+                            <Tab eventKey="Activity" title="Activity">
+                            </Tab>
+                        </Tabs>
                     </Col>
                 </Row>
                 :
