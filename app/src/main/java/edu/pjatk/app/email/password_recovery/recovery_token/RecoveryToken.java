@@ -1,4 +1,4 @@
-package edu.pjatk.app.email.token;
+package edu.pjatk.app.email.password_recovery.recovery_token;
 
 import edu.pjatk.app.user.User;
 import lombok.Getter;
@@ -8,11 +8,12 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-public class ActivationToken {
+public class RecoveryToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,13 +22,12 @@ public class ActivationToken {
     private String token;
     private LocalDateTime created;
     private LocalDateTime expired;
-    private LocalDateTime confirmed;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    public ActivationToken(String token, LocalDateTime created, LocalDateTime expired, User user) {
+    public RecoveryToken(String token, LocalDateTime created, LocalDateTime expired, User user) {
         this.token = token;
         this.created = created;
         this.expired = expired;

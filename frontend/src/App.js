@@ -10,6 +10,7 @@ import Registration from "./registration/Registration";
 import Verification from "./registration/Verification";
 import Login from "./login/Login";
 import Settings from "./settings/Settings";
+import Recovery from "./recovery/Recovery";
 
 
 class App extends Component{
@@ -61,6 +62,7 @@ class App extends Component{
                     <Route path={"search"} element={<Search/>}/>
                     <Route path={"registration"} element={<Registration/>}/>
                     <Route path={"verification/:token"} element={<Verification/>}/>
+                    <Route path={"recovery/:token"} element={<Recovery/>}/>
                     <Route path={"login"} element={<Login/>}/>
                 </Routes>
             </Router>

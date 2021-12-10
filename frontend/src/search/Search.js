@@ -54,7 +54,7 @@ function Search(){
                                 <Form.Floating className="mb-3">
                                     <Form.Control value={input}
                                                   onChange={(e) => setInput(e.target.value)}
-                                                  type={"text"} placeholder={"sample text"}/>
+                                                  type={"text"} placeholder={"sample text"} required/>
                                     <label htmlFor={"floatingInputCustom"}>Search...</label>
                                 </Form.Floating>
                             </Col>

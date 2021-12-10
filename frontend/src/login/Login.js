@@ -1,12 +1,14 @@
-import {Alert, Button, Col, Container, Form, FormControl, FormGroup, Row} from "react-bootstrap";
+import {Alert, Button, Col, Container, Form, FormControl, FormGroup, Row, Tabs, Tab} from "react-bootstrap";
 import "./Login.css"
 import axios from "axios";
 import React, {useEffect, useState} from "react";
 import Cookies from "js-cookie"
 import {Navigate} from "react-router-dom";
+import RecoveryForm from "./RecoveryForm";
 
 function Login(){
 
+    const [selected, setSelected] = useState("Login");
 
     const [username,setUsername] = useState();
     const [password,setPassword] = useState();
@@ -18,7 +20,7 @@ function Login(){
         }
     })
 
-    async function handleSubmit(e){
+    async function handleLogin(e){
         e.preventDefault()
 
         await axios.post("http://localhost:8080/login", {
@@ -36,47 +38,65 @@ function Login(){
             })
     }
 
+
     return(
         <Container className={"LOGIN-container"}>
             <Row>
                 <Col className={"col-4"}></Col>
                 <Col className={"col-4"}>
-                    <Form className={"LOGIN-form"} onSubmit={handleSubmit}>
-                        <FormGroup className={"mb-3"}>
-                            <Form.Label>Username</Form.Label>
-                            <FormControl type={"text"}
-                                         value={username}
-                                         onChange={(e) => setUsername(e.target.value)}
-                                         required/>
-                        </FormGroup>
-                        <FormGroup className={"mb-5"}>
-                            <Form.Label>Password</Form.Label>
-                            <FormControl type={"password"}
-                                         value={password}
-                                         onChange={(e) => setPassword(e.target.value)}
-                                         required/>
-                        </FormGroup>
-                        <Button className={"mb-5"} variant="primary" type="submit">
-                            Log In
-                        </Button>
-                    </Form>
-                    {responseCode === 403 ?
-                        <Alert variant={"danger"}>
+                    <Tabs defaultActiveKey={"Login"} activeKey={selected} hidden>
+                        <Tab eventKey={"Login"} title={"Login"}>
+                            <Form className={"LOGIN-form"} onSubmit={handleLogin}>
+                                <FormGroup className={"mb-3"}>
+                                    <Form.Label>Username</Form.Label>
+                                    <FormControl type={"text"}
+                                                 value={username}
+                                                 onChange={(e) => setUsername(e.target.value)}
+                                                 required/>
+                                </FormGroup>
+                                <FormGroup className={"mb-5"}>
+                                    <Form.Label>Password</Form.Label>
+                                    <FormControl type={"password"}
+                                                 value={password}
+                                                 onChange={(e) => setPassword(e.target.value)}
+                                                 required/>
+                                </FormGroup>
+                                <Button className={"mb-5"} variant="primary" type="submit">
+                                    Log In
+                                </Button>
+                            </Form>
+                            {responseCode === 403 ?
+                                <Alert variant={"danger"}>
+                                    <center>
+                                        Bad credentials
+                                    </center>
+                                </Alert>
+                                :responseCode === 500 ?
+                                    <Alert variant={"danger"}>
+                                        <center>
+                                            Server error
+                                        </center>
+                                    </Alert>
+                                    :responseCode === 200 ?
+                                        <Navigate to={"/"}/>
+                                        :
+                                        <></>
+                            }
+                            <span className={"LOGIN-forgot-password"} onClick={() => {setSelected("Forgot password")}}>
+                                    <center>
+                                        Forgot password?
+                                    </center>
+                                </span>
+                        </Tab>
+                        <Tab eventKey={"Forgot password"} title={"Forgot password"}>
+                            <RecoveryForm/>
                             <center>
-                                Bad credentials
+                                <span className={"LOGIN-forgot-password"} onClick={() => {setSelected("Login")}}>
+                                        Back to login
+                                </span>
                             </center>
-                        </Alert>
-                        :responseCode === 500 ?
-                        <Alert variant={"danger"}>
-                            <center>
-                                Server error
-                            </center>
-                        </Alert>
-                        :responseCode === 200 ?
-                        <Navigate to={"/"}/>
-                        :
-                        <></>
-                    }
+                        </Tab>
+                    </Tabs>
                 </Col>
                 <Col className={"col-4"}></Col>
             </Row>

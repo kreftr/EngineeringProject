@@ -34,7 +34,22 @@ public class EmailService implements EmailSender {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
             helper.setText(content, true);
             helper.setTo(recipient);
-            helper.setSubject("Account activation");
+            helper.setSubject("Default text");
+            helper.setFrom("noreply@engineeringproject.com");
+            javaMailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            throw new IllegalStateException("Failed to send email");
+        }
+    }
+
+    @Async
+    public void send(String recipient, String subject, String content) {
+        try {
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+            helper.setText(content, true);
+            helper.setTo(recipient);
+            helper.setSubject(subject);
             helper.setFrom("noreply@engineeringproject.com");
             javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {

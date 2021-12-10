@@ -55,3 +55,11 @@ databaseChangeLog:
         stripComments: true
         splitStatements: false
         path: db.changelog/20211110_user_drop_columns_fkey_profile.sql
+  - changeSet:
+      id: 20211210_recovery_token
+      author: Rafał Kreft
+      sqlFile:
+        relativeToChangelogFile: true
+        stripComments: true
+        splitStatements: false
+        path: db.changelog/20211210_recovery_token.sql

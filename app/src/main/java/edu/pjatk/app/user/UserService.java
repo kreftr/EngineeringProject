@@ -1,9 +1,8 @@
 package edu.pjatk.app.user;
 
-import edu.pjatk.app.email.token.ActivationTokenService;
-import edu.pjatk.app.photo.Photo;
+import edu.pjatk.app.email.activation_token.ActivationTokenService;
 import edu.pjatk.app.photo.PhotoService;
-import edu.pjatk.app.request.ChangePasswordRequest;
+import edu.pjatk.app.request.PasswordChangeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -30,6 +29,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+
     public void saveUser(User user){
         userRepository.save(user);
     }
@@ -47,10 +47,17 @@ public class UserService {
         userRepository.remove(user);
     }
 
+    //Password change for currently logged user
     @Transactional
-    public void changeUserPassword(ChangePasswordRequest passwordRequest){
+    public void changeUserPassword(PasswordChangeRequest passwordRequest){
         User user = findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).get();
         user.setPassword(passwordEncoder.encode(passwordRequest.getNewPassword()));
+        userRepository.update(user);
+    }
+
+    //Password change for user passed in parameter
+    public void changePassword(User user, PasswordChangeRequest passwordChangeRequest){
+        user.setPassword(passwordEncoder.encode(passwordChangeRequest.getNewPassword()));
         userRepository.update(user);
     }
 

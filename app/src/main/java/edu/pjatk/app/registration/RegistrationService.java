@@ -1,8 +1,8 @@
 package edu.pjatk.app.registration;
 
 import edu.pjatk.app.email.EmailService;
-import edu.pjatk.app.email.token.ActivationToken;
-import edu.pjatk.app.email.token.ActivationTokenService;
+import edu.pjatk.app.email.activation_token.ActivationToken;
+import edu.pjatk.app.email.activation_token.ActivationTokenService;
 import edu.pjatk.app.request.RegistrationRequest;
 import edu.pjatk.app.user.User;
 import edu.pjatk.app.user.UserRole;
@@ -10,6 +10,7 @@ import edu.pjatk.app.user.UserService;
 import edu.pjatk.app.user.profile.Profile;
 import edu.pjatk.app.user.profile.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,9 @@ import java.util.UUID;
 
 @Service
 public class RegistrationService {
+
+    @Value("${tokens.activation-token.validity}")
+    private int activationTokenValidity;
 
     private final UserService userService;
     private final ProfileService profileService;
@@ -38,6 +42,7 @@ public class RegistrationService {
     }
 
 
+    //TODO: Token validity should be read from the configuration file
     @Transactional
     public void registerUser(RegistrationRequest request){
 
@@ -53,10 +58,10 @@ public class RegistrationService {
 
         activationTokenService.saveActivationToken(
                 new ActivationToken(token, LocalDateTime.now(),
-                        LocalDateTime.now().plusDays(1), user)
+                        LocalDateTime.now().plusDays(activationTokenValidity), user)
         );
 
-        emailService.send(request.getEmail(), emailService.emailBuilder(
+        emailService.send(request.getEmail(), "Account activation", emailService.emailBuilder(
                 request.getUsername(),
                 "http://localhost:3000/verification/"+token,
                 "email_verification.html"

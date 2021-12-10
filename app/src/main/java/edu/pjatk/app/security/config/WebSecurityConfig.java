@@ -46,7 +46,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), userService))
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
-                .antMatchers("/", "/registration", "/registration/*", "/photo", "/profile").permitAll()
+                .antMatchers("/", "/registration", "/registration/*", "/photo", "/profile", "/recovery", "/recovery/*").permitAll()
                 .antMatchers("/test/user", "/profile/my", "/user/changePassword", "/user/deleteAccount").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/test/admin").hasRole("ADMIN")
                 .anyRequest().authenticated();

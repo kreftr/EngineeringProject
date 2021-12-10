@@ -1,4 +1,4 @@
-package edu.pjatk.app.email.token;
+package edu.pjatk.app.email.activation_token;
 
 import edu.pjatk.app.user.User;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Container, Tabs, Nav, Row, Col, Image, Button, Tab} from "react-bootstrap";
+import {Container, Tabs, Row, Col, Image, Button, Tab} from "react-bootstrap";
 import default_profile_picture from "../assets/images/default_profile_picture.jpg"
 import {FaFlag, FaCog, FaUserPlus} from "react-icons/fa"
 import axios from "axios";

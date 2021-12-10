@@ -21,6 +21,7 @@ function Registration(){
 
         if (password !== confirmPassword){
             setResponseMessage("*Passwords are not the same")
+            setLoading(false)
             return;
         }
         else {

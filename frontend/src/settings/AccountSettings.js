@@ -55,7 +55,6 @@ function AccountSettings(){
                 'Authorization': Cookies.get("authorization")
             }
         }).then(res => {
-            console.log(res)
             Cookies.remove("userId")
             Cookies.remove("authorization")
             window.location.replace("/login")

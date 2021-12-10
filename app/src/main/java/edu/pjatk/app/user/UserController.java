@@ -1,6 +1,6 @@
 package edu.pjatk.app.user;
 
-import edu.pjatk.app.request.ChangePasswordRequest;
+import edu.pjatk.app.request.PasswordChangeRequest;
 import edu.pjatk.app.response.ResponseMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,7 +29,7 @@ public class UserController {
     }
 
     @PostMapping("/changePassword")
-    public ResponseEntity changePassword(@Valid @RequestBody ChangePasswordRequest passwordRequest){
+    public ResponseEntity changePassword(@Valid @RequestBody PasswordChangeRequest passwordRequest){
         userService.changeUserPassword(passwordRequest);
         return new ResponseEntity(new ResponseMessage("Password has been changed"), HttpStatus.OK);
     }

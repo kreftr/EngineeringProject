@@ -7,3 +7,11 @@
     display: flex;
     flex-direction: column;
 }
+
+.LOGIN-forgot-password {
+    text-decoration: none;
+    text-align: center;
+    font-weight: bold;
+    color: blue;
+    cursor: pointer;
+}
