@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @CrossOrigin("http://localhost:3000")
@@ -35,6 +36,15 @@ public class ProjectControler {
                     new ResponseMessage("There are no projects!"), HttpStatus.NOT_FOUND
             );
         }
+    }
+
+    @PostMapping(value = "/createProject/{id}/{project_name}/{creation_date}/{project_category}/{project_status}/" +
+            "{project_creator}")
+    public ResponseEntity<?> createProject(@PathVariable Long id, @PathVariable String project_name,
+                                           @PathVariable LocalDateTime creation_date, @PathVariable String project_category,
+                                           @PathVariable String project_status, @PathVariable Long project_creator) {
+//        TODO finish this function
+        return null;
     }
 
 }

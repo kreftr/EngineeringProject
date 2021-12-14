@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Repository
@@ -21,6 +21,7 @@ public class ProjectRepository {
         return Optional.of(entityManager.find(Project.class, id));
     }
 
+    @Transactional
     public void createProject(Project project){
         entityManager.persist(project);
     }
