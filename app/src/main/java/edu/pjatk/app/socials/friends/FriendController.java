@@ -1,4 +1,4 @@
-package edu.pjatk.app.socials.Friends;
+package edu.pjatk.app.socials.friends;
 
 import edu.pjatk.app.response.ResponseMessage;
 import org.springframework.beans.factory.annotation.Autowired;

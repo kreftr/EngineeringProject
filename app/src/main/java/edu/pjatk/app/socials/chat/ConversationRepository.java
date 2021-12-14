@@ -86,4 +86,10 @@ public class ConversationRepository {
         }
         return allConversations;
     }
+
+    @Transactional
+    public void createConversation(Conversation conversation){
+        entityManager.persist(conversation);
+    }
+
 }

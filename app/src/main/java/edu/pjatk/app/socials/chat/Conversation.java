@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -24,4 +25,9 @@ public class Conversation {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "second_user_id")
     private User second_user;
+
+    public Conversation(User first_user, User second_user){
+        this.first_user = first_user;
+        this.second_user = second_user;
+    }
 }

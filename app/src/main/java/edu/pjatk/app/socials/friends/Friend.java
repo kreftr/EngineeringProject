@@ -1,4 +1,4 @@
-package edu.pjatk.app.socials.Friends;
+package edu.pjatk.app.socials.friends;
 
 import edu.pjatk.app.user.User;
 import lombok.Getter;

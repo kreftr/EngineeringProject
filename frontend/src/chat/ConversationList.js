@@ -3,7 +3,7 @@ import {Container, ListGroup, ListGroupItem} from "react-bootstrap";
 import Cookies from "js-cookie"
 import useAxiosGet from "../hooks/HttpRequests";
 import Conversation from "./Conversation"
-// import "./Chat.css"
+// import "./Message.css"
 
 export default function ConversationList(props) {
     let content = null

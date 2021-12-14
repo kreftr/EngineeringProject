@@ -5,7 +5,7 @@ import useAxiosGet from "../hooks/HttpRequests";
 import {useParams} from "react-router-dom";
 import Cookies from "js-cookie";
 import axios from "axios";
-// import "./Chat.css"
+// import "./Message.css"
 
 export default function Chat() {
     let content = null

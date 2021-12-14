@@ -3,6 +3,8 @@ import Cookies from "js-cookie";
 import useAxiosGet from "../hooks/HttpRequests";
 import {Image} from "react-bootstrap";
 import {Link} from "react-router-dom";
+import "./Conversation.css"
+
 
 export default function Conversation(props) {
     const conversation_id = props.conversation.id
@@ -35,10 +37,10 @@ export default function Conversation(props) {
     return (
         <Link to={`/chat/${conversation_id}`}>
             <div>
-                <p className={"conversation_nickname"}>{friend_username}</p>
                 <Image className={"conversation_avatar"} src={`http://localhost:8080/photo?filename=${friend_avatar_path}`}
                        roundedCircle={true} width="35px" height="35px"/>
-                <p>{recent_message_content}</p>
+                <p className={"conversation_nickname"}>{friend_username}</p>
+                <p className={"conversation_recent_msg_content"}>{recent_message_content}</p>
             </div>
         </Link>
     )

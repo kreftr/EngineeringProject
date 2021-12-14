@@ -44,13 +44,15 @@ export default function Friend(props) {
             <Link to={`/profile/${friend_id}`}>
                 <Image className={"friend_avatar"} src={`http://localhost:8080/photo?filename=${friend_avatar_path}`}
                        roundedCircle={true} width="35px" height="35px"/>
-                <p className={"friend_nickname"}>{friend_nickname}</p>
-                <p className={"friend_name"}>{friend_name}</p>
-                <p className={"friend_surname"}>{friend_surname}</p>
+                <div className={"friend_names_div"}>
+                    <p className={"friend_nickname"}>{friend_nickname}</p>
+                    <span className={"friend_name"}>{friend_name}</span>
+                    <span className={"friend_surname"}>{friend_surname}</span>
+                </div>
             </Link>
-            <div>
-                <Link to={`/chat/${friend_id}`}><Button variant="primary">Message</Button></Link>
-                <Button variant="primary" onClick={handleRemoval}>Remove friend</Button>
+            <div className={"friend_buttons_div"}>
+                <Link to={`/chat/${friend_id}`}><Button variant="primary" className={"friend_message_btn"}>Message</Button></Link>
+                <Button variant="primary" className={"friend_remove_btn"} onClick={handleRemoval}>Remove friend</Button>
             </div>
         </div>
     );
