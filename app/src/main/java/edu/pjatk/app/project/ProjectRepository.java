@@ -5,10 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import java.util.Optional;
 
 @Repository
 public class ProjectRepository {
-
     private final EntityManager entityManager;
 
     @Autowired
@@ -16,8 +17,19 @@ public class ProjectRepository {
         this.entityManager = entityManager;
     }
 
+    public Optional<Project> findProjectById(Long id) {
+        return Optional.of(entityManager.find(Project.class, id));
+    }
 
     public void createProject(Project project){
         entityManager.persist(project);
+    }
+
+    public void updateProject(Project project){
+
+    }
+
+    public void deleteProject(Project project){
+
     }
 }

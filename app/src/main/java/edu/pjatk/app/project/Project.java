@@ -1,5 +1,7 @@
 package edu.pjatk.app.project;
 
+import edu.pjatk.app.file.File;
+import edu.pjatk.app.task.Task;
 import edu.pjatk.app.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +25,6 @@ public class Project {
     private String project_name;
     private String project_description;
     private LocalDateTime creation_date;
-    @Enumerated(EnumType.STRING)
     private String project_category;
     private String project_status;
 
@@ -31,26 +32,35 @@ public class Project {
     @JoinColumn(name = "project_creator")
     private User creator;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "project_participant")
-    List<User> participants;
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id")   //project_participant
+    private List<User> participants;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "project_file")
-    List<File> file;
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id")  //project_file
+    private List<File> file;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "project_task")
-    List<Task> task;
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id")  //project_task
+    private List<Task> task;
 
 
-    public Project (String project_name, String project_description, LocalDateTime creation_date,
-                    String project_category, String project_status, Long project_participant, Long project_creator,
-                    Long project_file, Long project_task){
+    public Project(String project_name, LocalDateTime creation_date,
+                    String project_category, String project_status, User creator){
+        this.project_name = project_name;
+        this.creation_date = creation_date;
+        this.project_category = project_category;
+        this.project_status = project_status;
+        this.creator = creator;
+    }
+
+    public Project(String project_name, String project_description, LocalDateTime creation_date,
+                   String project_category, String project_status, User creator){
         this.project_name = project_name;
         this.project_description = project_description;
         this.creation_date = creation_date;
         this.project_category = project_category;
         this.project_status = project_status;
+        this.creator = creator;
     }
 }

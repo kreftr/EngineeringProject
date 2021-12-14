@@ -1,4 +1,4 @@
-package edu.pjatk.app.project;
+package edu.pjatk.app.file;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
