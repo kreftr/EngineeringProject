@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Optional;
 
 @CrossOrigin("http://localhost:3000")
@@ -32,6 +34,23 @@ public class TaskControler {
         else {
             return new ResponseEntity<>(
                     new ResponseMessage("There are no tasks!"), HttpStatus.NOT_FOUND
+            );
+        }
+    }
+
+    @PostMapping(value = "/createTask//{task_name}/{task_status}/{expiration_date}")
+    public ResponseEntity<?> createProject(@PathVariable String task_name,
+                                           @PathVariable String task_status,
+                                           @PathVariable LocalDateTime expiration_date) {
+        if (task_name.length() > 0 && task_status.length() > 0) {
+            taskService.createTask(task_name, task_status, expiration_date);
+            return new ResponseEntity<>(
+                    new ResponseMessage("Task created!"), HttpStatus.OK
+            );
+        }
+        else {
+            return new ResponseEntity<>(
+                    new ResponseMessage("Error wrong attributes for Task creation"), HttpStatus.BAD_REQUEST
             );
         }
     }

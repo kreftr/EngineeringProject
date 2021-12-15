@@ -26,11 +26,17 @@ public class ProjectRepository {
         entityManager.persist(project);
     }
 
-    public void updateProject(Project project){
-
+    @Transactional
+    public void deleteProject(Long id){
+        Project project = entityManager.find(Project.class, id);
+        entityManager.remove(project);
     }
 
-    public void deleteProject(Project project){
-
+    @Transactional
+    public void editProjectName(Long id) {
+        Project project = entityManager.find(Project.class, id);
+        entityManager.merge(project);
     }
+
+
 }

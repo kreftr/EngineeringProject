@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import javax.persistence.PostUpdate;
 import java.util.Optional;
 
 @CrossOrigin("http://localhost:3000")
@@ -38,13 +38,38 @@ public class ProjectControler {
         }
     }
 
-    @PostMapping(value = "/createProject/{id}/{project_name}/{creation_date}/{project_category}/{project_status}/" +
+    @PostMapping(value = "/createProject/{project_name}/{project_category}/{project_status}/" +
             "{project_creator}")
-    public ResponseEntity<?> createProject(@PathVariable Long id, @PathVariable String project_name,
-                                           @PathVariable LocalDateTime creation_date, @PathVariable String project_category,
-                                           @PathVariable String project_status, @PathVariable Long project_creator) {
-//        TODO finish this function
-        return null;
+    public ResponseEntity<?> createProject(@PathVariable String project_name,
+                                           @PathVariable String project_category,
+                                           @PathVariable String project_status,
+                                           @PathVariable Long project_creator) {
+        if (project_name.length() > 0 && project_category.length() > 0 && project_status.length() > 0) {
+            projectService.createProject(project_name, project_category, project_status, project_creator);
+            return new ResponseEntity<>(
+                    new ResponseMessage("Project created!"), HttpStatus.OK
+            );
+        }
+        else {
+            return new ResponseEntity<>(
+                    new ResponseMessage("Error wrong attributes for project creation"), HttpStatus.BAD_REQUEST
+            );
+        }
     }
 
+    @DeleteMapping(value = "/deleteProject/{id}")
+    public ResponseEntity<?> deleteProject(@PathVariable long id) {
+        projectService.deleteProject(id);
+        return new ResponseEntity<>(
+                new ResponseMessage("Project deleted!"), HttpStatus.OK
+        );
+    }
+
+    @PostMapping(value = "/editProjectName/{id}/{project_name}")
+    public ResponseEntity<?> editProjectName(@PathVariable long id, @PathVariable String project_name) {
+        projectService.editProjectName(id, project_name);
+        return new ResponseEntity<>(
+                new ResponseMessage("Project name change is complete"), HttpStatus.OK
+        );
+    }
 }
