@@ -1,0 +1,16 @@
+
+.RATING-radio-input {
+    display: none;
+}
+
+.RATING-star {
+    cursor: pointer;
+    transition: color 200ms;
+}
+
+.RATING-stars-holder {
+    display: flex;
+    justify-content: center; /* align horizontal */
+    align-items: center; /* align vertical */
+    padding: 15px;
+}

@@ -1,0 +1,60 @@
+.r {
+    background-color: red;
+}
+
+.x {
+    display: inline;
+}
+
+.PROJECT-VIEW-base-info {
+    display: inline-block;
+}
+
+.PROJECT-VIEW-title {
+    font-size: 45px;
+}
+
+.PROJECT-VIEW-subtitle {
+    line-height: 120%;
+}
+
+.PROJECT-VIEW-founder {
+    display: inline-flex;
+}
+
+.PROJECT-VIEW-project-picture-col {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.PROJECT-VIEW-project-picture {
+    width: 325px;
+    height: 325px;
+    border-style: outset;
+}
+
+.PROJECT-VIEW-author-col {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.PROJECT-VIEW-author-holder {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: outset black;
+    border-radius: 3%;
+    padding: 10px;
+}
+
+.PROJECT-VIEW-author-picture {
+    width: 60px;
+    height: 60px;
+}
+
+.PROJECT-VIEW-media {
+    display: flex;
+    justify-content: center;
+}
