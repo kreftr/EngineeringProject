@@ -2,10 +2,6 @@ package edu.pjatk.app.user;
 
 import edu.pjatk.app.request.PasswordChangeRequest;
 import edu.pjatk.app.response.ResponseMessage;
-import edu.pjatk.app.response.ResponseMessage;
-import edu.pjatk.app.socials.chat.Conversation;
-import edu.pjatk.app.user.profile.ProfileService;
-import liquibase.pro.packaged.id;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,9 +30,10 @@ public class UserController {
     }
 
     @PostMapping("/changePassword")
-    public ResponseEntity changePassword(@Valid @RequestBody PasswordChangeRequest passwordRequest){
+    public ResponseEntity changePassword(@Valid @RequestBody PasswordChangeRequest passwordRequest) {
         userService.changeUserPassword(passwordRequest);
         return new ResponseEntity(new ResponseMessage("Password has been changed"), HttpStatus.OK);
+    }
 
     @GetMapping(value = "/findUserById/{id}")
     public ResponseEntity<?> findUserById(@PathVariable Long id){

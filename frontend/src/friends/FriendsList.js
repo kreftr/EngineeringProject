@@ -1,33 +1,45 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Container, ListGroup, ListGroupItem} from "react-bootstrap";
-import useAxiosGet from "../hooks/HttpRequests";
 import Cookies from "js-cookie";
 import Friend from "./Friend";
+import axios from "axios";
+
 
 function FriendsList() {
-    let content = null
     const cookie_user_id = Number(Cookies.get("userId"))
-    let friends = useAxiosGet(`http://localhost:8080/friends/getAllFriends/${cookie_user_id}`)
+    const [friends, setFriends] = useState([])
+    const [friendsLoading, setFriendsLoading] = useState(true)
+    const [friendsCode, setFriendsCode] = useState(null)
 
-    if (friends.data) {
-        content =
-            <Container className={"container"}>
+    useEffect(() => {
+        axios.get(`http://localhost:8080/friends/getAllFriends/${cookie_user_id}`)
+            .then(response => {
+                setFriendsCode(response.status);
+                setFriends(response.data);
+                setFriendsLoading(false);
+            })
+            .catch(err => {
+                setFriendsCode(err.response.status)
+                setFriendsLoading(false);
+            })
+    }, [cookie_user_id])
+
+    return (
+        <Container className={"container"}>
+            { friendsCode === 200 && !friendsLoading ?
                 <ListGroup className={"list-group"}>
                     {
-                        friends.data.map((friend, key) =>
+                        friends.map((friend, key) =>
                             <ListGroupItem key={key}>
                                 <Friend friend={friend}/>
                             </ListGroupItem>
                         )
                     }
                 </ListGroup>
-            </Container>
-    }
-
-    return (
-        <div>
-            {content}
-        </div>
+                :
+                <></>
+            }
+        </Container>
     );
 }
 

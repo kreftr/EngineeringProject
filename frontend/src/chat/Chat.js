@@ -37,6 +37,7 @@ export default function Chat() {
             axios.get(`http://localhost:8080/conversation/getAllMessages/${conversation_id}`).then(response => {
                 setMessagesCode(response.status);
                 setMessages(response.data);
+                document.getElementById("message_sender_input").value = ""  // clear input after
             })
         }
     }

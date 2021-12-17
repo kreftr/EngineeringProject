@@ -18,8 +18,6 @@ function Profile(){
     const [responseMessage, setMessage]  = useState("Loading content...");
 
     useEffect(() => {
-        // TODO: FIX React Hook useEffect has a missing dependency: 'id'.
-
         axios.get(`http://localhost:8080/profile?id=${id}`)
             .then(response => {
                 setCode(response.status);
@@ -32,7 +30,7 @@ function Profile(){
                 else setMessage("Server error!");
                 setLoading(false);
             })
-    },[]);
+    },[id]);
 
 
     return(

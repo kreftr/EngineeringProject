@@ -21,7 +21,7 @@ function Verification(){
                 setResponseCode(err.response.status)
                 setResponseMessage(err.response.data.message)
             })
-    }, [])
+    }, [token])
 
 
     return(
