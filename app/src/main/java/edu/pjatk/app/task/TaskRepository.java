@@ -21,6 +21,10 @@ public class TaskRepository {
         return Optional.of(entityManager.find(Task.class, id));
     }
 
+    public Optional<Task> findTaskByName(String task_name) {
+        return Optional.of(entityManager.find(Task.class, task_name));
+    }
+
     @Transactional
     public void createTask(Task task){
         entityManager.persist(task);

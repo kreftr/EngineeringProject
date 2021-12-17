@@ -24,6 +24,14 @@ public class ProjectService {
         return projectRepository.findProjectById(id);
     }
 
+    public Optional<Project> findProjectByName(String project_name) {
+        return projectRepository.findProjectByName(project_name);
+    }
+
+    public Optional<Project> getAllProjects(Long project_creator) {
+        return projectRepository.getAllProjects(project_creator);
+    }
+
     public void createProject(String project_name, String project_category, String project_status, Long project_creator){
         LocalDateTime date = LocalDateTime.now();
         Optional<User> author = userRepository.findById(project_creator);

@@ -38,6 +38,38 @@ public class ProjectControler {
         }
     }
 
+    @GetMapping(value = "/findProjectByName/{project_name}")
+    public ResponseEntity<?> findProjectByName(@PathVariable String project_name) {
+        Optional<Project> project = projectService.findProjectByName(project_name);
+        if (project.isPresent())
+        {
+            return new ResponseEntity<>(
+                    project, HttpStatus.OK
+            );
+        }
+        else {
+            return new ResponseEntity<>(
+                    new ResponseMessage("There are no projects!"), HttpStatus.NOT_FOUND
+            );
+        }
+    }
+
+    @GetMapping(value = "/getAllProjects/{project_creator}")
+    public ResponseEntity<?> getAllProjects(@PathVariable Long project_creator) {
+        Optional<Project> project = projectService.getAllProjects(project_creator);
+        if (project.isPresent())
+        {
+            return new ResponseEntity<>(
+                    project, HttpStatus.OK
+            );
+        }
+        else {
+            return new ResponseEntity<>(
+                    new ResponseMessage("There are no projects!"), HttpStatus.NOT_FOUND
+            );
+        }
+    }
+
     @PostMapping(value = "/createProject/{project_name}/{project_category}/{project_status}/" +
             "{project_creator}")
     public ResponseEntity<?> createProject(@PathVariable String project_name,

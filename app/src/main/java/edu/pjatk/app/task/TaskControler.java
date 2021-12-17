@@ -38,6 +38,22 @@ public class TaskControler {
         }
     }
 
+    @GetMapping(value = "/findTaskByName/{task_name}")
+    public ResponseEntity<?> findTaskByName(@PathVariable String task_name) {
+        Optional<Task> task = taskService.findTaskByName(task_name);
+        if (task.isPresent())
+        {
+            return new ResponseEntity<>(
+                    task, HttpStatus.OK
+            );
+        }
+        else {
+            return new ResponseEntity<>(
+                    new ResponseMessage("There are no tasks!"), HttpStatus.NOT_FOUND
+            );
+        }
+    }
+
     @PostMapping(value = "/createTask//{task_name}/{task_status}/{expiration_date}")
     public ResponseEntity<?> createProject(@PathVariable String task_name,
                                            @PathVariable String task_status,

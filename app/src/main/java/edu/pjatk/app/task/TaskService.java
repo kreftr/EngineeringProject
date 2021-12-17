@@ -23,6 +23,10 @@ public class TaskService {
         return taskRepository.findTaskById(id);
     }
 
+    public Optional<Task> findTaskByName(String task_name) {
+        return  taskRepository.findTaskByName(task_name);
+    }
+
     public void createTask(String task_name, String task_status, LocalDateTime expiration_date){
         LocalDateTime date = LocalDateTime.now();
         }
