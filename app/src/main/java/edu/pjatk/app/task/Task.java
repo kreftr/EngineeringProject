@@ -1,5 +1,7 @@
 package edu.pjatk.app.task;
 
+import edu.pjatk.app.project.Project;
+import edu.pjatk.app.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,6 +26,17 @@ public class Task {
     private LocalDateTime creation_date;
     private LocalDateTime expiration_date;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "participant_id")
+    private User participant;
+
+    public Task(String task_name, String task_status, LocalDateTime creation_date,
+                LocalDateTime expiration_date) {
+        this.task_name = task_name;
+        this.task_status = task_status;
+        this.creation_date = creation_date;
+        this.expiration_date = expiration_date;
+    }
 
     public Task(String task_name, String task_description, String task_status, LocalDateTime creation_date,
                 LocalDateTime expiration_date) {
@@ -32,6 +45,5 @@ public class Task {
         this.task_status = task_status;
         this.creation_date = creation_date;
         this.expiration_date = expiration_date;
-
     }
 }

@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.PostUpdate;
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin("http://localhost:3000")
@@ -56,7 +56,7 @@ public class ProjectControler {
 
     @GetMapping(value = "/getAllProjects/{project_creator}")
     public ResponseEntity<?> getAllProjects(@PathVariable Long project_creator) {
-        Optional<Project> project = projectService.getAllProjects(project_creator);
+        Optional<List<Project>> project = projectService.getAllProjects(project_creator);
         if (project.isPresent())
         {
             return new ResponseEntity<>(
@@ -70,21 +70,35 @@ public class ProjectControler {
         }
     }
 
-    @PostMapping(value = "/createProject/{project_name}/{project_category}/{project_status}/" +
-            "{project_creator}")
-    public ResponseEntity<?> createProject(@PathVariable String project_name,
-                                           @PathVariable String project_category,
-                                           @PathVariable String project_status,
-                                           @PathVariable Long project_creator) {
-        if (project_name.length() > 0 && project_category.length() > 0 && project_status.length() > 0) {
-            projectService.createProject(project_name, project_category, project_status, project_creator);
+    @PostMapping(value = "/createProject/{name}/{category}/{status}/{creator}")
+    public ResponseEntity<?> createProject(@PathVariable String name, @PathVariable String category,
+                                           @PathVariable String status, @PathVariable Long creator) {
+        if (!name.isEmpty() && !category.isEmpty() && !status.isEmpty()) {
+            projectService.createProject(name, category, status, creator);
             return new ResponseEntity<>(
                     new ResponseMessage("Project created!"), HttpStatus.OK
             );
         }
         else {
             return new ResponseEntity<>(
-                    new ResponseMessage("Error wrong attributes for project creation"), HttpStatus.BAD_REQUEST
+                    new ResponseMessage("Error, wrong attributes for project creation"), HttpStatus.BAD_REQUEST
+            );
+        }
+    }
+
+    @PostMapping(value = "/createProject/{name}/{category}/{status}/{creator}/{description}")
+    public ResponseEntity<?> createProject(@PathVariable String name, @PathVariable String category,
+                                           @PathVariable String status, @PathVariable Long creator,
+                                           @PathVariable String description) {
+        if (!name.isEmpty() && !category.isEmpty() && !status.isEmpty()) {
+            projectService.createProject(name, description, category, status, creator);
+            return new ResponseEntity<>(
+                    new ResponseMessage("Project created!"), HttpStatus.OK
+            );
+        }
+        else {
+            return new ResponseEntity<>(
+                    new ResponseMessage("Error, wrong attributes for project creation"), HttpStatus.BAD_REQUEST
             );
         }
     }

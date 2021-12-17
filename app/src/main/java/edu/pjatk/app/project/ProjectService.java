@@ -2,11 +2,11 @@ package edu.pjatk.app.project;
 
 import edu.pjatk.app.user.User;
 import edu.pjatk.app.user.UserRepository;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,7 +28,7 @@ public class ProjectService {
         return projectRepository.findProjectByName(project_name);
     }
 
-    public Optional<Project> getAllProjects(Long project_creator) {
+    public Optional<List<Project>> getAllProjects(Long project_creator) {
         return projectRepository.getAllProjects(project_creator);
     }
 
@@ -37,7 +37,17 @@ public class ProjectService {
         Optional<User> author = userRepository.findById(project_creator);
         if (author.isPresent())
         {
-            Project project = new Project(project_name,date,project_category,project_status,author.get());
+            Project project = new Project(project_name, date, project_category, project_status, author.get());
+            projectRepository.createProject(project);
+        }
+    }
+
+    public void createProject(String project_name, String description, String project_category, String project_status, Long project_creator){
+        LocalDateTime date = LocalDateTime.now();
+        Optional<User> author = userRepository.findById(project_creator);
+        if (author.isPresent())
+        {
+            Project project = new Project(project_name, description, date, project_category, project_status, author.get());
             projectRepository.createProject(project);
         }
     }
@@ -49,7 +59,8 @@ public class ProjectService {
     public void editProjectName(Long id, String project_name) {
         Optional<Project> project = projectRepository.findProjectById(id);
         if (project.isPresent()){
-            projectRepository.editProjectName(id);
+            project.get().setProject_name(project_name);
+            projectRepository.editProjectName(project.get());
         }
     }
 }

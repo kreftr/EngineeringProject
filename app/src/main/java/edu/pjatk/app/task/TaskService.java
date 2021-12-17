@@ -24,10 +24,18 @@ public class TaskService {
     }
 
     public Optional<Task> findTaskByName(String task_name) {
-        return  taskRepository.findTaskByName(task_name);
+        return taskRepository.findTaskByName(task_name);
     }
 
     public void createTask(String task_name, String task_status, LocalDateTime expiration_date){
-        LocalDateTime date = LocalDateTime.now();
-        }
+        LocalDateTime creation_date = LocalDateTime.now();
+        Task task = new Task(task_name, task_status, creation_date, expiration_date);
+        taskRepository.createTask(task);
+    }
+
+    public void createTask(String task_name, String description, String task_status, LocalDateTime expiration_date){
+        LocalDateTime creation_date = LocalDateTime.now();
+        Task task = new Task(task_name, description, task_status, creation_date, expiration_date);
+        taskRepository.createTask(task);
+    }
 }

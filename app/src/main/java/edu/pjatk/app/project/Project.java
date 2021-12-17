@@ -1,7 +1,5 @@
 package edu.pjatk.app.project;
 
-import edu.pjatk.app.file.File;
-import edu.pjatk.app.task.Task;
 import edu.pjatk.app.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +7,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 
 @Getter
@@ -31,19 +28,6 @@ public class Project {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "project_creator")
     private User creator;
-
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")   //project_participant
-    private List<User> participants;
-
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")  //project_file
-    private List<File> file;
-
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")  //project_task
-    private List<Task> task;
-
 
     public Project(String project_name, LocalDateTime creation_date,
                     String project_category, String project_status, User creator){

@@ -1,5 +1,6 @@
 package edu.pjatk.app.file;
 
+import edu.pjatk.app.project.Project;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,6 +21,9 @@ public class File {
     private Long file_size;
     private String file_url;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id")
+    private Project project;
 
     public File(String file_name, Long file_size, String file_url){
         this.file_name = file_name;
