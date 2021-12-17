@@ -32,6 +32,13 @@ public class Task {
         this.task_status = task_status;
         this.creation_date = creation_date;
         this.expiration_date = expiration_date;
+    }
 
+    public Task(String task_name, String task_status, LocalDateTime creation_date,
+                LocalDateTime expiration_date) {
+        this.task_name = task_name;
+        this.task_status = task_status;
+        this.creation_date = creation_date;
+        this.expiration_date = expiration_date;
     }
 }

@@ -19,15 +19,36 @@ public class TaskService {
         this.taskRepository = taskRepository;
     }
 
-    public Optional<Task> findTaskById(Long id) {
-        return taskRepository.findTaskById(id);
+    public Optional<Task> getTaskById(Long id) {
+        return taskRepository.getTaskById(id);
     }
 
-    public Optional<Task> findTaskByName(String task_name) {
-        return  taskRepository.findTaskByName(task_name);
+    public Optional<Task> getTaskByName(String task_name) {
+        return  taskRepository.getTaskByName(task_name);
     }
+
+
+    public void createTask(String task_name, String task_description, String task_status, LocalDateTime expiration_date){
+        LocalDateTime date = LocalDateTime.now();
+        Task task = new Task(task_name, task_description,task_status, date, expiration_date);
+        taskRepository.createTask(task);
+        }
 
     public void createTask(String task_name, String task_status, LocalDateTime expiration_date){
         LocalDateTime date = LocalDateTime.now();
+        Task task = new Task(task_name,task_status, date, expiration_date);
+        taskRepository.createTask(task);
+    }
+
+    public void deleteTask(Long id) {
+        taskRepository.deleteTask(id);
+    }
+
+    public void editTaskName(Long id, String task_name) {
+        Optional<Task> task = taskRepository.getTaskById(id);
+        if (task.isPresent()){
+            taskRepository.editTaskName(id, task_name);
         }
+    }
+
 }

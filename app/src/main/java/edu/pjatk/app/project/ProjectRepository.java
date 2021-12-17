@@ -18,11 +18,11 @@ public class ProjectRepository {
         this.entityManager = entityManager;
     }
 
-    public Optional<Project> findProjectById(Long id) {
+    public Optional<Project> getProjectById(Long id) {
         return Optional.of(entityManager.find(Project.class, id));
     }
 
-    public Optional<Project> findProjectByName(String project_name) {
+    public Optional<Project> getProjectByName(String project_name) {
         return Optional.of(entityManager.find(Project.class, project_name));
     }
 
@@ -51,9 +51,21 @@ public class ProjectRepository {
     }
 
     @Transactional
-    public void editProjectName(Long id) {
+    public void editProjectName(Long id, String project_name) {
         Project project = entityManager.find(Project.class, id);
-        entityManager.merge(project);
+        project.setProject_name(project_name);
+    }
+
+    @Transactional
+    public void editProjectCategory(Long id, String project_category) {
+        Project project = entityManager.find(Project.class, id);
+        project.setProject_name(project_category);
+    }
+
+    @Transactional
+    public void editProjectStatus(Long id, String project_status) {
+        Project project = entityManager.find(Project.class, id);
+        project.setProject_name(project_status);
     }
 
 

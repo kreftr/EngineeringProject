@@ -22,9 +22,9 @@ public class ProjectControler {
         this.projectService = projectService;
     }
 
-    @GetMapping(value = "/findProjectById/{id}")
+    @GetMapping(value = "/getProjectById/{id}")
     public ResponseEntity<?> findProjectById(@PathVariable Long id) {
-        Optional<Project> project = projectService.findProjectById(id);
+        Optional<Project> project = projectService.getProjectById(id);
         if (project.isPresent())
         {
             return new ResponseEntity<>(
@@ -38,9 +38,9 @@ public class ProjectControler {
         }
     }
 
-    @GetMapping(value = "/findProjectByName/{project_name}")
-    public ResponseEntity<?> findProjectByName(@PathVariable String project_name) {
-        Optional<Project> project = projectService.findProjectByName(project_name);
+    @GetMapping(value = "/getProjectByName/{project_name}")
+    public ResponseEntity<?> getProjectByName(@PathVariable String project_name) {
+        Optional<Project> project = projectService.getProjectByName(project_name);
         if (project.isPresent())
         {
             return new ResponseEntity<>(
@@ -89,6 +89,26 @@ public class ProjectControler {
         }
     }
 
+    @PostMapping(value = "/createProject/{project_name}/{project_category}/{project_status}/" +
+            "{project_creator}/{project_description}")
+    public ResponseEntity<?> createProject(@PathVariable String project_name,
+                                           @PathVariable String project_description,
+                                           @PathVariable String project_category,
+                                           @PathVariable String project_status,
+                                           @PathVariable Long project_creator) {
+        if (project_name.length() > 0 && project_category.length() > 0 && project_status.length() > 0) {
+            projectService.createProject(project_name, project_description, project_category, project_status, project_creator);
+            return new ResponseEntity<>(
+                    new ResponseMessage("Project created!"), HttpStatus.OK
+            );
+        }
+        else {
+            return new ResponseEntity<>(
+                    new ResponseMessage("Error wrong attributes for project creation"), HttpStatus.BAD_REQUEST
+            );
+        }
+    }
+
     @DeleteMapping(value = "/deleteProject/{id}")
     public ResponseEntity<?> deleteProject(@PathVariable long id) {
         projectService.deleteProject(id);
@@ -102,6 +122,22 @@ public class ProjectControler {
         projectService.editProjectName(id, project_name);
         return new ResponseEntity<>(
                 new ResponseMessage("Project name change is complete"), HttpStatus.OK
+        );
+    }
+
+    @PostMapping(value = "/editProjectCategory/{id}/{project_category}")
+    public ResponseEntity<?> editProjectCategory(@PathVariable long id, @PathVariable String project_category) {
+        projectService.editProjectCategory(id, project_category);
+        return new ResponseEntity<>(
+                new ResponseMessage("Project category change is complete"), HttpStatus.OK
+        );
+    }
+
+    @PostMapping(value = "/editProjectStatus/{id}/{project_status}")
+    public ResponseEntity<?> editProjectStatus(@PathVariable long id, @PathVariable String project_status) {
+        projectService.editProjectStatus(id, project_status);
+        return new ResponseEntity<>(
+                new ResponseMessage("Project status change is complete"), HttpStatus.OK
         );
     }
 }

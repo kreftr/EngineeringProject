@@ -17,11 +17,11 @@ public class TaskRepository {
         this.entityManager = entityManager;
     }
 
-    public Optional<Task> findTaskById(Long id) {
+    public Optional<Task> getTaskById(Long id) {
         return Optional.of(entityManager.find(Task.class, id));
     }
 
-    public Optional<Task> findTaskByName(String task_name) {
+    public Optional<Task> getTaskByName(String task_name) {
         return Optional.of(entityManager.find(Task.class, task_name));
     }
 
@@ -29,4 +29,17 @@ public class TaskRepository {
     public void createTask(Task task){
         entityManager.persist(task);
     }
+
+    @Transactional
+    public void deleteTask(Long id){
+        Task task = entityManager.find(Task.class, id);
+        entityManager.remove(task);
+    }
+
+    @Transactional
+    public void editTaskName(Long id, String task_name) {
+        Task task = entityManager.find(Task.class, id);
+        task.setTask_name(task_name);
+    }
+
 }
