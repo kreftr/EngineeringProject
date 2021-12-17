@@ -18,20 +18,7 @@ public class FriendRepository {
         this.entityManager = entityManager;
     }
 
-    // TODO przywroc
-    public Optional<Friend> findById(Long id) {
-//        Optional<Friend> friend;
-//        try {
-//            friend = Optional.of(
-//                    entityManager.createQuery(
-//                            "SELECT friend from Friend friend where friend.id=:friendId",
-//                            Friend.class).setParameter("friendId", id).getSingleResult()
-//            );
-//        } catch (NoResultException noResultException) {
-//            friend = Optional.empty();
-//        }
-//        return friend;
-
+    public Optional<Friend> getById(Long id) {
         return Optional.of(entityManager.find(Friend.class, id));
     }
 

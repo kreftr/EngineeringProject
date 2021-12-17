@@ -20,9 +20,9 @@ public class FriendController {
         this.friendService = friendService;
     }
 
-    @GetMapping(value = "/findFriendById/{id}")
-    public ResponseEntity<?> findFriendById(@PathVariable Long id) {
-        Optional<Friend> friend = friendService.findById(id);
+    @GetMapping(value = "/getFriendById/{id}")
+    public ResponseEntity<?> getFriendById(@PathVariable Long id) {
+        Optional<Friend> friend = friendService.getById(id);
         if (friend.isPresent())
         {
             return new ResponseEntity<>(
@@ -60,7 +60,6 @@ public class FriendController {
         );
     }
 
-    // TODO przetestuj
     @GetMapping(value = "/getAllFriends/{friend_id}")
     public ResponseEntity<?> getAllFriends(@PathVariable Long friend_id) {
         Optional<List<Friend>> friends = friendService.getAllFriends(friend_id);
@@ -77,7 +76,6 @@ public class FriendController {
         }
     }
 
-    // TODO przetestuj
     @GetMapping(value = "/getAllPending/{friend_id}")
     public ResponseEntity<?> getAllPending(@PathVariable Long friend_id) {
         Optional<List<Friend>> pending_friends = friendService.getAllPending(friend_id);

@@ -16,7 +16,7 @@ export default function Friend(props) {
     const [conversationCode, setConversationCode] = useState(null)
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/conversation/findConversationByUserId/${first_user_id}/${second_user_id}`)
+        axios.get(`http://localhost:8080/conversation/getConversationByUserId/${first_user_id}/${second_user_id}`)
             .then(response => {
                 setConversationCode(response.status);
                 setConversation(response.data);
@@ -31,7 +31,7 @@ export default function Friend(props) {
     // if conversation doesnt exist, create it
     if (!conversationLoading && conversationCode === 404) {
         axios.post(`http://localhost:8080/conversation/createConversation/${first_user_id}/${second_user_id}`).then()
-        axios.get(`http://localhost:8080/conversation/findConversationByUserId/${first_user_id}/${second_user_id}`)
+        axios.get(`http://localhost:8080/conversation/getConversationByUserId/${first_user_id}/${second_user_id}`)
             .then(response => {
                 setConversationCode(response.status);
                 setConversation(response.data);

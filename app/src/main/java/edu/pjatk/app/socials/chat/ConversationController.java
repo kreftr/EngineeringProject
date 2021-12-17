@@ -22,16 +22,15 @@ public class ConversationController {
 
     @PostMapping(value = "/createConversation/{first_user_id}/{second_user_id}")
     public ResponseEntity<?> createConversation(@PathVariable Long first_user_id, @PathVariable Long second_user_id) {
-        // TODO handle situation when users have one instance of that conversation
         conversationService.createConversation(first_user_id, second_user_id);
         return new ResponseEntity<>(
                 new ResponseMessage("Conversation created!"), HttpStatus.OK
         );
     }
 
-    @GetMapping(value = "/findConversationById/{id}")
-    public ResponseEntity<?> findConversationById(@PathVariable Long id) {
-        Optional<Conversation> conversation = conversationService.findConversationById(id);
+    @GetMapping(value = "/getConversationById/{id}")
+    public ResponseEntity<?> getConversationById(@PathVariable Long id) {
+        Optional<Conversation> conversation = conversationService.getConversationById(id);
         if (conversation.isPresent())
         {
             return new ResponseEntity<>(
@@ -45,9 +44,9 @@ public class ConversationController {
         }
     }
 
-    @GetMapping(value = "/findConversationByUserId/{first_user_id}/{second_user_id}")
-    public ResponseEntity<?> findConversationByUserId(@PathVariable Long first_user_id, @PathVariable Long second_user_id) {
-        Optional<Conversation> conversation = conversationService.findConversationByUserId(first_user_id, second_user_id);
+    @GetMapping(value = "/getConversationByUserId/{first_user_id}/{second_user_id}")
+    public ResponseEntity<?> getConversationByUserId(@PathVariable Long first_user_id, @PathVariable Long second_user_id) {
+        Optional<Conversation> conversation = conversationService.getConversationByUserId(first_user_id, second_user_id);
         if (conversation.isPresent())
         {
             return new ResponseEntity<>(

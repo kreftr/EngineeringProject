@@ -18,7 +18,7 @@ public class ConversationRepository {
         this.entityManager = entityManager;
     }
 
-    public Optional<Conversation> findConversationById(Long id) {
+    public Optional<Conversation> getConversationById(Long id) {
         Optional<Conversation> conversation;
         try {
             conversation = Optional.of(
@@ -32,7 +32,7 @@ public class ConversationRepository {
         return conversation;
     }
 
-    public Optional<Conversation> findConversationByUserId(Long first_user_id, Long second_user_id) {
+    public Optional<Conversation> getConversationByUserId(Long first_user_id, Long second_user_id) {
         Optional<Conversation> conversation;
         try {
             conversation = Optional.of(

@@ -19,8 +19,8 @@ public class FriendService {
         this.userService = userService;
     }
 
-    public Optional<Friend> findById(Long id) {
-        return friendRepository.findById(id);
+    public Optional<Friend> getById(Long id) {
+        return friendRepository.getById(id);
     }
 
     public void addFriend(Long first_user_id, Long second_user_id) {
@@ -38,7 +38,7 @@ public class FriendService {
     }
 
     public void acceptFriend(Long id) {
-        Optional<Friend> friend = friendRepository.findById(id);
+        Optional<Friend> friend = friendRepository.getById(id);
         if (friend.isPresent()) {
             friendRepository.acceptFriend(friend.get());
         }

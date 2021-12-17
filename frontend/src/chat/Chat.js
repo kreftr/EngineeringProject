@@ -41,6 +41,7 @@ export default function Chat() {
         }
     }
 
+    // TODO new messages stack down infinitely, fix this
     return (
         <Container className={"container"}>
             { messagesCode === 200 && !messagesLoading ?
@@ -54,7 +55,7 @@ export default function Chat() {
                             )
                         }
                     </ListGroup>
-                    <div id={"message_sender"}>
+                    <div id={"message_sender"} style={{position: "absolute", bottom: "50px"}}>
                         <input id={"message_sender_input"} type="text"
                                onChange={event => setInputValue(event.target.value)} onKeyDown={sendNewMessage}/>
                     </div>

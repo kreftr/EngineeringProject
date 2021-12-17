@@ -3,6 +3,7 @@ import {Image} from "react-bootstrap";
 import useAxiosGet from "../hooks/HttpRequests";
 import "./Message.css"
 
+
 export default function Message(props) {
     let message_date = new Date(props.message.message_date)
     let message_date_short = message_date.toLocaleDateString(navigator.language, {hour: '2-digit', minute:'2-digit'});
