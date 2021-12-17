@@ -12,6 +12,9 @@ import Login from "./login/Login";
 import Settings from "./settings/Settings";
 import Recovery from "./recovery/Recovery";
 import ProjectView from "./project/ProjectView";
+import Chat from "./chat/Chat"
+import ConversationList from "./chat/ConversationList"
+import FriendsList from "./friends/FriendsList"
 
 
 class App extends Component{
@@ -33,8 +36,8 @@ class App extends Component{
                                 { Cookies.get("authorization") ?
                                     <>
                                         <Nav.Link href={"/profile/"+Cookies.get("userId")}>My profile</Nav.Link>
-                                        <Nav.Link href="#link">Friends</Nav.Link>
-                                        <Nav.Link href="#link">Chat</Nav.Link>
+                                        <Nav.Link href="/friends">Friends</Nav.Link>
+                                        <Nav.Link href={"/conversations/"+Cookies.get("userId")}>Chat</Nav.Link>
                                     </>
                                     :
                                     <></>
@@ -60,6 +63,9 @@ class App extends Component{
                 <Routes>
                     <Route path={"profile/:id"} element={<Profile/>}/>
                     <Route path={"profile/settings"} element={<Settings/>}/>
+                    <Route path={"chat/:conversation_id"} element={<Chat/>}/>
+                    <Route path={"friends"} element={<FriendsList/>}/>
+                    <Route path={"conversations/:conversation_id"} element={<ConversationList/>}/>
                     <Route path={"search"} element={<Search/>}/>
                     <Route path={"registration"} element={<Registration/>}/>
                     <Route path={"verification/:token"} element={<Verification/>}/>

@@ -63,3 +63,35 @@ databaseChangeLog:
         stripComments: true
         splitStatements: false
         path: db.changelog/20211210_recovery_token.sql
+  - changeSet:
+      id: 20211117_conversation
+      author: Adam Nawrot
+      sqlFile:
+        relativeToChangelogFile: true
+        stripComments: true
+        splitStatements: false
+        path: db.changelog/20211117_conversation.sql
+  - changeSet:
+      id: 20211119_friends
+      author: Adam Nawrot
+      sqlFile:
+        relativeToChangelogFile: true
+        stripComments: true
+        splitStatements: false
+        path: db.changelog/20211119_friends.sql
+  - changeSet:
+      id: 20211206_message_add_author
+      author: Adam Nawrot
+      sqlFile:
+        relativeToChangelogFile: true
+        stripComments: true
+        splitStatements: false
+        path: db.changelog/20211206_message_add_author.sql
+  - changeSet:
+      id: 20211207_message_author_profile_edit
+      author: Adam Nawrot
+      sqlFile:
+        relativeToChangelogFile: true
+        stripComments: true
+        splitStatements: false
+        path: db.changelog/20211207_message_author_profile_edit.sql
