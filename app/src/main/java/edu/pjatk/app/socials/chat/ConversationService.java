@@ -24,10 +24,15 @@ public class ConversationService {
         return conversationRepository.findConversationById(id);
     }
 
+    public Optional <Conversation> findConversationByUserId(Long first_user_id, Long second_user_id) {
+        return conversationRepository.findConversationByUserId(first_user_id, second_user_id);
+    }
+
     public void createConversation(Long first_user_id, Long second_user_id) {
         Optional<User> first_user = userRepository.findById(first_user_id);
         Optional<User> second_user = userRepository.findById(second_user_id);
-        if (first_user.isPresent() && second_user.isPresent()) {
+        Optional<Conversation> existing_conversation = conversationRepository.findConversationByUserId(first_user_id, second_user_id);
+        if (first_user.isPresent() && second_user.isPresent() && existing_conversation.isEmpty()) {
             Conversation conversation = new Conversation(first_user.get(), second_user.get());
             conversationRepository.createConversation(conversation);
         }
@@ -36,8 +41,6 @@ public class ConversationService {
     public void addMessage(Long conversation_id, Long author_id, String text){
         Date date = java.util.Calendar.getInstance().getTime();
         Optional<Conversation> conversation = conversationRepository.findConversationById(conversation_id);
-
-        // TODO make new conversation if it doesnt exist yet
         Optional<User> author = userRepository.findById(author_id);
         if (conversation.isPresent() && author.isPresent())
         {

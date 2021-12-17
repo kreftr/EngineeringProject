@@ -1,8 +1,7 @@
-import React from 'react';
-import {Button, Container, Image} from "react-bootstrap";
+import React, {useEffect, useState} from 'react';
+import {Button, Image} from "react-bootstrap";
 import Cookies from "js-cookie";
 import axios from "axios";
-import useAxiosGet from "../hooks/HttpRequests";
 import {Link} from "react-router-dom";
 import "./Friend.css"
 
@@ -12,11 +11,43 @@ export default function Friend(props) {
     const second_user_id = props.friend.secondUser.id
     const cookie_user_id = Number(Cookies.get("userId"))
 
+    const [conversation, setConversation] = useState("")
+    const [conversationLoading, setConversationLoading] = useState(true)
+    const [conversationCode, setConversationCode] = useState(null)
+
+    useEffect(() => {
+        axios.get(`http://localhost:8080/conversation/findConversationByUserId/${first_user_id}/${second_user_id}`)
+            .then(response => {
+                setConversationCode(response.status);
+                setConversation(response.data);
+                setConversationLoading(false);
+            })
+            .catch(err => {
+                setConversationCode(err.response.status)
+                setConversationLoading(false);
+            })
+        }, [first_user_id, second_user_id])
+
+    // if conversation doesnt exist, create it
+    if (!conversationLoading && conversationCode === 404) {
+        axios.post(`http://localhost:8080/conversation/createConversation/${first_user_id}/${second_user_id}`).then()
+        axios.get(`http://localhost:8080/conversation/findConversationByUserId/${first_user_id}/${second_user_id}`)
+            .then(response => {
+                setConversationCode(response.status);
+                setConversation(response.data);
+                setConversationLoading(false);
+            })
+            .catch(err => {
+                setConversationCode(err.response.status)
+                setConversationLoading(false);
+            })
+    }
+
     let friend_id = null
     let friend_user_data = null
 
     function handleRemoval() {
-        axios.delete(`http://localhost:8080/friends/deleteById/${friend_id}`)
+        axios.delete(`http://localhost:8080/friends/deleteById/${friend_id}`).then()
     }
 
     // find out which id is associated with our friend
@@ -51,7 +82,7 @@ export default function Friend(props) {
                 </div>
             </Link>
             <div className={"friend_buttons_div"}>
-                <Link to={`/chat/${friend_id}`}><Button variant="primary" className={"friend_message_btn"}>Message</Button></Link>
+                <Link to={`/conversations/${conversation.id}`}><Button variant="primary" className={"friend_message_btn"}>Message</Button></Link>
                 <Button variant="primary" className={"friend_remove_btn"} onClick={handleRemoval}>Remove friend</Button>
             </div>
         </div>

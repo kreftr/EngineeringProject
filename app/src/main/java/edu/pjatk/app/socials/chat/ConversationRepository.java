@@ -32,6 +32,22 @@ public class ConversationRepository {
         return conversation;
     }
 
+    public Optional<Conversation> findConversationByUserId(Long first_user_id, Long second_user_id) {
+        Optional<Conversation> conversation;
+        try {
+            conversation = Optional.of(
+                    entityManager.createQuery(
+                            "SELECT conversation from Conversation conversation where " +
+                                    "conversation.first_user.id=:first_user_id and conversation.second_user.id=:second_user_id",
+                            Conversation.class).setParameter("first_user_id", first_user_id).
+                            setParameter("second_user_id", second_user_id).getSingleResult()
+            );
+        } catch (NoResultException noResultException) {
+            conversation = Optional.empty();
+        }
+        return conversation;
+    }
+
     @Transactional
     public void addMessage(Message message){
         entityManager.persist(message);

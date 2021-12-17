@@ -45,6 +45,23 @@ public class ConversationController {
         }
     }
 
+    @GetMapping(value = "/findConversationByUserId/{first_user_id}/{second_user_id}")
+    public ResponseEntity<?> findConversationByUserId(@PathVariable Long first_user_id, @PathVariable Long second_user_id) {
+        Optional<Conversation> conversation = conversationService.findConversationByUserId(first_user_id, second_user_id);
+        if (conversation.isPresent())
+        {
+            return new ResponseEntity<>(
+                    conversation, HttpStatus.OK
+            );
+        }
+        else {
+            return new ResponseEntity<>(
+                    new ResponseMessage("There is no conversation between these people!"), HttpStatus.NOT_FOUND
+            );
+        }
+    }
+
+
     @PostMapping(value = "/addMessage/{conversation_id}/{author_id}/{text}")
     public ResponseEntity<?> addMessage(@PathVariable Long conversation_id, @PathVariable Long author_id, @PathVariable String text) {
         String trimmedText = text.trim();
