@@ -34,6 +34,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         this.userService = userService;
     }
 
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
@@ -50,6 +51,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/test/user", "/profile/my", "/user/changePassword", "/user/deleteAccount").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/conversation/**", "/friends/**", "/user/findUserById/*").permitAll()
                 .antMatchers("/test/user", "/profile/my").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/", "/registration", "/registration/*", "/photo", "/profile", "/project"
+                        , "/project/*", "/file", "/file/*", "/task", "/task/*").permitAll()
+                .antMatchers("/test/user").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/test/admin").hasRole("ADMIN")
                 .anyRequest().authenticated();
     }
