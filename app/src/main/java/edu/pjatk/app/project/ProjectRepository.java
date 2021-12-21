@@ -1,6 +1,7 @@
 package edu.pjatk.app.project;
 
 
+import edu.pjatk.app.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -23,15 +24,24 @@ public class ProjectRepository {
     }
 
     public Optional<Project> getProjectByName(String project_name) {
-        return Optional.of(entityManager.find(Project.class, project_name));
-    }
-
-    public Optional<Project> getAllProjects(Long project_creator) {
         Optional project;
         try {
             project =  Optional.of(entityManager.createQuery(
-                "select project from Project project where project.creator = :project_creator", Project.class)
-                .setParameter("project_creator", project_creator));
+                            "select project from Project project where project.project_name = :project_name", Project.class)
+                    .setParameter("project_name", project_name).getResultList());
+        }
+        catch (NoResultException noResultException){
+            project = Optional.empty();
+        }
+        return project;
+    }
+
+    public Optional<Project> getAllProjects(Long creator_id) {
+        Optional project;
+        try {
+            project =  Optional.of(entityManager.createQuery(
+                "select project from Project project where project.creator.id = :creator_id", Project.class)
+                .setParameter("creator_id", creator_id).getResultList());
         }
         catch (NoResultException noResultException){
             project = Optional.empty();
@@ -54,18 +64,21 @@ public class ProjectRepository {
     public void editProjectName(Long id, String project_name) {
         Project project = entityManager.find(Project.class, id);
         project.setProject_name(project_name);
+        entityManager.persist(project);
     }
 
     @Transactional
     public void editProjectCategory(Long id, String project_category) {
         Project project = entityManager.find(Project.class, id);
         project.setProject_name(project_category);
+        entityManager.persist(project);
     }
 
     @Transactional
     public void editProjectStatus(Long id, String project_status) {
         Project project = entityManager.find(Project.class, id);
         project.setProject_name(project_status);
+        entityManager.persist(project);
     }
 
 

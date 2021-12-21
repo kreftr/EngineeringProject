@@ -36,5 +36,6 @@ public class FileRepository {
     public void editFileName(Long id, String file_name) {
         File file = entityManager.find(File.class, id);
         file.setFile_name(file_name);
+        entityManager.persist(file);
     }
 }

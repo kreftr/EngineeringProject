@@ -33,15 +33,15 @@ public class Project {
     private User creator;
 
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")   //project_participant
+    @JoinColumn(name = "id")
     private List<User> participants;
 
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")  //project_file
+    @JoinColumn(name = "id")
     private List<File> file;
 
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")  //project_task
+    @JoinColumn(name = "id")
     private List<Task> task;
 
 

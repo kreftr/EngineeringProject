@@ -40,6 +40,7 @@ public class TaskRepository {
     public void editTaskName(Long id, String task_name) {
         Task task = entityManager.find(Task.class, id);
         task.setTask_name(task_name);
+        entityManager.persist(task);
     }
 
 }

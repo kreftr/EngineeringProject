@@ -28,8 +28,8 @@ public class ProjectService {
         return projectRepository.getProjectByName(project_name);
     }
 
-    public Optional<Project> getAllProjects(Long project_creator) {
-        return projectRepository.getAllProjects(project_creator);
+    public Optional<Project> getAllProjects(Long creator_id) {
+        return projectRepository.getAllProjects(creator_id);
     }
 
     public void createProject(String project_name, String project_category, String project_status, Long project_creator){

@@ -54,9 +54,9 @@ public class ProjectControler {
         }
     }
 
-    @GetMapping(value = "/getAllProjects/{project_creator}")
-    public ResponseEntity<?> getAllProjects(@PathVariable Long project_creator) {
-        Optional<Project> project = projectService.getAllProjects(project_creator);
+    @GetMapping(value = "/getAllProjects/{creator_id}")
+    public ResponseEntity<?> getAllProjects(@PathVariable Long creator_id) {
+        Optional<Project> project = projectService.getAllProjects(creator_id);
         if (project.isPresent())
         {
             return new ResponseEntity<>(
