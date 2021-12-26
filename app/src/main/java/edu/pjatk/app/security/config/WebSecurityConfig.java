@@ -34,6 +34,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         this.userService = userService;
     }
 
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
@@ -45,12 +46,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtAuthenticationFilter(authenticationManager()))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), userService))
                 .authorizeRequests()
-                .antMatchers("/", "/registration", "/registration/*", "/profile", "/recovery", "/recovery/*").permitAll()
+                .antMatchers("/", "/registration", "/registration/*", "/profile", "/recovery", "/recovery/*", "/user/findUserById/*").permitAll()
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
                 .antMatchers(HttpMethod.GET, "/profile", "/photo").permitAll()
                 .antMatchers(HttpMethod.POST,  "/profile", "/photo").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/user/changePassword", "/user/deleteAccount", "/friends/**", "/conversation/**").hasAnyRole("USER", "ADMIN")
-                .antMatchers( "/user/findUserById/*").permitAll()
+                .antMatchers("/user/changePassword", "/user/deleteAccount", "/friends/**", "/conversation/**", "/profile/my").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/project/**", "/file/**", "/task/**").permitAll()
                 .anyRequest().authenticated();
     }
 
