@@ -1,0 +1,20 @@
+
+.INVITATION-container {
+    padding: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.INVITATION-name-surname {
+    color: gray;
+}
+
+.INVITATION-buttons-container {
+    display: flex;
+    justify-content: center;
+}
+
+.INVITATION-button {
+    font-size: 200%;
+    margin: 0 20px;
+}

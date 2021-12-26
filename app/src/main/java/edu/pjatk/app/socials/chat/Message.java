@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -19,7 +20,7 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String content;
-    private Date message_date;
+    private LocalDateTime message_date;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "conversation_id")
@@ -29,7 +30,7 @@ public class Message {
     @JoinColumn(name = "author_id")
     private User user;
 
-    public Message(String content, Date message_date, Conversation conversation, User user){
+    public Message(String content, LocalDateTime message_date, Conversation conversation, User user){
         this.content = content;
         this.message_date = message_date;
         this.conversation = conversation;

@@ -4,9 +4,9 @@ import Message from "./Message"
 import {useParams} from "react-router-dom";
 import Cookies from "js-cookie";
 import axios from "axios";
+import "./Chat.css"
 
-
-export default function Chat() {
+function Chat(props) {
     const [inputValue, setInputValue] = useState("");
     const [messages, setMessages] = useState([])
     const [messagesLoading, setMessagesLoading] = useState(true)
@@ -16,16 +16,20 @@ export default function Chat() {
     useEffect(() => {
         // messages are collected every certain amount of time from server
         const interval = setInterval(() => {
-            axios.get(`http://localhost:8080/conversation/getAllMessages/${conversation_id}`)
-                .then(response => {
-                    setMessagesCode(response.status);
-                    setMessages(response.data);
-                    setMessagesLoading(false);
-                })
-                .catch(err => {
-                    setMessagesCode(err.response.status)
-                    setMessagesLoading(false);
-                })
+            axios.get(`http://localhost:8080/conversation/getAllMessages/${props.conversation.conversationId}`, {
+                headers: {
+                    'Authorization': Cookies.get("authorization")
+                }
+            })
+            .then(response => {
+                setMessagesCode(response.status);
+                setMessages(response.data);
+                setMessagesLoading(false);
+            })
+            .catch(err => {
+                setMessagesCode(err.response.status)
+                setMessagesLoading(false);
+            })
         }, 1000)
         return () => clearInterval(interval)
     }, [conversation_id])
@@ -33,8 +37,16 @@ export default function Chat() {
     const sendNewMessage = (event) => {
         if (event.key === 'Enter') {
             let author_id = Cookies.get("userId")
-            axios.post(`http://localhost:8080/conversation/addMessage/${conversation_id}/${author_id}/${inputValue}`).then()
-            axios.get(`http://localhost:8080/conversation/getAllMessages/${conversation_id}`).then(response => {
+            axios.post(`http://localhost:8080/conversation/addMessage/${props.conversation.conversationId}/${author_id}/${inputValue}`, {}, {
+                headers: {
+                    'Authorization': Cookies.get("authorization")
+                }
+            }).then()
+            axios.get(`http://localhost:8080/conversation/getAllMessages/${props.conversation.conversationId}`, {
+                headers: {
+                    'Authorization': Cookies.get("authorization")
+                }
+            }).then(response => {
                 setMessagesCode(response.status);
                 setMessages(response.data);
                 document.getElementById("message_sender_input").value = ""  // clear input after
@@ -47,7 +59,7 @@ export default function Chat() {
         <Container className={"container"}>
             { messagesCode === 200 && !messagesLoading ?
                 <div>
-                    <ListGroup className={"list-group"}>
+                    <ListGroup className={"list-group CHAT-window"}>
                         {
                             messages.map((message, key) =>
                                 <ListGroupItem key={key}>
@@ -56,8 +68,8 @@ export default function Chat() {
                             )
                         }
                     </ListGroup>
-                    <div id={"message_sender"} style={{position: "absolute", bottom: "50px"}}>
-                        <input id={"message_sender_input"} type="text"
+                    <div id={"message_sender"}>
+                        <input className={"CHAT-input mt-4"} id={"message_sender_input"} type="text"
                                onChange={event => setInputValue(event.target.value)} onKeyDown={sendNewMessage}/>
                     </div>
                 </div>
@@ -67,3 +79,4 @@ export default function Chat() {
         </Container>
     );
 }
+export default Chat;

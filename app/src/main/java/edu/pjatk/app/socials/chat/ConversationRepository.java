@@ -38,13 +38,16 @@ public class ConversationRepository {
             conversation = Optional.of(
                     entityManager.createQuery(
                             "SELECT conversation from Conversation conversation where " +
-                                    "conversation.first_user.id=:first_user_id and conversation.second_user.id=:second_user_id",
+                                    "(conversation.first_user.id=:first_user_id and " +
+                                    "conversation.second_user.id=:second_user_id) or " +
+                                    "(conversation.first_user.id=:second_user_id and " +
+                                    "conversation.second_user.id=:first_user_id)",
                             Conversation.class).setParameter("first_user_id", first_user_id).
                             setParameter("second_user_id", second_user_id).getSingleResult()
             );
         } catch (NoResultException noResultException) {
             conversation = Optional.empty();
-        }
+        };
         return conversation;
     }
 

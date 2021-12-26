@@ -45,12 +45,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtAuthenticationFilter(authenticationManager()))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), userService))
                 .authorizeRequests()
+                .antMatchers("/", "/registration", "/registration/*", "/profile", "/recovery", "/recovery/*").permitAll()
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
-                .antMatchers("/", "/registration", "/registration/*", "/photo", "/profile", "/recovery", "/recovery/*").permitAll()
-                .antMatchers("/test/user", "/profile/my", "/user/changePassword", "/user/deleteAccount").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/conversation/**", "/friends/**", "/user/findUserById/*").permitAll()
-                .antMatchers("/test/user", "/profile/my").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/test/admin").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/profile", "/photo").permitAll()
+                .antMatchers(HttpMethod.POST,  "/profile", "/photo").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/user/changePassword", "/user/deleteAccount", "/friends/**", "/conversation/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers( "/user/findUserById/*").permitAll()
                 .anyRequest().authenticated();
     }
 

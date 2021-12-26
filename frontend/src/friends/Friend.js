@@ -1,90 +1,72 @@
-import React, {useEffect, useState} from 'react';
-import {Button, Image} from "react-bootstrap";
+import React from 'react';
+import {Button, Col, Image, Row} from "react-bootstrap";
 import Cookies from "js-cookie";
 import axios from "axios";
-import {Link} from "react-router-dom";
 import "./Friend.css"
+import default_profile_picture from "../assets/images/default_profile_picture.jpg"
+import {FaEnvelope, FaUserMinus} from "react-icons/fa";
+import {useParams} from "react-router-dom";
 
+function Friend(props) {
 
-export default function Friend(props) {
-    const first_user_id = props.friend.firstUser.id
-    const second_user_id = props.friend.secondUser.id
-    const cookie_user_id = Number(Cookies.get("userId"))
+    const {id} = useParams();
 
-    const [conversation, setConversation] = useState("")
-    const [conversationLoading, setConversationLoading] = useState(true)
-    const [conversationCode, setConversationCode] = useState(null)
-
-    useEffect(() => {
-        axios.get(`http://localhost:8080/conversation/getConversationByUserId/${first_user_id}/${second_user_id}`)
-            .then(response => {
-                setConversationCode(response.status);
-                setConversation(response.data);
-                setConversationLoading(false);
-            })
-            .catch(err => {
-                setConversationCode(err.response.status)
-                setConversationLoading(false);
-            })
-        }, [first_user_id, second_user_id])
-
-    // if conversation doesnt exist, create it
-    if (!conversationLoading && conversationCode === 404) {
-        axios.post(`http://localhost:8080/conversation/createConversation/${first_user_id}/${second_user_id}`).then()
-        axios.get(`http://localhost:8080/conversation/getConversationByUserId/${first_user_id}/${second_user_id}`)
-            .then(response => {
-                setConversationCode(response.status);
-                setConversation(response.data);
-                setConversationLoading(false);
-            })
-            .catch(err => {
-                setConversationCode(err.response.status)
-                setConversationLoading(false);
-            })
+    function removeFriend(){
+        axios.delete(`http://localhost:8080/friends/deleteById/${props.friend.id}`, {
+            headers: {
+                'Authorization': Cookies.get("authorization")
+            }
+        }).then(response => {
+            window.location.reload();
+        }).catch(err => {
+            console.log(err.response)
+        })
     }
 
-    let friend_id = null
-    let friend_user_data = null
-
-    function handleRemoval() {
-        axios.delete(`http://localhost:8080/friends/deleteById/${friend_id}`).then()
-    }
-
-    // find out which id is associated with our friend
-    if (first_user_id === cookie_user_id) {
-        friend_id = second_user_id
-        friend_user_data = props.friend.secondUser
-    } else if (second_user_id === cookie_user_id) {
-        friend_id = first_user_id
-        friend_user_data = props.friend.firstUser
-    }
-
-    let friend_avatar_path = null
-    let friend_nickname = null
-    let friend_name = null
-    let friend_surname = null
-    if (friend_user_data) {
-        friend_avatar_path = friend_user_data.profile.photo.fileName
-        friend_nickname = friend_user_data.username
-        friend_name = friend_user_data.profile.name
-        friend_surname = friend_user_data.profile.surname
-    }
 
     return (
-        <div>
-            <Link to={`/profile/${friend_id}`}>
-                <Image className={"friend_avatar"} src={`http://localhost:8080/photo?filename=${friend_avatar_path}`}
-                       roundedCircle={true} width="35px" height="35px"/>
-                <div className={"friend_names_div"}>
-                    <p className={"friend_nickname"}>{friend_nickname}</p>
-                    <span className={"friend_name"}>{friend_name}</span>
-                    <span className={"friend_surname"}>{friend_surname}</span>
-                </div>
-            </Link>
-            <div className={"friend_buttons_div"}>
-                <Link to={`/conversations/${conversation.id}`}><Button variant="primary" className={"friend_message_btn"}>Message</Button></Link>
-                <Button variant="primary" className={"friend_remove_btn"} onClick={handleRemoval}>Remove friend</Button>
-            </div>
-        </div>
+        <Row className={"INVITATION-container"}>
+            <Col className={"col-2"}>
+                <a href={`/profile/${props.friend.id}`} style={{ textDecoration: 'none' }}>
+                    { props.friend.profilePhoto ?
+                        <Image className={"ml-3"} src={`http://localhost:8080/photo?filename=${props.friend.profilePhoto}`}
+                               roundedCircle={true} width="100px" height="100px"/>
+                        :
+                        <Image className={"ml-3"} src={default_profile_picture}
+                               roundedCircle={true} width="100px" height="100px"/>
+                    }
+                </a>
+            </Col>
+            <Col className={"col-4"}>
+                <a href={`/profile/${props.friend.id}`} style={{ textDecoration: 'none' }}>
+                    <div className={"ml-3"}>
+                        <h2>{props.friend.username}</h2>
+                        { props.friend.name || props.friend.surname ?
+                            <h4 className={"INVITATION-name-surname"}>{props.friend.name} {props.friend.surname}</h4>
+                            :
+                            <></>
+                        }
+                    </div>
+                </a>
+            </Col>
+            <Col className={"col-6"}>
+                {Cookies.get("userId") === id ?
+                    <div className={"INVITATION-buttons-container"}>
+                        <Button type="button" variant="primary FRIEND-button"
+                                href={`/conversations/${props.friend.conversationId}`} size={"lg"}>
+                            <FaEnvelope className={"mr-2"} size={50}/>
+                            <h4>Chat</h4>
+                        </Button>
+                        <Button variant="danger FRIEND-button" size={"lg"} onClick={removeFriend}>
+                            <FaUserMinus className={"mr-2"} size={50}/>
+                            <h4>Remove</h4>
+                        </Button>
+                    </div>
+                    :
+                    <></>
+                }
+            </Col>
+        </Row>
     );
 }
+export default Friend;

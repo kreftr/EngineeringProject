@@ -1,33 +1,8 @@
-.friend_avatar {
-    float: left;
-    margin-right: 15px;
-}
 
-.friend_names_div {
-    float: left;
-}
-
-.friend_nickname {
-
-}
-
-.friend_name {
-    margin-right: 5px;
-}
-
-.friend_surname {
-
-}
-
-.friend_buttons_div {
-    clear: left;
-    padding-top: 15px;
-}
-
-.friend_message_btn {
-    margin-right: 5px;
-}
-
-.friend_remove_btn {
-
+.FRIEND-button{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 100%;
+    margin: 0 20px;
 }

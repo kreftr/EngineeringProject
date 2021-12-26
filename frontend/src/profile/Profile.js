@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Container, Tabs, Row, Col, Image, Button, Tab} from "react-bootstrap";
 import default_profile_picture from "../assets/images/default_profile_picture.jpg"
-import {FaFlag, FaCog, FaUserPlus} from "react-icons/fa"
+import {FaFlag, FaCog, FaUserPlus, FaUserMinus, FaUserClock, FaUserFriends} from "react-icons/fa"
 import axios from "axios";
 import Cookies from "js-cookie"
 import {useParams} from "react-router-dom";
@@ -12,30 +12,71 @@ function Profile(){
 
     const {id} = useParams();
 
+    const [friendStatus, setFriendStatus] = useState(null);
+
     const [profile, setProfile] = useState([]);
-    const [responseCode,setCode] = useState();
+    const [profileCode,setProfileCode] = useState();
     const [loadingContent, setLoading] = useState(true);
     const [responseMessage, setMessage]  = useState("Loading content...");
 
     useEffect(() => {
+        //Load profile
         axios.get(`http://localhost:8080/profile?id=${id}`)
             .then(response => {
-                setCode(response.status);
+                setProfileCode(response.status);
                 setProfile(response.data);
                 setLoading(false);
             })
             .catch(err => {
-                setCode(err.response.status)
+                setProfileCode(err.response.status)
                 if (err.response.status === 404) setMessage("Profile not found");
                 else setMessage("Server error!");
                 setLoading(false);
             })
+
+        //Check if is friend
+        if (Cookies.get("userId")!==id){
+            axios.get(`http://localhost:8080/friends/getFriendStatus/${id}`,
+                {headers:{'Authorization': Cookies.get("authorization")}
+            })
+                .then(response  => {
+                    setFriendStatus(response.data)
+                })
+                .catch(err => {
+                    console.log(err.response)
+                })
+        }
     },[id]);
+
+    function addFriend(){
+        axios.post(`http://localhost:8080/friends/addFriend/${id}`,{},
+            {headers:{'Authorization': Cookies.get("authorization")}
+            })
+            .then(response => {
+                setFriendStatus("PENDING")
+            })
+            .catch(err =>  {
+                setFriendStatus(null)
+                console.log(err.response)
+            });
+    }
+
+    function removeFriend(){
+        axios.delete(`http://localhost:8080/friends/deleteById/${id}`, {
+            headers: {
+                'Authorization': Cookies.get("authorization")
+            }
+        }).then(response => {
+            setFriendStatus("NOT_FRIEND")
+        }).catch(err => {
+            console.log(err.response)
+        })
+    }
 
 
     return(
         <Container className={"PROFILE-profile-container"}>
-            {responseCode === 200 && !loadingContent ?
+            {profileCode === 200 && !loadingContent ?
                 <Row>
                     <Col className={"col-4 PROFILE-info-col"}>
                         {!profile.profile_photo  ?
@@ -64,16 +105,36 @@ function Profile(){
                             { Cookies.get("userId")!==id && Cookies.get("authorization") ?
                                 <>
                                     <li>
-                                        <Button className={"PROFILE-icon-placeholder"}>
-                                            <FaUserPlus className={"PROFILE-icon"}/>
-                                            <h4>Add friend</h4>
-                                        </Button>
+                                        { friendStatus === "NOT_FRIEND" ?
+                                            <Button className={"PROFILE-icon-placeholder"} onClick={addFriend}>
+                                                <FaUserPlus className={"PROFILE-icon"}/>
+                                                <h4>Add friend</h4>
+                                            </Button>
+                                        : friendStatus === "FRIEND" ?
+                                            <Button variant={"danger"} className={"PROFILE-icon-placeholder"} onClick={removeFriend}>
+                                                <FaUserMinus className={"PROFILE-icon"}/>
+                                                <h5>Remove friend</h5>
+                                            </Button>
+                                        : friendStatus === "PENDING" ?
+                                            <Button variant={"secondary"} className={"PROFILE-icon-placeholder"} disabled={true}>
+                                                <FaUserClock className={"PROFILE-icon"}/>
+                                                <h5>Pending friend request</h5>
+                                            </Button>
+                                        :
+                                            <></>
+                                        }
                                     </li>
                                     <li>
-                                    <Button className={"PROFILE-icon-placeholder"}>
-                                    <FaFlag className={"PROFILE-icon"}/>
-                                    <h4>Report</h4>
-                                    </Button>
+                                        <a href={`/friends/${id}`}>
+                                            <Button className={"PROFILE-icon-placeholder"}>
+                                                <FaUserFriends className={"PROFILE-icon"}/>
+                                                <h4>Friends</h4>
+                                            </Button>
+                                        </a>
+                                        <Button className={"PROFILE-icon-placeholder"}>
+                                            <FaFlag className={"PROFILE-icon"}/>
+                                            <h4>Report</h4>
+                                        </Button>
                                     </li>
                                 </>
                                 :

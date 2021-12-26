@@ -1,23 +1,23 @@
 import React, {useEffect, useState} from 'react';
 import Cookies from "js-cookie";
-import {Image} from "react-bootstrap";
-import {Link} from "react-router-dom";
+import {Col, Image} from "react-bootstrap";
+import default_profile_picture from "../assets/images/default_profile_picture.jpg"
 import "./Conversation.css"
 import axios from "axios";
 
 
-export default function Conversation(props) {
-    const conversation_id = props.conversation.id
-    const first_user_id = props.conversation.first_user.id
-    const second_user_id = props.conversation.second_user.id
-    const cookie_user_id = Number(Cookies.get("userId"))
+function Conversation(props) {
 
     const [recentMessage, setRecentMessage] = useState([])
     const [recentMessageCode, setRecentMessageCode] = useState(null)
     const [recentMessageLoading, setRecentMessageLoading] = useState(true)
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/conversation/getRecentMessage/${conversation_id}`).then(response => {
+        axios.get(`http://localhost:8080/conversation/getRecentMessage/${props.conversation.conversationId}`, {
+            headers: {
+                'Authorization': Cookies.get("authorization")
+            }
+        }).then(response => {
             setRecentMessageCode(response.status);
             setRecentMessage(response.data);
             setRecentMessageLoading(false);
@@ -26,36 +26,38 @@ export default function Conversation(props) {
             setRecentMessageCode(err.response.status)
             setRecentMessageLoading(false);
         })
-    }, [conversation_id])
+    }, [])
 
-    // find out which id is associated with our friend
-    let friend_user_data = null
-    if (first_user_id === cookie_user_id) {
-        friend_user_data = props.conversation.second_user
-    } else if (second_user_id === cookie_user_id) {
-        friend_user_data = props.conversation.first_user
-    }
 
-    let friend_avatar_path = null
-    let friend_username = null
-    if (friend_user_data) {
-        friend_avatar_path = friend_user_data.profile.photo.fileName
-        friend_username = friend_user_data.profile.name
-    }
 
     return (
-        <Link to={`/chat/${conversation_id}`}>
-            <div>
-                <Image className={"conversation_avatar"} src={`http://localhost:8080/photo?filename=${friend_avatar_path}`}
-                       roundedCircle={true} width="35px" height="35px"/>
-                <p className={"conversation_nickname"}>{friend_username}</p>
-
-                { recentMessageCode === 200 && !recentMessageLoading ?
-                <p className={"conversation_recent_msg_content"}>{recentMessage.content}</p>
-                :
-                <></>
+        <div className={"mb-2 mt-2 CONVERSATION-holder"}>
+            <Col className={"col-4"}>
+                {props.conversation.profilePhoto !== null ?
+                    <Image
+                        src={`http://localhost:8080/photo?filename=${props.conversation.profilePhoto}`}
+                        roundedCircle={true} width="100px" height="100px"/>
+                    :
+                    <Image src={default_profile_picture}
+                           roundedCircle={true} width="100px" height="100px"/>
                 }
-            </div>
-        </Link>
+            </Col>
+            <Col className={"col-8"}>
+                { !recentMessageLoading && recentMessageCode === 200 ?
+                    <div>
+                        <h2>{props.conversation.username}</h2>
+                        <div>{recentMessage.date}</div>
+                        <span>{recentMessage.username}: {recentMessage.content}</span>
+                    </div>
+                    :
+                    <div>
+                        <h2>{props.conversation.username}</h2>
+                        <div>Click here and start conversation</div>
+                    </div>
+                }
+            </Col>
+
+        </div>
     )
 }
+export default Conversation;

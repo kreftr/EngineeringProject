@@ -1,4 +1,4 @@
-import {Alert, Button, Col, Form, Row, Modal, Image} from "react-bootstrap";
+import {Alert, Button, Col, Form, Row, Modal} from "react-bootstrap";
 import React, {useState} from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -125,11 +125,6 @@ function AccountSettings(){
                                 <Modal.Title>Account deletion</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-                                <center>
-                                    <Image className={"SETTINGS-profile-pic mb-4"}
-                                           src={"https://c.tenor.com/O4ZiceEcnUQAAAAM/sad-spongebob.gif"}
-                                           roundedCircle={true}/>
-                                </center>
                                 <h5>Are you sure you want to delete your account?</h5>
                                 Deleting your account is permanent and will remove all content including comments,
                                 avatars and profile settings.

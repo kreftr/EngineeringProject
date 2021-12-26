@@ -1,4 +1,4 @@
-import {Button, Carousel, Col, Container, Image, Row} from "react-bootstrap";
+import {Button, Col, Container, Image, Row} from "react-bootstrap";
 import {FaFacebookSquare, FaGithubSquare, FaKickstarter, FaYoutube} from "react-icons/all";
 import "./ProjectView.css"
 import React from "react";

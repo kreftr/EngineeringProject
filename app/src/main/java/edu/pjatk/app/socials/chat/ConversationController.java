@@ -1,5 +1,7 @@
 package edu.pjatk.app.socials.chat;
 
+import edu.pjatk.app.response.ConversationResponse;
+import edu.pjatk.app.response.RecentMessageResponse;
 import edu.pjatk.app.response.ResponseMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin("http://localhost:3000")
 @RestController
 @RequestMapping("/conversation")
 public class ConversationController {
@@ -20,9 +21,9 @@ public class ConversationController {
         this.conversationService = conversationService;
     }
 
-    @PostMapping(value = "/createConversation/{first_user_id}/{second_user_id}")
-    public ResponseEntity<?> createConversation(@PathVariable Long first_user_id, @PathVariable Long second_user_id) {
-        conversationService.createConversation(first_user_id, second_user_id);
+    @PostMapping(value = "/createConversation/{user_id}")
+    public ResponseEntity<?> createConversation(@PathVariable Long user_id) {
+        conversationService.createConversation(user_id);
         return new ResponseEntity<>(
                 new ResponseMessage("Conversation created!"), HttpStatus.OK
         );
@@ -44,9 +45,9 @@ public class ConversationController {
         }
     }
 
-    @GetMapping(value = "/getConversationByUserId/{first_user_id}/{second_user_id}")
-    public ResponseEntity<?> getConversationByUserId(@PathVariable Long first_user_id, @PathVariable Long second_user_id) {
-        Optional<Conversation> conversation = conversationService.getConversationByUserId(first_user_id, second_user_id);
+    @GetMapping(value = "/getConversationByUserId/{user_id}")
+    public ResponseEntity<?> getConversationByUserId(@PathVariable Long user_id) {
+        Optional<Conversation> conversation = conversationService.getConversationByUserId(user_id);
         if (conversation.isPresent())
         {
             return new ResponseEntity<>(
@@ -104,8 +105,8 @@ public class ConversationController {
     }
 
     @GetMapping(value = "/getRecentMessage/{id}")
-    public ResponseEntity<?> getRecentMessage(@PathVariable long id) {
-        Optional<Message> message = conversationService.getRecentMessage(id);
+    public ResponseEntity<?> getRecentMessage(@PathVariable Long id) {
+        Optional<RecentMessageResponse> message = conversationService.getRecentMessage(id);
         if (message.isPresent())
         {
             return new ResponseEntity<>(
@@ -119,10 +120,11 @@ public class ConversationController {
         }
     }
 
-    @GetMapping(value = "/getAllUserConversations/{userId}")
-    public ResponseEntity<?> getAllUserConversations(@PathVariable long userId) {
-        Optional<List<Conversation>> conversations = conversationService.getAllUserConversations(userId);
-        if (conversations.isPresent())
+    @GetMapping(value = "/getAllUserConversations")
+    public ResponseEntity<?> getAllUserConversations() {
+        List<ConversationResponse> conversations = conversationService.getAllUserConversations();
+
+        if (!conversations.isEmpty())
         {
             return new ResponseEntity<>(
                     conversations, HttpStatus.OK

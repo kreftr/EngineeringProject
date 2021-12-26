@@ -1,12 +1,5 @@
-.conversation_avatar {
-    float: left;
-    margin-right: 10px;
-}
 
-.conversation_nickname {
-    padding-top: 5px;
-}
-
-.conversation_recent_msg_content {
-
+.CONVERSATION-holder {
+    display: flex;
+    align-items: center;
 }
