@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -59,6 +61,22 @@ public class ActivationTokenRepository {
             activationToken = Optional.empty();
         }
         return activationToken;
+    }
+
+    public Optional<List<ActivationToken>> findExpired(LocalDateTime currentDateTime){
+        Optional expiredTokens;
+        try {
+            expiredTokens = Optional.of(
+                    entityManager.createQuery(
+                                    "SELECT token FROM ActivationToken token WHERE token.confirmed IS NULL " +
+                                            "AND token.expired <= :currentDateTime",
+                                    ActivationToken.class)
+                            .setParameter("currentDateTime", currentDateTime).getResultList()
+            );
+        } catch (NoResultException noResultException){
+            expiredTokens = Optional.empty();
+        }
+        return expiredTokens;
     }
 
 }

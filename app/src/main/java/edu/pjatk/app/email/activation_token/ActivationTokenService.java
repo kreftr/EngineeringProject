@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -36,6 +37,11 @@ public class ActivationTokenService {
     public void confirmActivationToken(ActivationToken activationToken){
         activationToken.setConfirmed(LocalDateTime.now());
         activationTokenRepository.update(activationToken);
+    }
+
+    public Optional<List<ActivationToken>> findExpiredTokens(){
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        return activationTokenRepository.findExpired(currentDateTime);
     }
 
 }

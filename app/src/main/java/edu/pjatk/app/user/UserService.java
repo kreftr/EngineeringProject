@@ -40,6 +40,12 @@ public class UserService {
     }
 
     @Transactional
+    public void removeUser(User user){
+        activationTokenService.removeActivationTokenByUser(user);
+        userRepository.remove(user);
+    }
+
+    @Transactional
     public void removeCurrentlyLoggedUser(){
         User user = findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).get();
         if (user.getProfile().getPhoto() != null) photoService.removePhoto(user.getProfile().getPhoto());

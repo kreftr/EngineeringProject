@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -53,6 +55,20 @@ public class RecoveryTokenRepository {
             recoveryToken = Optional.empty();
         }
         return recoveryToken;
+    }
+
+    public Optional<List<RecoveryToken>> findExpired(LocalDateTime currentDateTime){
+        Optional expiredRecoveryTokens;
+        try {
+            expiredRecoveryTokens = Optional.of(
+                    entityManager.createQuery(
+                                    "SELECT token FROM RecoveryToken token WHERE token.expired <= :currentDateTime", RecoveryToken.class)
+                            .setParameter("currentDateTime", currentDateTime).getResultList()
+            );
+        } catch (NoResultException noResultException){
+            expiredRecoveryTokens = Optional.empty();
+        }
+        return expiredRecoveryTokens;
     }
 
 }
