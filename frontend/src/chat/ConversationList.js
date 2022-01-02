@@ -22,7 +22,6 @@ function ConversationList() {
             }
         }).then((response) => {
             setConversations(response.data);
-            console.log(conversations)
         }).catch(err => {
             console.log(err.response)
         });
@@ -38,7 +37,7 @@ function ConversationList() {
                                 <Nav variant="pills" className="flex-column">
                                     {
                                         conversations.map((conversation, key) =>
-                                            <Nav.Item>
+                                            <Nav.Item key={key}>
                                                 <Nav.Link eventKey={conversation.conversationId}
                                                           onClick={() => {setConversation(conversation);}}>
                                                     <Conversation conversation={conversation}/>

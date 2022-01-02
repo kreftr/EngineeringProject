@@ -1,34 +1,43 @@
 package edu.pjatk.app.project;
 
 
+import edu.pjatk.app.request.ProjectRequest;
 import edu.pjatk.app.response.ResponseMessage;
+import edu.pjatk.app.response.project.FullProjectResponse;
+import edu.pjatk.app.response.project.MiniProjectResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.PostUpdate;
+import java.util.Arrays;
 import java.util.Optional;
+import java.util.Set;
 
 @CrossOrigin("http://localhost:3000")
 @RestController
 @RequestMapping("/project")
 
-public class ProjectControler {
+public class ProjectController {
+
     private final ProjectService projectService;
 
     @Autowired
-    private ProjectControler(ProjectService projectService){
+    private ProjectController(ProjectService projectService){
         this.projectService = projectService;
     }
 
     @GetMapping(value = "/getProjectById/{id}")
     public ResponseEntity<?> findProjectById(@PathVariable Long id) {
-        Optional<Project> project = projectService.getProjectById(id);
-        if (project.isPresent())
+
+        Optional<FullProjectResponse> projectResponse = projectService.getProjectById(id);
+
+        if (projectResponse.isPresent())
         {
             return new ResponseEntity<>(
-                    project, HttpStatus.OK
+                    projectResponse.get(), HttpStatus.OK
             );
         }
         else {
@@ -56,11 +65,12 @@ public class ProjectControler {
 
     @GetMapping(value = "/getAllProjects/{creator_id}")
     public ResponseEntity<?> getAllProjects(@PathVariable Long creator_id) {
-        Optional<Project> project = projectService.getAllProjects(creator_id);
-        if (project.isPresent())
+        Set<MiniProjectResponse> projects = projectService.getAllProjects(creator_id);
+
+        if (!projects.isEmpty())
         {
             return new ResponseEntity<>(
-                    project, HttpStatus.OK
+                    projects, HttpStatus.OK
             );
         }
         else {
@@ -70,34 +80,13 @@ public class ProjectControler {
         }
     }
 
-    @PostMapping(value = "/createProject/{project_name}/{project_category}/{project_status}/" +
-            "{project_creator}")
-    public ResponseEntity<?> createProject(@PathVariable String project_name,
-                                           @PathVariable String project_category,
-                                           @PathVariable String project_status,
-                                           @PathVariable Long project_creator) {
-        if (project_name.length() > 0 && project_category.length() > 0 && project_status.length() > 0) {
-            projectService.createProject(project_name, project_category, project_status, project_creator);
-            return new ResponseEntity<>(
-                    new ResponseMessage("Project created!"), HttpStatus.OK
-            );
-        }
-        else {
-            return new ResponseEntity<>(
-                    new ResponseMessage("Error wrong attributes for project creation"), HttpStatus.BAD_REQUEST
-            );
-        }
-    }
+    @PostMapping(value = "/createProject", consumes = {"multipart/form-data"})
+    public ResponseEntity<?> createProject(@RequestPart ProjectRequest projectRequest,
+                                           @RequestPart(required = false) MultipartFile projectPhoto) {
 
-    @PostMapping(value = "/createProject/{project_name}/{project_category}/{project_status}/" +
-            "{project_creator}/{project_description}")
-    public ResponseEntity<?> createProject(@PathVariable String project_name,
-                                           @PathVariable String project_description,
-                                           @PathVariable String project_category,
-                                           @PathVariable String project_status,
-                                           @PathVariable Long project_creator) {
-        if (project_name.length() > 0 && project_category.length() > 0 && project_status.length() > 0) {
-            projectService.createProject(project_name, project_description, project_category, project_status, project_creator);
+        //TODO: Request validation
+        if (true) {
+            projectService.createProject(projectRequest, projectPhoto);
             return new ResponseEntity<>(
                     new ResponseMessage("Project created!"), HttpStatus.OK
             );
@@ -140,4 +129,5 @@ public class ProjectControler {
                 new ResponseMessage("Project status change is complete"), HttpStatus.OK
         );
     }
+
 }

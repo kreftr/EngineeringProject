@@ -46,12 +46,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtAuthenticationFilter(authenticationManager()))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), userService))
                 .authorizeRequests()
-                .antMatchers("/", "/registration", "/registration/*", "/profile", "/recovery", "/recovery/*", "/user/findUserById/*").permitAll()
+                .antMatchers("/", "/registration", "/registration/*", "/profile", "/recovery", "/recovery/*",
+                        "/user/findUserById/*", "/categories/getAll", "/project/getAllProjects/*",
+                        "/project/getProjectById/*").permitAll()
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
-                .antMatchers(HttpMethod.GET, "/profile", "/photo").permitAll()
+                .antMatchers(HttpMethod.GET, "/profile", "/photo", "/project/getAllProjects/*").permitAll()
                 .antMatchers(HttpMethod.POST,  "/profile", "/photo").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/user/changePassword", "/user/deleteAccount", "/friends/**", "/conversation/**", "/profile/my").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/project/**", "/file/**", "/task/**").permitAll()
+                .antMatchers("/user/changePassword", "/user/deleteAccount", "/friends/**", "/conversation/**",
+                        "/profile/my", "/project/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers( "/file/**", "/task/**").permitAll()
                 .anyRequest().authenticated();
     }
 

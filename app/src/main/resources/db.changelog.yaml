@@ -111,3 +111,35 @@ databaseChangeLog:
         stripComments: true
         splitStatements: false
         path: db.changelog/20211223_message_edit_date_column.sql
+  - changeSet:
+      id: 20211228_project_add_photo_access_introduction_links
+      author: Rafał Kreft
+      sqlFile:
+        relativeToChangelogFile: true
+        stripComments: true
+        splitStatements: false
+        path: db.changelog/20211228_project_add_photo_access_introduction_links.sql
+  - changeSet:
+      id: 20220101_category
+      author: Rafał Kreft
+      sqlFile:
+        relativeToChangelogFile: true
+        stripComments: true
+        splitStatements: false
+        path: db.changelog/20220101_category.sql
+  - changeSet:
+      id: 20220101_insert_categories
+      author: Rafał Kreft
+      sqlFile:
+        relativeToChangelogFile: true
+        stripComments: true
+        splitStatements: false
+        path: db.changelog/20220101_insert_categories.sql
+  - changeSet:
+      id: 20220101_project_category
+      author: Rafał Kreft
+      sqlFile:
+        relativeToChangelogFile: true
+        stripComments: true
+        splitStatements: false
+        path: db.changelog/20220101_project_category.sql

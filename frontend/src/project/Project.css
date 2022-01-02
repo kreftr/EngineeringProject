@@ -1,0 +1,18 @@
+.PROJECT-button-section {
+    display: block;
+    background-color: red;
+}
+
+.PROJECT-button {
+    width: 100%;
+    padding: 8px;
+    font-size: 20px;
+}
+
+.PROJECT-introduction {
+    line-height: 130%;
+}
+
+.PROJECT-categories {
+    display: inline-flex;
+}

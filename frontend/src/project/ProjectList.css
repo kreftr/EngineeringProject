@@ -1,0 +1,37 @@
+
+.PROJECT_LIST-buttons-col {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.PROJECT_LIST-create-project-col {
+    display: flex;
+    background-color: red;
+}
+
+.PROJECT_LIST-create-project-pic {
+    align-self: center;
+}
+
+.PROJECT_LIST-create-project {
+    display: flex;
+    background-color: black;
+}
+
+.q {
+    width: 100%;
+}
+
+.PROJECT-categories {
+    overflow: scroll;
+    height: 200px;
+    /* Hide scrollbar for IE, Edge and Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.example::-webkit-scrollbar {
+    display: none;
+}

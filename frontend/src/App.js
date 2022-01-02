@@ -14,6 +14,7 @@ import Recovery from "./recovery/Recovery";
 import ProjectView from "./project/ProjectView";
 import ConversationList from "./chat/ConversationList"
 import FriendsList from "./friends/FriendsList"
+import ProjectList from "./project/ProjectList";
 
 
 class App extends Component{
@@ -35,6 +36,7 @@ class App extends Component{
                                 { Cookies.get("authorization") ?
                                     <>
                                         <Nav.Link href={"/profile/"+Cookies.get("userId")}>My profile</Nav.Link>
+                                        <Nav.Link href={"/projects"}>Projects</Nav.Link>
                                         <Nav.Link href={"/friends/"+Cookies.get("userId")}>Friends</Nav.Link>
                                         <Nav.Link href={"/conversations"}>Chat</Nav.Link>
                                     </>
@@ -63,6 +65,8 @@ class App extends Component{
                     <Route path={"profile/:id"} element={<Profile/>}/>
                     <Route path={"profile/settings"} element={<Settings/>}/>
                     <Route path={"friends/:id"} element={<FriendsList/>}/>
+                    <Route path={"projects"} element={<ProjectList/>}/>
+                    <Route path={"project/:id"} element={<ProjectView/>}/>
                     <Route path={"conversations/:id"} element={<ConversationList/>}/>
                     <Route path={"conversations"} element={<ConversationList/>}/>
                     <Route path={"search"} element={<Search/>}/>
@@ -70,7 +74,6 @@ class App extends Component{
                     <Route path={"verification/:token"} element={<Verification/>}/>
                     <Route path={"recovery/:token"} element={<Recovery/>}/>
                     <Route path={"login"} element={<Login/>}/>
-                    <Route path={"project"} element={<ProjectView/>}/>
                 </Routes>
             </Router>
         )

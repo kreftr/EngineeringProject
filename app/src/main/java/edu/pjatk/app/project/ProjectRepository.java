@@ -1,14 +1,14 @@
 package edu.pjatk.app.project;
 
-
-import edu.pjatk.app.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
+
 
 @Repository
 public class ProjectRepository {
@@ -20,7 +20,16 @@ public class ProjectRepository {
     }
 
     public Optional<Project> getProjectById(Long id) {
-        return Optional.of(entityManager.find(Project.class, id));
+        Optional project;
+        try {
+            project = Optional.of(entityManager.createQuery(
+                            "select project from Project project where project.id = :id", Project.class)
+                            .setParameter("id", id).getSingleResult());
+        }
+        catch (NoResultException e){
+            project = Optional.empty();
+        }
+        return project;
     }
 
     public Optional<Project> getProjectByName(String project_name) {
@@ -36,8 +45,8 @@ public class ProjectRepository {
         return project;
     }
 
-    public Optional<Project> getAllProjects(Long creator_id) {
-        Optional project;
+    public Optional<List<Project>> getAllProjects(Long creator_id) {
+        Optional<List<Project>> project;
         try {
             project =  Optional.of(entityManager.createQuery(
                 "select project from Project project where project.creator.id = :creator_id", Project.class)
@@ -80,6 +89,5 @@ public class ProjectRepository {
         project.setProject_name(project_status);
         entityManager.persist(project);
     }
-
 
 }
