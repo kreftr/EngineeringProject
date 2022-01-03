@@ -1,5 +1,7 @@
-import { Button, Col, Container, FloatingLabel, Form, FormControl, Image, InputGroup, ListGroup, ListGroupItem, Modal,
-         Row } from "react-bootstrap";
+import {
+    Alert, Button, Col, Container, FloatingLabel, Form, FormControl, Image, InputGroup, ListGroup, ListGroupItem, Modal,
+    Row
+} from "react-bootstrap";
 import {FaFacebookSquare, FaGithubSquare, FaKickstarter, FaRegPlusSquare, FaSistrix, FaYoutube} from "react-icons/all";
 import React, {useEffect, useState} from "react";
 import default_project_picture from "../assets/images/default-project-picture.jpg"
@@ -10,6 +12,9 @@ import Project from "./Project";
 
 
 function ProjectList(){
+
+    const [projectCreationMessage, setProjectCreationMessage] = useState()
+    const [responseCode, setResponseCode] = useState()
 
     //Created projects
     const [projects, setProjects] = useState([]);
@@ -30,7 +35,6 @@ function ProjectList(){
     const [introduction, setIntroduction] = useState(null);
     const [access, setAccess] = useState("PUBLIC");
     const [description, setDescription] = useState(null);
-    //TODO: There should be at least one category chosen
     const [category, setCategory] = useState([]);
     const [ytLink, setYTLink] = useState(null);
     const [fbLink, setFBLink] = useState(null);
@@ -50,8 +54,7 @@ function ProjectList(){
 
         axios.get(`http://localhost:8080/project/getAllProjects/${Cookies.get("userId")}`, {headers:{
                 'Authorization': Cookies.get("authorization")
-            }}).then(response => {
-                console.log(response)
+        }}).then(response => {
             setProjects(response.data)
         }).catch(err => {
             console.log(err.response)
@@ -96,6 +99,9 @@ function ProjectList(){
                 window.location.reload();
             })
             .catch(err => {
+                setResponseCode(err.response.status)
+                if (err.response.status === 400) setProjectCreationMessage("*"+err.response.data.error)
+                else setProjectCreationMessage("SERVER ERROR!")
                 console.log(err.response)
             })
     }
@@ -229,6 +235,21 @@ function ProjectList(){
                                         </Row>
                                         <Row>
                                             <hr/>
+                                            { projectCreationMessage && responseCode === 400 ?
+                                                <Alert variant={"danger"}>
+                                                    <center>
+                                                        {projectCreationMessage}
+                                                    </center>
+                                                </Alert>
+                                                : projectCreationMessage ?
+                                                <Alert variant={"danger"}>
+                                                    <center>
+                                                        {projectCreationMessage}
+                                                    </center>
+                                                </Alert>
+                                                :
+                                                <></>
+                                            }
                                             <Col>
                                                 <Button className={"q"} variant="secondary" onClick={handleClose}>
                                                     Close

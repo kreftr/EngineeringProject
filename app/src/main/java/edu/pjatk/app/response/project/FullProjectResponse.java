@@ -17,6 +17,8 @@ public class FullProjectResponse {
     private String introduction;
     private String description;
     private String creationDate;
+    private String status;
+    private String access;
     private Set<String> categories;
 
     private String youtubeLink;

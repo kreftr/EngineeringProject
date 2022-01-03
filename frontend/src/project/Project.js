@@ -1,29 +1,29 @@
-import {Badge, Button, Col, Image, ListGroupItem, Row} from "react-bootstrap";
+import {Button, Col, Image, ListGroupItem, Row} from "react-bootstrap";
 import default_project_picture from "../assets/images/default-project-picture.jpg"
 import React from "react";
 import "./Project.css"
-import {FaEye, FaRegEdit, FaUserPlus} from "react-icons/fa";
+import {FaCogs, FaEye, FaFileAlt} from "react-icons/fa";
 
 function Project(props){
 
     return(
         <ListGroupItem>
             <Row>
-                <Col className={"col-4"}>
+                <Col className={"col-3 PROJECT-thumbnail-section"}>
                     {props.project.projectPhoto ?
-                        <Image className={"ml-3"}
+                        <Image
                                src={`http://localhost:8080/photo?filename=${props.project.projectPhoto}`}
                                width="200px" height="200px"/>
                         :
-                        <Image className={"ml-3"} src={default_project_picture}
+                        <Image src={default_project_picture}
                                width="200px" height="200px"/>
                     }
                 </Col>
-                <Col className={"col-5"}>
+                <Col className={"col-6 PROJECT-content-section"}>
                     <h2>{props.project.title}</h2>
                     <div className={"PROJECT-introduction"}>{props.project.introduction}</div>
                 </Col>
-                <Col className={"col-3 PROJECT-button-section"}>
+                <Col className={"col-3 PROJECT-button-section b"}>
                     <a href={`/project/${props.project.projectId}`}>
                         <Button className={"PROJECT-button mt-3 mb-2"} variant={"primary"}>
                             <FaEye className={"mr-2"} size={35}/>
@@ -31,22 +31,13 @@ function Project(props){
                         </Button>
                     </a>
                     <Button className={"PROJECT-button mb-2"} variant={"success"}>
-                        <FaUserPlus className={"mr-2"} size={35}/>
-                        Invite
+                        <FaFileAlt className={"mr-2"} size={35}/>
+                        Workspace
                     </Button>
-                    <Button className={"PROJECT-button"} variant={"warning"}>
-                        <FaRegEdit className={"mr-2"} size={35}/>
+                    <Button className={"PROJECT-button"} variant={"danger"}>
+                        <FaCogs className={"mr-2"} size={35}/>
                         Settings
                     </Button>
-                </Col>
-            </Row>
-            <Row className={"mt-1"}>
-                <Col>
-                    {
-                        props.project.categories.map((category, key) =>
-                            <Badge key={key} className={"mr-2"} bg="primary">{category}</Badge>
-                        )
-                    }
                 </Col>
             </Row>
         </ListGroupItem>

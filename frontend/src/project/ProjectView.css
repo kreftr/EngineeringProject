@@ -1,27 +1,31 @@
-.r {
-    background-color: red;
-}
-
-.x {
-    display: inline;
-}
-
 .PROJECT-VIEW-base-info {
     display: inline-block;
 }
 
 .PROJECT-VIEW-title {
     font-size: 45px;
+    word-break: break-all;
 }
 
 .PROJECT-VIEW-subtitle {
     line-height: 120%;
+    overflow-wrap: break-word;
+}
+
+.PROJECT-VIEW-description {
+    overflow-wrap: break-word;
 }
 
 .PROJECT-VIEW-project-picture-col {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.PROJECT-VIEW-picture-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .PROJECT-VIEW-project-picture {
@@ -38,7 +42,6 @@
 
 .PROJECT-VIEW-author-holder {
     display: inline-flex;
-    width: 90%;
     text-decoration: none;
     align-items: center;
     justify-content: center;

@@ -1,4 +1,4 @@
-import {Badge, Button, Col, Container, Image, Row} from "react-bootstrap";
+import {Badge, Button, Col, Container, Image, ListGroup, Row} from "react-bootstrap";
 import {FaFacebookSquare, FaGithubSquare, FaKickstarter, FaYoutube} from "react-icons/all";
 import "./ProjectView.css"
 import default_project_picture from "../assets/images/default-project-picture.jpg"
@@ -31,27 +31,6 @@ function ProjectView(){
     }, [])
 
 
-    function authorSection(){
-        return(
-            <div>
-                <a className={"PROJECT-VIEW-author-holder"} href={`/profile/${project.authorId}`}>
-                    { project.authorPhoto ?
-                        <Image className={"PROJECT-VIEW-author-picture"}
-                               src={`http://localhost:8080/photo?filename=${project.authorPhoto}`}
-                               roundedCircle={true}/>
-                        :
-                        <Image className={"PROJECT-VIEW-author-picture"}
-                        src={default_profile_photo}
-                        roundedCircle={true}/>
-                    }
-                    <h2 className={"ml-2"}>{project.authorUsername}</h2>
-                </a>
-            </div>
-        )
-    }
-
-
-
     return(
         <Container className={"mt-5"}>
             <Row>
@@ -60,7 +39,7 @@ function ProjectView(){
                     { statusCode === 200 ?
                         <div>
                             <Row className={"mb-4"}>
-                                <Col>
+                                <Col className={"PROJECT-VIEW-picture-section"}>
                                     { project.projectPhoto ?
                                         <div className={"PROJECT-VIEW-project-picture-col"}>
                                             <Image className={"PROJECT-VIEW-project-picture"}
@@ -84,54 +63,67 @@ function ProjectView(){
                                         </h4>
                                     </div>
                                 </Col>
+                                <hr className={"mt-3 mb-1"}/>
                             </Row>
-                            <Row className={"mt-4"}>
+                            <Row>
                                 <Col>
-                                    <Row className={"ml-5 mr-5"}>
-                                            <Button className={"mb-3"} variant="primary">Join</Button>
-                                            <Button variant="primary">Report</Button>
-                                    </Row>
-                                    <Row className={"mt-3"}>
-                                        <Rating/>
-                                    </Row>
                                     <Row>
-                                        <Col>
-                                        {
-                                            project.categories.map((category, key) =>
-                                                <Badge key={key} className={"mr-1"} bg="primary">{category}</Badge>
-                                            )
-                                        }
-                                        </Col>
+                                        <ListGroup>
+                                            <ListGroup.Item>
+                                                <h3>Project rating: <Badge pill bg="primary">4.75</Badge></h3>
+                                            </ListGroup.Item>
+                                            <ListGroup.Item>
+                                                <h3> Access:
+                                                    { project.access === "PUBLIC" ?
+                                                        <Badge className={"ml-2"} bg="success">{project.access}</Badge>
+                                                        : project.access === "PROTECTED" ?
+                                                        <Badge className={"ml-2"} bg="warning">{project.access}</Badge>
+                                                        :
+                                                        <Badge className={"ml-2"} bg="dark">{project.access}</Badge>
+                                                    }
+                                                </h3>
+                                            </ListGroup.Item>
+                                            <ListGroup.Item>
+                                                <h3>
+                                                    Creation date: <Badge bg="secondary">{project.creationDate.slice(0,10)}</Badge>
+                                                </h3>
+                                            </ListGroup.Item>
+                                            <ListGroup.Item>
+                                                {
+                                                    project.categories.map((category, key) =>
+                                                        <Badge key={key} className={"mr-1"} bg="primary">{category}</Badge>
+                                                    )
+                                                }
+                                            </ListGroup.Item>
+                                        </ListGroup>
                                     </Row>
                                 </Col>
                                 <Col>
-                                    <Row className={"PROJECT-VIEW-author-col mb-4"}>
-                                        {authorSection()}
+                                    <Row className={"ml-3 mr-3 o"}>
+                                            <center>
+                                                <a className={"PROJECT-VIEW-author-holder"} href={`/profile/${project.authorId}`}>
+                                                    { project.authorPhoto ?
+                                                        <Image className={"PROJECT-VIEW-author-picture"}
+                                                               src={`http://localhost:8080/photo?filename=${project.authorPhoto}`}
+                                                               roundedCircle={true}/>
+                                                        :
+                                                        <Image className={"PROJECT-VIEW-author-picture"}
+                                                               src={default_profile_photo}
+                                                               roundedCircle={true}/>
+                                                    }
+                                                    <h2 className={"ml-2"}>{project.authorUsername}</h2>
+                                                </a>
+                                            </center>
+                                        <Button className={"mb-3 mt-4"} variant="primary">Join</Button>
+                                        <Button variant="primary">Report</Button>
                                     </Row>
-                                    <Row>
-                                        <Col>
-                                            <Row>
-                                                <div>
-                                                    <Col>
-                                                        <h1>81%</h1>
-                                                    </Col>
-                                                    <Col>
-                                                        <span>of voters fond this project interesting</span>
-                                                    </Col>
-                                                </div>
-                                            </Row>
-                                        </Col>
-                                        <Col>
-                                            <span>Creation date: </span>
-                                            <h5>{project.creationDate}</h5>
-                                        </Col>
-                                    </Row>
+                                    <Rating/>
                                 </Col>
                             </Row>
-                            <hr className={"mb-4 mt-4"}/>
+                            <hr className={"mb-4 mt-2"}/>
                             <Row>
                                 <h1 className={"mb-4"}>About project</h1>
-                                <span>
+                                <span className={"PROJECT-VIEW-description"}>
                                     {project.description}
                                 </span>
                             </Row>

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.PostUpdate;
+import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
@@ -81,21 +82,11 @@ public class ProjectController {
     }
 
     @PostMapping(value = "/createProject", consumes = {"multipart/form-data"})
-    public ResponseEntity<?> createProject(@RequestPart ProjectRequest projectRequest,
+    public ResponseEntity<?> createProject(@Valid @RequestPart ProjectRequest projectRequest,
                                            @RequestPart(required = false) MultipartFile projectPhoto) {
 
-        //TODO: Request validation
-        if (true) {
-            projectService.createProject(projectRequest, projectPhoto);
-            return new ResponseEntity<>(
-                    new ResponseMessage("Project created!"), HttpStatus.OK
-            );
-        }
-        else {
-            return new ResponseEntity<>(
-                    new ResponseMessage("Error wrong attributes for project creation"), HttpStatus.BAD_REQUEST
-            );
-        }
+        projectService.createProject(projectRequest, projectPhoto);
+        return new ResponseEntity<>(new ResponseMessage("Project created!"), HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/deleteProject/{id}")

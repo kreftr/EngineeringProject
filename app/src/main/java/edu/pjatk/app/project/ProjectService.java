@@ -64,7 +64,8 @@ public class ProjectService {
             return Optional.of(new FullProjectResponse(
                     project.getId(), projectPhoto,
                     project.getProject_name(), project.getProject_introduction(),
-                    project.getProject_description(), project.getCreation_date().format(formatter), categories,
+                    project.getProject_description(), project.getCreation_date().format(formatter),
+                    project.getProject_status().name(), project.getProject_access().name(), categories,
                     ytLink, gitLink, fbLink, kickLink,
                     project.getCreator().getId(), project.getCreator().getUsername(),
                     authorPhoto
@@ -121,7 +122,6 @@ public class ProjectService {
         {
             Set<Category> categories = new HashSet<>();
             for (String category : projectRequest.getCategory()){
-                System.out.println(category);
                 categories.add(categoryService.getCategoryByTitle(category).get());
             }
 
