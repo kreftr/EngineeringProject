@@ -9,7 +9,7 @@
 
 .PROJECT-VIEW-subtitle {
     line-height: 120%;
-    overflow-wrap: break-word;
+    overflow-wrap: anywhere;
 }
 
 .PROJECT-VIEW-description {
@@ -29,8 +29,8 @@
 }
 
 .PROJECT-VIEW-project-picture {
-    width: 325px;
-    height: 325px;
+    width: 350px;
+    height: 350px;
     border-style: outset;
 }
 

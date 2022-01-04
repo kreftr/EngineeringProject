@@ -50,16 +50,18 @@ public class ProjectController {
 
     @GetMapping(value = "/getProjectByName/{project_name}")
     public ResponseEntity<?> getProjectByName(@PathVariable String project_name) {
-        Optional<Project> project = projectService.getProjectByName(project_name);
-        if (project.isPresent())
+
+        Set<MiniProjectResponse> projects = projectService.getProjectByName(project_name);
+
+        if (projects.isEmpty())
         {
             return new ResponseEntity<>(
-                    project, HttpStatus.OK
+                    new ResponseMessage("No matches for '"+project_name+"'"), HttpStatus.NOT_FOUND
             );
         }
         else {
             return new ResponseEntity<>(
-                    new ResponseMessage("There are no projects!"), HttpStatus.NOT_FOUND
+                    projects, HttpStatus.OK
             );
         }
     }

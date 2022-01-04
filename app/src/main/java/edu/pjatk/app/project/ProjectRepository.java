@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @Repository
 public class ProjectRepository {
+
     private final EntityManager entityManager;
 
     @Autowired
@@ -32,12 +33,12 @@ public class ProjectRepository {
         return project;
     }
 
-    public Optional<Project> getProjectByName(String project_name) {
-        Optional project;
+    public Optional<List<Project>> getProjectByName(String project_name) {
+        Optional<List<Project>> project;
         try {
             project =  Optional.of(entityManager.createQuery(
-                            "select project from Project project where project.project_name = :project_name", Project.class)
-                    .setParameter("project_name", project_name).getResultList());
+                            "select project from Project project where project.project_name like :project_name", Project.class)
+                    .setParameter("project_name", project_name+"%").getResultList());
         }
         catch (NoResultException noResultException){
             project = Optional.empty();

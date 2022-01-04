@@ -1,6 +1,7 @@
 package edu.pjatk.app.socials.friends;
 
 import edu.pjatk.app.response.FriendResponse;
+import edu.pjatk.app.socials.chat.Conversation;
 import edu.pjatk.app.socials.chat.ConversationService;
 import edu.pjatk.app.user.User;
 import edu.pjatk.app.user.UserService;
@@ -49,6 +50,8 @@ public class FriendService {
         );
         Optional<Friend> friend = friendRepository.getFriendByUserId(loggedUser.get().getId(), id);
         if (loggedUser.isPresent() && friend.isPresent()){
+            Optional<Conversation> friendConversation = conversationService.getConversationByUserId(id);
+            if (friendConversation.isPresent()) conversationService.removeConversation(friendConversation.get());
             friendRepository.deleteFriend(friend.get());
             return true;
         }

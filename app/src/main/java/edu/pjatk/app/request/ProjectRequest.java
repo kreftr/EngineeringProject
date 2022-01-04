@@ -19,7 +19,7 @@ public class ProjectRequest {
     @NotBlank(message = "{validation.project.title.notBlank}")
     @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "{validation.project.title.regex}")
     private String title;
-    @Size(max = 300, message = "{validation.project.introduction.size}")
+    @Size(min = 150, max = 300, message = "{validation.project.introduction.size}")
     @NotBlank(message = "{validation.project.introduction.noBlank}")
     private String introduction;
     @NotBlank(message = "{validation.project.description.notBlank}")
