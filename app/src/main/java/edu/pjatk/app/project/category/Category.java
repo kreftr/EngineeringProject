@@ -23,6 +23,9 @@ public class Category {
     @ManyToMany(mappedBy = "categories")
     private Set<Project> projects = new HashSet<>();
 
+    @ManyToMany(mappedBy = "categories")
+    private Set<Project> profiles = new HashSet<>();
+
     public Category(String title){
         this.title = title;
     }

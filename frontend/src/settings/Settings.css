@@ -31,3 +31,8 @@
 .SETTINGS-save-button {
     width: 100%;
 }
+
+.SETTINGS-grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}

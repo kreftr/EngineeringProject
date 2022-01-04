@@ -69,7 +69,6 @@ function ProjectList(){
         else {
             setCategory([...category, e.target.value])
         }
-        console.log(category)
     }
 
     function projectSubmit(e){

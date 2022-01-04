@@ -4,7 +4,6 @@ import edu.pjatk.app.response.ConversationResponse;
 import edu.pjatk.app.response.RecentMessageResponse;
 import edu.pjatk.app.user.User;
 import edu.pjatk.app.user.UserService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -43,6 +42,27 @@ public class ConversationService {
         else return Optional.empty();
     }
 
+    public List<Conversation> getAllUserConversations(){
+
+        List<Conversation> conversations = new ArrayList<>();
+
+        Optional<User> loggedUser = userService.findUserByUsername(
+                SecurityContextHolder.getContext().getAuthentication().getName()
+        );
+
+        Optional<List<Conversation>> optionalConversations = conversationRepository.getAllUserConversations(
+                loggedUser.get().getId()
+        );
+
+        if (optionalConversations.isPresent() && !optionalConversations.get().isEmpty()){
+            for (Conversation c : optionalConversations.get()){
+                conversations.add(c);
+            }
+        }
+
+        return conversations;
+    }
+
     public void createConversation(Long user_id) {
         Optional<User> first_user = userService.findUserById(user_id);
         Optional<User> loggedUser = userService.findUserByUsername(
@@ -68,6 +88,10 @@ public class ConversationService {
     }
 
     public void deleteById(Long id){ conversationRepository.deleteById(id); }
+
+    public void removeConversation(Conversation conversation){
+        conversationRepository.remove(conversation);
+    }
 
     public Optional<List<Message>> getAllMessages(Long id){
         return conversationRepository.getAllMessages(id);
@@ -96,7 +120,7 @@ public class ConversationService {
         else return Optional.empty();
     }
 
-    public List<ConversationResponse> getAllUserConversations() {
+    public List<ConversationResponse> getAllUserConversationResponse() {
 
         List<ConversationResponse> listToReturn = new ArrayList<>();
 
