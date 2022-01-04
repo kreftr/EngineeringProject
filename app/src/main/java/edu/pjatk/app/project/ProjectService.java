@@ -8,9 +8,7 @@ import edu.pjatk.app.request.ProjectRequest;
 import edu.pjatk.app.response.project.FullProjectResponse;
 import edu.pjatk.app.response.project.MiniProjectResponse;
 import edu.pjatk.app.user.User;
-import edu.pjatk.app.user.UserRepository;
 import edu.pjatk.app.user.UserService;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -77,7 +75,40 @@ public class ProjectService {
     public Set<MiniProjectResponse> getProjectByName(String project_name) {
 
         Set<MiniProjectResponse> projectResponses = new HashSet<>();
-        Optional<List<Project>> projectList = projectRepository.getProjectByName(project_name);
+        Optional<List<Project>> projectList = projectRepository.getProjectsByTitle(project_name);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+        if (projectList.isPresent() && !projectList.get().isEmpty()){
+
+            String projectPhoto, authorPhoto;
+
+            for (Project p : projectList.get()){
+
+                Set<String> categories = new HashSet<>();
+                try { projectPhoto = p.getPhoto().getFileName(); } catch (NullPointerException e) { projectPhoto = null;}
+                try { authorPhoto = p.getCreator().getProfile().getPhoto().getFileName(); }
+                catch (NullPointerException e) { authorPhoto = null;}
+
+                for (Category c : p.getCategories()){
+                    categories.add(c.getTitle());
+                }
+
+                projectResponses.add(
+                        new MiniProjectResponse(
+                                p.getId(), projectPhoto, p.getProject_name(), p.getProject_introduction(),
+                                categories, p.getCreation_date().format(formatter), p.getCreator().getId(),
+                                p.getCreator().getUsername(), authorPhoto
+                        )
+                );
+            }
+            return projectResponses;
+        }
+        else return Collections.emptySet();
+    }
+
+    public Set<MiniProjectResponse> getProjectByCategory(String categoryTitle){
+        Set<MiniProjectResponse> projectResponses = new HashSet<>();
+        Optional<List<Project>> projectList = projectRepository.getByCategory(categoryTitle);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
         if (projectList.isPresent() && !projectList.get().isEmpty()){

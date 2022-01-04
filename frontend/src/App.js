@@ -9,7 +9,7 @@ import Search from "./search/Search";
 import Registration from "./registration/Registration";
 import Verification from "./registration/Verification";
 import Login from "./login/Login";
-import Settings from "./settings/Settings";
+import Settings from "./profile/settings/Settings";
 import Recovery from "./recovery/Recovery";
 import ProjectView from "./project/ProjectView";
 import ConversationList from "./chat/ConversationList"

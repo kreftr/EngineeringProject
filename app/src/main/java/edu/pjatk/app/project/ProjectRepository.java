@@ -33,17 +33,30 @@ public class ProjectRepository {
         return project;
     }
 
-    public Optional<List<Project>> getProjectByName(String project_name) {
-        Optional<List<Project>> project;
+    public Optional<List<Project>> getProjectsByTitle(String project_name) {
+        Optional<List<Project>> projects;
         try {
-            project =  Optional.of(entityManager.createQuery(
-                            "select project from Project project where project.project_name like :project_name", Project.class)
+            projects =  Optional.of(entityManager.createQuery(
+                            "select project from Project project where project.project_name like :project_name and project.project_access <> 'PRIVATE'", Project.class)
                     .setParameter("project_name", project_name+"%").getResultList());
         }
         catch (NoResultException noResultException){
-            project = Optional.empty();
+            projects = Optional.empty();
         }
-        return project;
+        return projects;
+    }
+
+    public Optional<List<Project>> getByCategory(String categoryTitle) {
+        Optional<List<Project>> projects;
+        try {
+            projects =  Optional.of(entityManager.createQuery(
+                            "select project from Project project join project.categories c where c.title = :title and project.project_access <> 'PRIVATE'", Project.class)
+                    .setParameter("title", categoryTitle).getResultList());
+        }
+        catch (NoResultException noResultException){
+            projects = Optional.empty();
+        }
+        return projects;
     }
 
     public Optional<List<Project>> getAllProjects(Long creator_id) {

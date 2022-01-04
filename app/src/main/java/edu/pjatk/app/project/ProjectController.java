@@ -66,6 +66,21 @@ public class ProjectController {
         }
     }
 
+    @GetMapping(value = "/getProjectByCategory/{title}")
+    public ResponseEntity getProjectByCategory(@PathVariable String title){
+        Set<MiniProjectResponse> projects = projectService.getProjectByCategory(title);
+        if (projects.isEmpty()){
+            return new ResponseEntity<>(
+                    new ResponseMessage("No matches for "+title+" category"), HttpStatus.NOT_FOUND
+            );
+        }
+        else {
+            return new ResponseEntity<>(
+                    projects, HttpStatus.OK
+            );
+        }
+    }
+
     @GetMapping(value = "/getAllProjects/{creator_id}")
     public ResponseEntity<?> getAllProjects(@PathVariable Long creator_id) {
         Set<MiniProjectResponse> projects = projectService.getAllProjects(creator_id);
