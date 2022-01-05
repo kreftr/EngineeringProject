@@ -23,6 +23,10 @@ public class FriendRepository {
     @Transactional
     public void addFriend(Friend friend) { entityManager.persist(friend); }
 
+    public void removeFriend(Friend friend){
+        entityManager.remove(friend);
+    }
+
     @Transactional
     public void acceptFriend(Friend friend) {
         entityManager.merge(friend);

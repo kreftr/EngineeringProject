@@ -68,6 +68,10 @@ public class FriendService {
         else return false;
     }
 
+    public void removeFriend(Friend friend){
+        friendRepository.removeFriend(friend);
+    }
+
     @Transactional
     public boolean acceptFriendByUserId(Long id) {
         Optional<User> loggedUser = userService.findUserByUsername(
@@ -118,7 +122,8 @@ public class FriendService {
         else return Optional.empty();
     }
 
-    public List<FriendResponse> getAllFriendsByUserId(Long id) {
+    //Returns responses
+    public List<FriendResponse> getAllFriendsResponsesByUserId(Long id) {
         Optional<List<Friend>> friendList = friendRepository.getAllFriendsByUserId(id);
         Optional<User> user = userService.findUserById(id);
 
@@ -176,6 +181,11 @@ public class FriendService {
             return listToReturn;
         }
         else return Collections.emptyList();
+    }
+
+    //Returns entity models
+    public Optional<List<Friend>> getAllFriendsByUserId(Long id){
+        return friendRepository.getAllFriendsByUserId(id);
     }
 
     public List<FriendResponse> getAllPending(){
