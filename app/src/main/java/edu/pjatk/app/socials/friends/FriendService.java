@@ -44,6 +44,7 @@ public class FriendService {
         }
     }
 
+    @Transactional
     public boolean deleteFriendByUserId(Long id) {
         Optional<User> loggedUser = userService.findUserByUsername(
                 SecurityContextHolder.getContext().getAuthentication().getName()
@@ -53,6 +54,15 @@ public class FriendService {
             Optional<Conversation> friendConversation = conversationService.getConversationByUserId(id);
             if (friendConversation.isPresent()) conversationService.removeConversation(friendConversation.get());
             friendRepository.deleteFriend(friend.get());
+
+            Optional<List<Conversation>> conversations = conversationService.getAllUserConversations(loggedUser.get().getId());
+            if (conversations.isPresent())
+            {
+                for (Conversation conversation : conversations.get()) {
+                    conversationService.removeConversation(conversation);
+                }
+            }
+
             return true;
         }
         else return false;

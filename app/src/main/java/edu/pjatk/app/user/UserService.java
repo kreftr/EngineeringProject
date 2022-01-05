@@ -3,6 +3,8 @@ package edu.pjatk.app.user;
 import edu.pjatk.app.email.activation_token.ActivationTokenService;
 import edu.pjatk.app.photo.PhotoService;
 import edu.pjatk.app.request.PasswordChangeRequest;
+import edu.pjatk.app.socials.chat.Conversation;
+import edu.pjatk.app.socials.chat.ConversationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,6 +21,8 @@ public class UserService {
     private final ActivationTokenService activationTokenService;
     private final PhotoService photoService;
     private final BCryptPasswordEncoder passwordEncoder;
+    private ConversationService conversationService;
+
 
     @Autowired
     public UserService(UserRepository userRepository, ActivationTokenService activationTokenService,
@@ -29,6 +33,11 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    // conversationService is loaded separately to avoid circular dependencies
+    @Autowired
+    public void setConversationService(ConversationService conversationService) {
+        this.conversationService = conversationService;
+    }
 
     public void saveUser(User user){
         userRepository.save(user);
@@ -43,6 +52,14 @@ public class UserService {
     public void removeUser(User user){
         activationTokenService.removeActivationTokenByUser(user);
         userRepository.remove(user);
+
+        Optional<List<Conversation>> conversations = conversationService.getAllUserConversations(user.getId());
+        if (conversations.isPresent())
+        {
+            for (Conversation conversation : conversations.get()) {
+                conversationService.removeConversation(conversation);
+            }
+        }
     }
 
     @Transactional
@@ -51,6 +68,14 @@ public class UserService {
         if (user.getProfile().getPhoto() != null) photoService.removePhoto(user.getProfile().getPhoto());
         activationTokenService.removeActivationTokenByUser(user);
         userRepository.remove(user);
+
+        Optional<List<Conversation>> conversations = conversationService.getAllUserConversations(user.getId());
+        if (conversations.isPresent())
+        {
+            for (Conversation conversation : conversations.get()) {
+                conversationService.removeConversation(conversation);
+            }
+        }
     }
 
     //Password change for currently logged user

@@ -32,7 +32,6 @@ public class User {
     @JoinColumn(name = "profile_id")
     private Profile profile;
 
-
     public User(String username, String email, String password, LocalDateTime creationDate,
                 UserRole userRole, Profile profile){
         this.username = username;
