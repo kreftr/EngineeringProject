@@ -1,6 +1,7 @@
 package edu.pjatk.app.socials.friends;
 
 import edu.pjatk.app.response.FriendResponse;
+import edu.pjatk.app.socials.chat.Conversation;
 import edu.pjatk.app.socials.chat.ConversationService;
 import edu.pjatk.app.user.User;
 import edu.pjatk.app.user.UserService;
@@ -43,6 +44,7 @@ public class FriendService {
         }
     }
 
+    @Transactional
     public boolean deleteFriendByUserId(Long id) {
         Optional<User> loggedUser = userService.findUserByUsername(
                 SecurityContextHolder.getContext().getAuthentication().getName()
@@ -50,6 +52,15 @@ public class FriendService {
         Optional<Friend> friend = friendRepository.getFriendByUserId(loggedUser.get().getId(), id);
         if (loggedUser.isPresent() && friend.isPresent()){
             friendRepository.deleteFriend(friend.get());
+
+            Optional<List<Conversation>> conversations = conversationService.getAllUserConversations(loggedUser.get().getId());
+            if (conversations.isPresent())
+            {
+                for (Conversation conversation : conversations.get()) {
+                    conversationService.removeConversation(conversation);
+                }
+            }
+
             return true;
         }
         else return false;

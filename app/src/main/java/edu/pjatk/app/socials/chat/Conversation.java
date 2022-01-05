@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -25,6 +25,9 @@ public class Conversation {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "second_user_id")
     private User second_user;
+
+    @OneToMany(mappedBy = "conversation", cascade = CascadeType.REMOVE)
+    private List<Message> messages;
 
     public Conversation(User first_user, User second_user){
         this.first_user = first_user;
