@@ -1,7 +1,7 @@
 import {Badge, Button, Col, Container, Image, ListGroup, Row} from "react-bootstrap";
 import {FaFacebookSquare, FaGithubSquare, FaKickstarter, FaYoutube} from "react-icons/all";
 import "./ProjectView.css"
-import default_project_picture from "../assets/images/default-project-picture.jpg"
+import default_project_picture from "../assets/images/default_project_picture.jpg"
 import default_profile_photo from "../assets/images/default_profile_picture.jpg"
 import React, {useEffect, useState} from "react";
 import Rating from "./Rating";

@@ -1,5 +1,5 @@
 import {Button, Col, Image, ListGroupItem, Row} from "react-bootstrap";
-import default_project_picture from "../assets/images/default-project-picture.jpg"
+import default_project_picture from "../assets/images/default_project_picture.jpg"
 import React from "react";
 import "./Project.css"
 import {FaCogs, FaEye, FaFileAlt} from "react-icons/fa";

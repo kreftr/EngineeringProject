@@ -56,3 +56,37 @@
     height: 40px;
     width: 40px;
 }
+
+.PROFILE-project-introduction{
+    line-height: 120%;
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+.PROFILE-project-card-clickable {
+    cursor: pointer;
+}
+
+.PROFILE-project-text-padding {
+    padding: 0 25px;
+}
+
+.PROFILE-href-styling {
+    text-decoration: none;
+    color: black;
+}
+
+a:hover {color: black; text-decoration: none; }
+
+.PROFILE-projects-window {
+    overflow: scroll;
+    height: 700px;
+    /* Hide scrollbar for IE, Edge and Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.example::-webkit-scrollbar {
+    display: none;
+}

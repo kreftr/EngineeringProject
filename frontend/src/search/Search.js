@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 import "./Search.css"
 import default_profile_picture from "../assets/images/default_profile_picture.jpg"
-import default_project_picture from "../assets/images/default-project-picture.jpg"
+import default_project_picture from "../assets/images/default_project_picture.jpg"
 
 function Search(){
 

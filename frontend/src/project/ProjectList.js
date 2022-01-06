@@ -4,7 +4,7 @@ import {
 } from "react-bootstrap";
 import {FaFacebookSquare, FaGithubSquare, FaKickstarter, FaRegPlusSquare, FaSistrix, FaYoutube} from "react-icons/all";
 import React, {useEffect, useState} from "react";
-import default_project_picture from "../assets/images/default-project-picture.jpg"
+import default_project_picture from "../assets/images/default_project_picture.jpg"
 import "./ProjectList.css"
 import axios from "axios";
 import Cookies from "js-cookie";
