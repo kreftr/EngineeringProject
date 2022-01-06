@@ -20,6 +20,10 @@ public class ProjectRepository {
         this.entityManager = entityManager;
     }
 
+    public void update(Project project){
+        entityManager.merge(project);
+    }
+
     public Optional<Project> getProjectById(Long id) {
         Optional project;
         try {

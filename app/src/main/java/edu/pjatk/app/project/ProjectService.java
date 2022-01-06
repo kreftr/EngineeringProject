@@ -18,6 +18,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectService {
@@ -59,6 +60,12 @@ public class ProjectService {
                 categories.add(c.getTitle());
             }
 
+            //Return average rating if there is more than one vote
+            float averageRating = (project.getRatings().size() > 0 ?
+                    project.getRatings().stream().collect(Collectors.summingInt(Rating::getValue)).floatValue()/project.getRatings().size()
+                    : 0);
+            int numberOfVotes = project.getRatings().size();
+
             return Optional.of(new FullProjectResponse(
                     project.getId(), projectPhoto,
                     project.getProject_name(), project.getProject_introduction(),
@@ -66,7 +73,7 @@ public class ProjectService {
                     project.getProject_status().name(), project.getProject_access().name(), categories,
                     ytLink, gitLink, fbLink, kickLink,
                     project.getCreator().getId(), project.getCreator().getUsername(),
-                    authorPhoto
+                    authorPhoto, averageRating, numberOfVotes
             ));
         }
         else return Optional.empty();
@@ -169,6 +176,50 @@ public class ProjectService {
             return projectResponses;
         }
         else return Collections.emptySet();
+    }
+
+    @Transactional
+    public void rateProject(Long id, int ratingValue){
+
+        Optional<Project> project = projectRepository.getProjectById(id);
+        Optional<User> loggedUser = userService.findUserByUsername(
+                SecurityContextHolder.getContext().getAuthentication().getName()
+        );
+
+        if (project.isPresent() && loggedUser.isPresent()){
+
+            Rating newRate = new Rating(ratingValue, loggedUser.get().getProfile(), project.get());
+
+            Optional<Rating> oldRate = project.get().getRatings().stream().filter(
+                    rating -> rating.getProfile().equals(loggedUser.get().getProfile())).findFirst();
+
+            //Check if user already rated this project
+            if (oldRate.isPresent()){
+                for (int i=0; i < project.get().getRatings().size(); i++){
+                    if (project.get().getRatings().get(i).equals(oldRate.get())){
+                        project.get().getRatings().get(i).setValue(ratingValue);
+                    }
+                }
+            } else project.get().getRatings().add(newRate);
+
+            projectRepository.update(project.get());
+        }
+    }
+
+    public int getMyRating(Long projectId){
+        Optional<Project> projectOptional = projectRepository.getProjectById(projectId);
+        Optional<User> loggedUser = userService.findUserByUsername(
+                SecurityContextHolder.getContext().getAuthentication().getName()
+        );
+
+        if (loggedUser.isPresent() && projectOptional.isPresent()){
+            Project project = projectOptional.get();
+            Optional<Rating> rate = project.getRatings().stream().filter(
+                    rating -> rating.getProfile().equals(loggedUser.get().getProfile())).findFirst();
+            if (rate.isPresent()) return rate.get().getValue();
+            else return 0;
+        }
+        else return 0;
     }
 
     @Transactional

@@ -142,9 +142,9 @@ function Search(){
                                         </div>
                                     )})
                             : inputType === "project" || inputType === "category" ?
-                                projects.map((project) => {
+                                projects.map((project, key) => {
                                     return(
-                                        <Card className={"mt-3 ml-2 mr-2 flex-box"}>
+                                        <Card  key={key} className={"mt-3 ml-2 mr-2 flex-box"}>
                                             { project.projectPhoto ?
                                                 <Card.Img variant="top" width={"250px"} height={"250px"} src={`http://localhost:8080/photo?filename=${project.projectPhoto}`} />
                                                 :

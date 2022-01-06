@@ -6,6 +6,7 @@ import default_profile_photo from "../assets/images/default_profile_picture.jpg"
 import React, {useEffect, useState} from "react";
 import Rating from "./Rating";
 import axios from "axios";
+import Cookies from "js-cookie";
 import {useParams} from "react-router-dom";
 
 
@@ -22,7 +23,6 @@ function ProjectView(){
         ).then(response => {
             setProject(response.data)
             setStatusCode(response.status)
-            console.log(response.data)
         }).catch(err => {
             console.log(err.response)
             setStatusCode(err.response.status)
@@ -70,7 +70,24 @@ function ProjectView(){
                                     <Row>
                                         <ListGroup>
                                             <ListGroup.Item>
-                                                <h3>Project rating: <Badge pill bg="primary">4.75</Badge></h3>
+                                                { project.averageRating === 0 ?
+                                                    <h3>Project rating: <Badge pill bg="secondary">No votes</Badge></h3>
+                                                : project.averageRating > 0 && project.averageRating <= 2 ?
+                                                    <h3>Project rating:
+                                                        <Badge className={"ml-1"} pill bg="danger">{project.averageRating.toFixed(2)}</Badge>
+                                                        <Badge className={"ml-2"} pill bg="primary">{project.numberOfVotes} votes</Badge>
+                                                    </h3>
+                                                : project.averageRating > 2 && project.averageRating <= 3.5 ?
+                                                    <h3>Project rating:
+                                                        <Badge className={"ml-1"} pill bg="warning">{project.averageRating.toFixed(2)}</Badge>
+                                                        <Badge className={"ml-2"} pill bg="primary">{project.numberOfVotes} votes</Badge>
+                                                    </h3>
+                                                :
+                                                    <h3>Project rating:
+                                                        <Badge className={"ml-1"} pill bg="success">{project.averageRating.toFixed(2)}</Badge>
+                                                        <Badge className={"ml-2"} pill bg="primary">{project.numberOfVotes} votes</Badge>
+                                                    </h3>
+                                                }
                                             </ListGroup.Item>
                                             <ListGroup.Item>
                                                 <h3> Access:
@@ -114,10 +131,17 @@ function ProjectView(){
                                                     <h2 className={"ml-2"}>{project.authorUsername}</h2>
                                                 </a>
                                             </center>
-                                        <Button className={"mb-3 mt-4"} variant="primary">Join</Button>
-                                        <Button variant="primary">Report</Button>
+                                        { Cookies.get("authorization") ?
+                                            <Row>
+                                                <Button className={"mb-3 mt-4"} variant="primary">Join</Button>
+                                                <Button variant="primary">Report</Button>
+                                                <Rating/>
+                                            </Row>
+                                            :
+                                            <></>
+                                        }
                                     </Row>
-                                    <Rating/>
+
                                 </Col>
                             </Row>
                             <hr className={"mb-4 mt-2"}/>

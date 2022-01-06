@@ -11,6 +11,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -46,6 +47,9 @@ public class Project {
             inverseJoinColumns = {@JoinColumn(name = "category_id")}
     )
     private Set<Category> categories = new HashSet<>();
+
+    @OneToMany(mappedBy = "project", cascade = {CascadeType.MERGE, CascadeType.REMOVE}, orphanRemoval = true)
+    private List<Rating> ratings =  new ArrayList<>();
 
     @OneToOne(fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "photo_id")
@@ -85,16 +89,6 @@ public class Project {
         this.kickstarter_link = kickstarter_link;
         this.creator = creator;
         this.photo = photo;
-    }
-
-    public Project(String project_name, String project_description, LocalDateTime creation_date,
-                   Set<Category> categories, ProjectStatus project_status, User creator){
-        this.project_name = project_name;
-        this.project_description = project_description;
-        this.creation_date = creation_date;
-        this.categories = categories;
-        this.project_status = project_status;
-        this.creator = creator;
     }
 
 }

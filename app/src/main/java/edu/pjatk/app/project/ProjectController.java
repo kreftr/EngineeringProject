@@ -98,6 +98,23 @@ public class ProjectController {
         }
     }
 
+    @PostMapping(value = "/rateProject/{id}", params = "rating")
+    public ResponseEntity rateProject(@PathVariable Long id, @RequestParam int rating){
+
+        if (rating > 0 && rating <= 5){
+            projectService.rateProject(id, rating);
+            return new ResponseEntity(HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping(value = "/getMyRating/{projectId}")
+    public ResponseEntity getMyRating(@PathVariable Long projectId){
+        return new ResponseEntity(projectService.getMyRating(projectId), HttpStatus.OK);
+    }
+
     @PostMapping(value = "/createProject", consumes = {"multipart/form-data"})
     public ResponseEntity<?> createProject(@Valid @RequestPart ProjectRequest projectRequest,
                                            @RequestPart(required = false) MultipartFile projectPhoto) {
