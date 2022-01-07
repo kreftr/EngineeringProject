@@ -98,6 +98,19 @@ public class ProjectController {
         }
     }
 
+    @GetMapping(value= "/getProposed")
+    public ResponseEntity getProposedProjects(){
+        Set<MiniProjectResponse> proposedProjects = projectService.getAllProposedProjects();
+        if (proposedProjects.isEmpty()){
+            return new ResponseEntity<>(
+                    new ResponseMessage("We couldn't find any proper project for you :("), HttpStatus.NOT_FOUND
+            );
+        }
+        else {
+            return new ResponseEntity(proposedProjects, HttpStatus.OK);
+        }
+    }
+
     @PostMapping(value = "/rateProject/{id}", params = "rating")
     public ResponseEntity rateProject(@PathVariable Long id, @RequestParam int rating){
 

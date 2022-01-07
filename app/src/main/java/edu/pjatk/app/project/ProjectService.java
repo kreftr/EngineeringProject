@@ -178,6 +178,54 @@ public class ProjectService {
         else return Collections.emptySet();
     }
 
+    public Set<MiniProjectResponse> getAllProposedProjects(){
+        Optional<User> loggedUser = userService.findUserByUsername(
+                SecurityContextHolder.getContext().getAuthentication().getName()
+        );
+        Optional<List<Project>> allProjects = projectRepository.getAllProposedProjects(loggedUser.get().getId());
+
+        if (loggedUser.isPresent() && !allProjects.get().isEmpty()){
+
+            Set<MiniProjectResponse> proposedProjects = new HashSet<>();
+            Set<String> userCategories = new HashSet<>();
+            loggedUser.get().getProfile().getCategories().stream().forEach(category -> userCategories.add(category.getTitle()));
+            Set<String> projectCategories = new HashSet<>();
+
+            for (Project p : allProjects.get()){
+
+                p.getCategories().stream().forEach(category -> projectCategories.add(category.getTitle()));
+
+                if (projectCategories.retainAll(userCategories) && !projectCategories.isEmpty()){
+
+                    String projectPhoto, authorPhoto;
+                    Set<String> categories = new HashSet<>();
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+                    try { projectPhoto = p.getPhoto().getFileName(); } catch (NullPointerException e) { projectPhoto = null;}
+                    try { authorPhoto = p.getCreator().getProfile().getPhoto().getFileName(); }
+                    catch (NullPointerException e) { authorPhoto = null;}
+
+                    for (Category c : p.getCategories()){
+                        categories.add(c.getTitle());
+                    }
+
+                    proposedProjects.add(
+                            new MiniProjectResponse(
+                                    p.getId(), projectPhoto, p.getProject_name(), p.getProject_introduction(),
+                                    categories, p.getCreation_date().format(formatter), p.getCreator().getId(),
+                                    p.getCreator().getUsername(), authorPhoto
+                            )
+                    );
+
+                    projectCategories.clear();
+                }
+                projectCategories.clear();
+            }
+            return proposedProjects;
+        }
+        else return Collections.emptySet();
+    }
+
     @Transactional
     public void rateProject(Long id, int ratingValue){
 

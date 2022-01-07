@@ -1,5 +1,17 @@
 import {
-    Alert, Button, Col, Container, FloatingLabel, Form, FormControl, Image, InputGroup, ListGroup, ListGroupItem, Modal,
+    Alert,
+    Badge,
+    Button,
+    Col,
+    Container,
+    FloatingLabel,
+    Form,
+    FormControl,
+    Image,
+    InputGroup,
+    ListGroup,
+    ListGroupItem,
+    Modal,
     Row
 } from "react-bootstrap";
 import {FaFacebookSquare, FaGithubSquare, FaKickstarter, FaRegPlusSquare, FaSistrix, FaYoutube} from "react-icons/all";
@@ -9,6 +21,7 @@ import "./ProjectList.css"
 import axios from "axios";
 import Cookies from "js-cookie";
 import Project from "./Project";
+import {FaCogs, FaEye, FaFileAlt} from "react-icons/fa";
 
 
 function ProjectList(){
@@ -20,11 +33,18 @@ function ProjectList(){
     const [projects, setProjects] = useState([]);
     //Projects categories
     const [categories, setCategories] = useState([]);
+    //Proposed projects
+    const [proposed, setProposed] = useState([]);
+
+    //Proposed projects window
+    const [showProposedProjects, setShowProposedProjects] = useState(false);
+    const handleProposedProjectsClose = () => setShowProposedProjects(false);
+    const handleProposedProjectsShow = () => setShowProposedProjects(true);
 
     //Project creation window
-    const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const [showProjectCreation, setShowProjectCreation] = useState(false);
+    const handleProjectCreationClose = () => setShowProjectCreation(false);
+    const handleProjectCreationShow = () => setShowProjectCreation(true);
     function handleImageChange(e){
         setImg(URL.createObjectURL(e.target.files[0]));
     }
@@ -56,6 +76,14 @@ function ProjectList(){
                 'Authorization': Cookies.get("authorization")
         }}).then(response => {
             setProjects(response.data)
+        }).catch(err => {
+            console.log(err.response)
+        })
+
+        axios.get(`http://localhost:8080/project/getProposed`, {headers:{
+                'Authorization': Cookies.get("authorization")
+        }}).then(response => {
+            setProposed(response.data)
         }).catch(err => {
             console.log(err.response)
         })
@@ -113,11 +141,11 @@ function ProjectList(){
                 <Col className={"col-8"}>
                     <Row>
                         <Col className={"PROJECT_LIST-buttons-col"}>
-                            <Button variant={"primary"} onClick={handleShow}>
+                            <Button variant={"primary"} onClick={handleProjectCreationShow}>
                                 <FaRegPlusSquare size={50} className={"mr-2"}/>
                                 Create project
                             </Button>
-                            <Modal  show={show} onHide={handleClose} size={"lg"}>
+                            <Modal show={showProjectCreation} onHide={handleProjectCreationClose} size={"lg"}>
                                 <Modal.Header closeButton>
                                     <Modal.Title>New Project</Modal.Title>
                                 </Modal.Header>
@@ -250,7 +278,7 @@ function ProjectList(){
                                                 <></>
                                             }
                                             <Col>
-                                                <Button className={"q"} variant="secondary" onClick={handleClose}>
+                                                <Button className={"q"} variant="secondary" onClick={handleProjectCreationClose}>
                                                     Close
                                                 </Button>
                                             </Col>
@@ -263,9 +291,70 @@ function ProjectList(){
                                     </Form>
                                 </Modal.Body>
                             </Modal>
+                            <Modal show={showProposedProjects} onHide={handleProposedProjectsClose} size={"lg"}>
+                                <Modal.Header closeButton>
+                                    <Modal.Title>Projects you may like</Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>
+                                    <ListGroup className={"PROJECT-proposed mt-3"}>
+                                        { proposed.length === 0 ?
+                                            <center>
+                                                <h2>We couldn't find proper project for you</h2>
+                                                <p>Select in the profile settings, categories of projects that interest you or use the search engine.</p>
+                                            </center>
+                                            :
+                                            <></>
+                                        }
+                                        {
+                                            proposed.map((project, key) =>
+                                                <ListGroupItem key={key}>
+                                                    <a className={"PROFILE-href-styling"} href={`/project/${project.projectId}`}>
+                                                        <Row>
+                                                            <Col className={"col-3 PROJECT-thumbnail-section"}>
+                                                                {project.projectPhoto ?
+                                                                    <Image
+                                                                        src={`http://localhost:8080/photo?filename=${project.projectPhoto}`}
+                                                                        width="180px" height="180px"/>
+                                                                    :
+                                                                    <Image src={default_project_picture}
+                                                                           width="180px" height="180px"/>
+                                                                }
+                                                            </Col>
+                                                            <Col className={"col-9 PROJECT-content-section"}>
+                                                                <h2>{project.title}</h2>
+                                                                <div className={"PROJECT-introduction"}>{project.introduction}</div>
+                                                            </Col>
+                                                        </Row>
+                                                        <div className={"mt-1"}>
+                                                            { project.categories.map((category, key) =>
+                                                                <Badge pill key={key} className={"ml-1"} bg="primary">{category}</Badge>
+                                                            )
+                                                            }
+                                                        </div>
+                                                    </a>
+                                                    <hr/>
+                                                </ListGroupItem>
+                                            )
+                                        }
+                                    </ListGroup>
+                                    <Row>
+                                        <Col>
+                                            <Button className={"q mt-2"} variant="secondary" onClick={handleProposedProjectsClose}>
+                                                Close
+                                            </Button>
+                                        </Col>
+                                        <Col>
+                                            <Button className={"q mt-2"} variant="primary" href={"/search"}>
+                                                <FaSistrix size={20} className={"mr-2"}/>
+                                                Go to search bar
+                                            </Button>
+                                        </Col>
+                                    </Row>
+                                </Modal.Body>
+                            </Modal>
                         </Col>
                         <Col className={"PROJECT_LIST-buttons-col"}>
-                            <Button variant={"primary"}>
+                            <Button variant={"primary"} onClick={handleProposedProjectsShow}>
                                 <FaSistrix size={50} className={"mr-2"}/>
                                 Join project
                             </Button>

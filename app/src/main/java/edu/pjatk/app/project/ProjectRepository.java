@@ -37,6 +37,19 @@ public class ProjectRepository {
         return project;
     }
 
+    public Optional<List<Project>> getAllProposedProjects(Long id){
+        Optional<List<Project>> projects;
+        try {
+            projects =  Optional.of(entityManager.createQuery(
+                            "select project from Project project where project.project_access <> 'PRIVATE' and project.creator.id<>:id", Project.class)
+                    .setParameter("id", id).getResultList());
+        }
+        catch (NoResultException noResultException){
+            projects = Optional.empty();
+        }
+        return projects;
+    }
+
     public Optional<List<Project>> getProjectsByTitle(String project_name) {
         Optional<List<Project>> projects;
         try {
