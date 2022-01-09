@@ -11,9 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.PostUpdate;
 import javax.validation.Valid;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
 
@@ -134,6 +132,61 @@ public class ProjectController {
 
         projectService.createProject(projectRequest, projectPhoto);
         return new ResponseEntity<>(new ResponseMessage("Project created!"), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/getAllProjectsWhereIsMember")
+    public ResponseEntity getAllProjectsWhereIsMember(){
+        Set<MiniProjectResponse> projects = projectService.getAllProjectsWhereUserIsMember();
+        if (!projects.isEmpty()){
+            return new ResponseEntity(projects, HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping(value = "/join/{id}")
+    public ResponseEntity joinProject(@PathVariable Long id){
+
+        Optional<FullProjectResponse> project = projectService.getProjectById(id);
+
+        if (project.isPresent()){
+            if (project.get().getStatus().equals(ProjectStatus.OPEN.toString())) {
+
+                if (project.get().getAccess().equals(ProjectAccess.PUBLIC.toString()) ||
+                        project.get().getAccess().equals(ProjectAccess.PROTECTED.toString())) {
+                    if(projectService.joinProject(id)) return new ResponseEntity(HttpStatus.OK);
+                    else return new ResponseEntity(new ResponseMessage("You are already a participant in this project"), HttpStatus.BAD_REQUEST);
+                } else {
+                    return new ResponseEntity(new ResponseMessage("You can't join unless project's owner invites you") ,HttpStatus.UNAUTHORIZED);
+                }
+            } else {
+                return new ResponseEntity(
+                        new ResponseMessage("This project is bo longer open"), HttpStatus.UNAUTHORIZED
+                );
+            }
+        }
+        else {
+            return new ResponseEntity(
+                    new ResponseMessage("There is no project with this id"), HttpStatus.NOT_FOUND
+            );
+        }
+    }
+
+    @PostMapping(value = "/leave/{id}")
+    public ResponseEntity leaveProject(@PathVariable Long id){
+
+        Optional<FullProjectResponse> project = projectService.getProjectById(id);
+
+        if (project.isPresent()){
+            if(projectService.leaveProject(id)) return new ResponseEntity(HttpStatus.OK);
+            else return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        else {
+            return new ResponseEntity(
+                    new ResponseMessage("There is no project with this id"), HttpStatus.NOT_FOUND
+            );
+        }
     }
 
     @DeleteMapping(value = "/deleteProject/{id}")

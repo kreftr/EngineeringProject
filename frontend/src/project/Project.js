@@ -1,10 +1,22 @@
 import {Button, Col, Image, ListGroupItem, Row} from "react-bootstrap";
 import default_project_picture from "../assets/images/default_project_picture.jpg"
 import React from "react";
+import Cookies from "js-cookie";
 import "./Project.css"
-import {FaCogs, FaEye, FaFileAlt} from "react-icons/fa";
+import {FaCogs, FaEye, FaFileAlt, FaWindowClose} from "react-icons/fa";
+import axios from "axios";
 
 function Project(props){
+
+    function leave(id){
+        axios.post(`http://localhost:8080/project/leave/${id}`,null,{headers:{
+                'Authorization': Cookies.get("authorization")
+        }}).then(response => {
+            window.location.reload();
+        }).catch(err => {
+            console.log(err.response)
+        })
+    }
 
     return(
         <ListGroupItem>
@@ -30,14 +42,21 @@ function Project(props){
                             View
                         </Button>
                     </a>
-                    <Button className={"PROJECT-button mb-2"} variant={"success"}>
+                    <Button className={"PROJECT-button mb-2"} variant={"primary"}>
                         <FaFileAlt className={"mr-2"} size={35}/>
                         Workspace
                     </Button>
-                    <Button className={"PROJECT-button"} variant={"danger"}>
-                        <FaCogs className={"mr-2"} size={35}/>
-                        Settings
-                    </Button>
+                    { props.project.authorId == Cookies.get("userId") ?
+                        <Button className={"PROJECT-button"} variant={"primary"}>
+                            <FaCogs className={"mr-2"} size={35}/>
+                            Settings
+                        </Button>
+                        :
+                        <Button className={"PROJECT-button"} variant={"danger"} onClick={() => leave(props.project.projectId)}>
+                            <FaWindowClose className={"mr-2"} size={35}/>
+                            Leave
+                        </Button>
+                    }
                 </Col>
             </Row>
         </ListGroupItem>

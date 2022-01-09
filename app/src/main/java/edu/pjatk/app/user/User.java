@@ -1,5 +1,6 @@
 package edu.pjatk.app.user;
 
+import edu.pjatk.app.project.participant.Participant;
 import edu.pjatk.app.user.profile.Profile;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,6 +8,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Getter
@@ -43,5 +46,9 @@ public class User {
         this.locked = false;
         this.enabled = false;
     }
+
+    //Participant = what projects the user participates in and what permissions he has
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE}, orphanRemoval = true)
+    private Set<Participant> participants = new HashSet<>();
 
 }

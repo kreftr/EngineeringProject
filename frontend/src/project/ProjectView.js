@@ -17,6 +17,7 @@ function ProjectView(){
     const [project, setProject] = useState();
     const [statusCode, setStatusCode] = useState();
 
+
     useEffect(() => {
 
         axios.get(`http://localhost:8080/project/getProjectById/${id}`
@@ -29,6 +30,26 @@ function ProjectView(){
         })
 
     }, [])
+
+    function join(){
+        axios.post(`http://localhost:8080/project/join/${id}`,null,{headers:{
+                'Authorization': Cookies.get("authorization")
+        }}).then(response => {
+            window.location.reload();
+        }).catch(err => {
+            console.log(err.response)
+        })
+    }
+
+    function leave(){
+        axios.post(`http://localhost:8080/project/leave/${id}`,null,{headers:{
+                'Authorization': Cookies.get("authorization")
+        }}).then(response => {
+            window.location.reload();
+        }).catch(err => {
+            console.log(err.response)
+        })
+    }
 
 
     return(
@@ -133,7 +154,20 @@ function ProjectView(){
                                             </center>
                                         { Cookies.get("authorization") ?
                                             <Row>
-                                                <Button className={"mb-3 mt-4"} variant="primary">Join</Button>
+                                                {project.participants.includes(parseInt(Cookies.get("userId"))) ?
+                                                    <>
+                                                    { project.authorId != parseInt(Cookies.get("userId")) ?
+                                                        <>
+                                                            <Button className={"mb-3 mt-4"} variant="danger" onClick={() => leave()}>Leave</Button>
+                                                            <Button className={"mb-3"} variant="success">Workspace</Button>
+                                                        </>
+                                                        :
+                                                        <Button className={"mt-4 mb-3"} variant="success">Workspace</Button>
+                                                    }
+                                                    </>
+                                                    :
+                                                    <Button className={"mb-3 mt-4"} variant="primary" onClick={() => join()}>Join</Button>
+                                                }
                                                 <Button variant="primary">Report</Button>
                                                 <Rating/>
                                             </Row>

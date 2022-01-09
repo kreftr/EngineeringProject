@@ -33,4 +33,5 @@ public class FullProjectResponse {
     private float averageRating;
     private int numberOfVotes;
 
+    private Set<Long> participants;
 }

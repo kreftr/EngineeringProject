@@ -3,6 +3,7 @@ package edu.pjatk.app.project;
 import edu.pjatk.app.file.File;
 import edu.pjatk.app.photo.Photo;
 import edu.pjatk.app.project.category.Category;
+import edu.pjatk.app.project.participant.Participant;
 import edu.pjatk.app.task.Task;
 import edu.pjatk.app.user.User;
 import lombok.Getter;
@@ -51,6 +52,9 @@ public class Project {
     @OneToMany(mappedBy = "project", cascade = {CascadeType.MERGE, CascadeType.REMOVE}, orphanRemoval = true)
     private List<Rating> ratings =  new ArrayList<>();
 
+    @OneToMany(mappedBy = "project", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+    private Set<Participant> participants = new HashSet<>();
+
     @OneToOne(fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "photo_id")
     private Photo photo;
@@ -58,10 +62,6 @@ public class Project {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "project_creator")
     private User creator;
-
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
-    private List<User> participants;
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")

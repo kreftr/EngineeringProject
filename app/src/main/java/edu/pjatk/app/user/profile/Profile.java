@@ -3,6 +3,7 @@ package edu.pjatk.app.user.profile;
 import edu.pjatk.app.photo.Photo;
 import edu.pjatk.app.project.category.Category;
 import edu.pjatk.app.project.Rating;
+import edu.pjatk.app.project.participant.Participant;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

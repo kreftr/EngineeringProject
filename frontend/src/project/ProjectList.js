@@ -31,6 +31,8 @@ function ProjectList(){
 
     //Created projects
     const [projects, setProjects] = useState([]);
+    //Joined projects
+    const [joinedProjects, setJoinedProjects] = useState([]);
     //Projects categories
     const [categories, setCategories] = useState([]);
     //Proposed projects
@@ -76,6 +78,14 @@ function ProjectList(){
                 'Authorization': Cookies.get("authorization")
         }}).then(response => {
             setProjects(response.data)
+        }).catch(err => {
+            console.log(err.response)
+        })
+
+        axios.get("http://localhost:8080/project/getAllProjectsWhereIsMember", {headers:{
+                'Authorization': Cookies.get("authorization")
+        }}).then(response => {
+            setJoinedProjects(response.data)
         }).catch(err => {
             console.log(err.response)
         })
@@ -366,27 +376,40 @@ function ProjectList(){
                         <span>...</span>
                         <hr className={"mt-4 mb-4"}/>
                     </Row>
-                    <Row>
-                        <h2>Created projects</h2>
-                        {projects ?
-                            <ListGroup className={"mt-3"}>
-                                {
-                                    projects.map((project, key) =>
-                                        <ListGroupItem key={key}>
-                                            <Project project={project}/>
-                                        </ListGroupItem>
-                                    )
-                                }
-                            </ListGroup>
-                            :
-                            <h3 className={"mt-3"}>No projects found</h3>
-                        }
-                        <hr className={"mt-4 mb-4"}/>
-                    </Row>
-                    <Row>
-                        <h2>Joined projects</h2>
-                        <span>...</span>
-                    </Row>
+                    { projects.length > 0 ?
+                        <Row>
+                            <h2>Created projects</h2>
+                                <ListGroup className={"mt-3"}>
+                                    {
+                                        projects.map((project, key) =>
+                                            <ListGroupItem key={key}>
+                                                <Project project={project}/>
+                                            </ListGroupItem>
+                                        )
+                                    }
+                                </ListGroup>
+                            <hr className={"mt-4 mb-4"}/>
+                        </Row>
+                        :
+                        <h3 className={"mt-3"}>No projects found</h3>
+                    }
+                    { joinedProjects.length > 0 ?
+                        <Row>
+                            <h2>Joined projects</h2>
+                                <ListGroup className={"mt-3"}>
+                                    {
+                                        joinedProjects.map((project, key) =>
+                                            <ListGroupItem key={key}>
+                                                <Project project={project}/>
+                                            </ListGroupItem>
+                                        )
+                                    }
+                                </ListGroup>
+                            <hr className={"mt-4 mb-4"}/>
+                        </Row>
+                        :
+                        <></>
+                    }
                 </Col>
                 <Col className={"col-2"}/>
             </Row>

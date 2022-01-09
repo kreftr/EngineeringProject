@@ -159,3 +159,27 @@ databaseChangeLog:
         stripComments: true
         splitStatements: false
         path: db.changelog/20220105_rating.sql
+  - changeSet:
+      id: 20220108_participant
+      author: Rafał Kreft
+      sqlFile:
+        relativeToChangelogFile: true
+        stripComments: true
+        splitStatements: false
+        path: db.changelog/20220108_participant.sql
+  - changeSet:
+      id: 20220109_participiant_add_column_pending
+      author: Rafał Kreft
+      sqlFile:
+        relativeToChangelogFile: true
+        stripComments: true
+        splitStatements: false
+        path: db.changelog/20220109_participiant_add_column_pending.sql
+  - changeSet:
+      id: 20220109_project_invitation
+      author: Rafał Kreft
+      sqlFile:
+        relativeToChangelogFile: true
+        stripComments: true
+        splitStatements: false
+        path: db.changelog/20220109_project_invitation.sql
