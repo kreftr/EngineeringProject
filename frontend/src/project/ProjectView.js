@@ -166,9 +166,15 @@ function ProjectView(){
                                                     }
                                                     </>
                                                     :
-                                                    <Button className={"mb-3 mt-4"} variant="primary" onClick={() => join()}>Join</Button>
+                                                    <>
+                                                    { project.access !== "PRIVATE" ?
+                                                        <Button className={"mt-4"} variant="primary" onClick={() => join()}>Join</Button>
+                                                        :
+                                                        <></>
+                                                    }
+                                                    </>
                                                 }
-                                                <Button variant="primary">Report</Button>
+                                                <Button className={"mt-3"} variant="primary">Report</Button>
                                                 <Rating/>
                                             </Row>
                                             :

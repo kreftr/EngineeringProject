@@ -5,6 +5,7 @@ import edu.pjatk.app.request.ProjectRequest;
 import edu.pjatk.app.response.ResponseMessage;
 import edu.pjatk.app.response.project.FullProjectResponse;
 import edu.pjatk.app.response.project.MiniProjectResponse;
+import edu.pjatk.app.response.project.ProjectJoinRequestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -187,6 +188,27 @@ public class ProjectController {
                     new ResponseMessage("There is no project with this id"), HttpStatus.NOT_FOUND
             );
         }
+    }
+
+    @GetMapping(value = "/pendingRequests")
+    public ResponseEntity getPendingRequests(){
+        Set<ProjectJoinRequestResponse> pending = projectService.getAllPendingRequests();
+        if (!pending.isEmpty()){
+            return new ResponseEntity(pending, HttpStatus.OK);
+        }
+        else return new ResponseEntity(HttpStatus.NOT_FOUND);
+    }
+
+    @PostMapping(value = "/acceptPending/{pendingId}")
+    public ResponseEntity acceptPending(@PathVariable Long pendingId){
+        projectService.acceptPending(pendingId);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/rejectPending/{pendingId}")
+    public ResponseEntity rejectPending(@PathVariable Long pendingId){
+        projectService.rejectPending(pendingId);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/deleteProject/{id}")

@@ -16,12 +16,28 @@ public class ParticipantService {
         this.participantRepository = participantRepository;
     }
 
+    public void updateParticipant(Participant participant){
+        participantRepository.update(participant);
+    }
+
+    public void removeParticipant(Participant participant){
+        participantRepository.remove(participant);
+    }
+
+    public Optional<Participant> getById(Long id){
+        return participantRepository.getById(id);
+    }
+
     public Optional<Participant> getParticipantByUserAndProject(Long userid, Long projectId){
         return participantRepository.getByUserAndProjectIds(userid, projectId);
     }
 
     public Optional<List<Participant>> getAllWhereUserIsMember(Long userId){
         return participantRepository.getAllWhereUserIsMemberByUserId(userId);
+    }
+
+    public Optional<List<Participant>> getAllPending(Long userId){
+        return participantRepository.getAllPending(userId);
     }
 
 }

@@ -1,4 +1,5 @@
 import {
+    Accordion,
     Alert,
     Badge,
     Button,
@@ -17,11 +18,12 @@ import {
 import {FaFacebookSquare, FaGithubSquare, FaKickstarter, FaRegPlusSquare, FaSistrix, FaYoutube} from "react-icons/all";
 import React, {useEffect, useState} from "react";
 import default_project_picture from "../assets/images/default_project_picture.jpg"
+import default_profile_picture from "../assets/images/default_profile_picture.jpg"
 import "./ProjectList.css"
+import "./Project.css"
 import axios from "axios";
 import Cookies from "js-cookie";
 import Project from "./Project";
-import {FaCogs, FaEye, FaFileAlt} from "react-icons/fa";
 
 
 function ProjectList(){
@@ -33,6 +35,8 @@ function ProjectList(){
     const [projects, setProjects] = useState([]);
     //Joined projects
     const [joinedProjects, setJoinedProjects] = useState([]);
+    //Pending requests
+    const [pending, setPending] = useState([]);
     //Projects categories
     const [categories, setCategories] = useState([]);
     //Proposed projects
@@ -90,6 +94,14 @@ function ProjectList(){
             console.log(err.response)
         })
 
+        axios.get("http://localhost:8080/project/pendingRequests", {headers:{
+                'Authorization': Cookies.get("authorization")
+        }}).then(response => {
+            setPending(response.data)
+        }).catch(err => {
+            console.log(err.response)
+        })
+
         axios.get(`http://localhost:8080/project/getProposed`, {headers:{
                 'Authorization': Cookies.get("authorization")
         }}).then(response => {
@@ -139,6 +151,30 @@ function ProjectList(){
                 setResponseCode(err.response.status)
                 if (err.response.status === 400) setProjectCreationMessage("*"+err.response.data.error)
                 else setProjectCreationMessage("SERVER ERROR!")
+                console.log(err.response)
+            })
+    }
+
+    function acceptPending(pendingId){
+        axios.post(`http://localhost:8080/project/acceptPending/${pendingId}`, null, {headers:{
+                'Authorization': Cookies.get("authorization")
+            }})
+            .then(response => {
+                window.location.reload();
+            })
+            .catch(err => {
+                console.log(err.response)
+            })
+    }
+
+    function rejectPending(pendingId){
+        axios.post(`http://localhost:8080/project/rejectPending/${pendingId}`, null, {headers:{
+                'Authorization': Cookies.get("authorization")
+            }})
+            .then(response => {
+                window.location.reload();
+            })
+            .catch(err => {
                 console.log(err.response)
             })
     }
@@ -376,36 +412,109 @@ function ProjectList(){
                         <span>...</span>
                         <hr className={"mt-4 mb-4"}/>
                     </Row>
+                    { pending.length > 0 ?
+                        <Row>
+                            <Accordion className={"mb-4"}>
+                                <Accordion.Item eventKey="0">
+                                    <Accordion.Header>
+                                        <h2>
+                                            Pending join requests
+                                            <Badge className={"ml-2"} bg="primary">{pending.length}</Badge>
+                                        </h2>
+                                    </Accordion.Header>
+                                    <Accordion.Body>
+                                        <ListGroup className={"mt-3"}>
+                                            {
+                                                pending.map((request, key) =>
+                                                    <ListGroupItem key={key}>
+                                                        <Row>
+                                                            <Col className={"col-3 PROJECT-thumbnail-section"}>
+                                                                {request.profilePhoto ?
+                                                                    <Image
+                                                                        src={`http://localhost:8080/photo?filename=${request.profilePhoto}`}
+                                                                        width="200px" height="200px" rounded={true}/>
+                                                                    :
+                                                                    <Image src={default_profile_picture}
+                                                                           width="200px" height="200px" rounded={true}/>
+                                                                }
+                                                            </Col>
+                                                            <Col className={"col-6 PROJECT-content-section"}>
+                                                                <a href={`/profile/${request.userId}`}>
+                                                                    <h2>User: {request.username}</h2>
+                                                                </a>
+                                                                <h2>Wants to join</h2>
+                                                                <a href={`/project/${request.projectId}`}>
+                                                                    <h2>Project: {request.projectTitle}</h2>
+                                                                </a>
+                                                            </Col>
+                                                            <Col className={"col-3 PROJECT-button-section b"}>
+                                                                <Button className={"PROJECT-button mt-3 mb-3"} variant={"success"}
+                                                                        onClick={() => acceptPending(request.pendingId)}>Accept</Button>
+                                                                <Button className={"PROJECT-button mt-3 mb-3"} variant={"danger"}
+                                                                        onClick={() => rejectPending(request.pendingId)}>Reject</Button>
+                                                            </Col>
+                                                        </Row>
+                                                    </ListGroupItem>
+                                                )
+                                            }
+                                        </ListGroup>
+                                    </Accordion.Body>
+                                </Accordion.Item>
+                            </Accordion>
+                        </Row>
+                        :
+                        <></>
+                    }
                     { projects.length > 0 ?
                         <Row>
-                            <h2>Created projects</h2>
-                                <ListGroup className={"mt-3"}>
-                                    {
-                                        projects.map((project, key) =>
-                                            <ListGroupItem key={key}>
-                                                <Project project={project}/>
-                                            </ListGroupItem>
-                                        )
-                                    }
-                                </ListGroup>
-                            <hr className={"mt-4 mb-4"}/>
+                            <Accordion>
+                                <Accordion.Item eventKey="0">
+                                    <Accordion.Header>
+                                        <h2>
+                                            Created projects
+                                            <Badge className={"ml-2"} bg="primary">{projects.length}</Badge>
+                                        </h2>
+                                    </Accordion.Header>
+                                    <Accordion.Body>
+                                        <ListGroup className={"mt-3"}>
+                                            {
+                                                projects.map((project, key) =>
+                                                    <ListGroupItem key={key}>
+                                                        <Project project={project}/>
+                                                    </ListGroupItem>
+                                                )
+                                            }
+                                        </ListGroup>
+                                    </Accordion.Body>
+                                </Accordion.Item>
+                            </Accordion>
                         </Row>
                         :
                         <h3 className={"mt-3"}>No projects found</h3>
                     }
                     { joinedProjects.length > 0 ?
                         <Row>
-                            <h2>Joined projects</h2>
-                                <ListGroup className={"mt-3"}>
-                                    {
-                                        joinedProjects.map((project, key) =>
-                                            <ListGroupItem key={key}>
-                                                <Project project={project}/>
-                                            </ListGroupItem>
-                                        )
-                                    }
-                                </ListGroup>
-                            <hr className={"mt-4 mb-4"}/>
+                            <Accordion className={"mt-4"}>
+                                <Accordion.Item eventKey="0">
+                                    <Accordion.Header>
+                                        <h2>
+                                            Joined projects
+                                            <Badge className={"ml-2"} bg="primary">{joinedProjects.length}</Badge>
+                                        </h2>
+                                    </Accordion.Header>
+                                    <Accordion.Body>
+                                        <ListGroup className={"mt-3"}>
+                                            {
+                                                joinedProjects.map((project, key) =>
+                                                    <ListGroupItem key={key}>
+                                                        <Project project={project}/>
+                                                    </ListGroupItem>
+                                                )
+                                            }
+                                        </ListGroup>
+                                    </Accordion.Body>
+                                </Accordion.Item>
+                            </Accordion>
                         </Row>
                         :
                         <></>

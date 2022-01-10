@@ -12,6 +12,7 @@ import edu.pjatk.app.project.participant.ParticipantService;
 import edu.pjatk.app.request.ProjectRequest;
 import edu.pjatk.app.response.project.FullProjectResponse;
 import edu.pjatk.app.response.project.MiniProjectResponse;
+import edu.pjatk.app.response.project.ProjectJoinRequestResponse;
 import edu.pjatk.app.user.User;
 import edu.pjatk.app.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -244,7 +245,29 @@ public class ProjectService {
         else return Collections.emptySet();
     }
 
+    //Requests to join 'protected' project
+    public Set<ProjectJoinRequestResponse> getAllPendingRequests(){
+        Optional<User> loggedUser = userService.findUserByUsername(
+                SecurityContextHolder.getContext().getAuthentication().getName()
+        );
 
+        Optional<List<Participant>> participants = participantService.getAllPending(loggedUser.get().getId());
+
+        if (participants.isPresent() && participants.get().size() > 0){
+
+            Set<ProjectJoinRequestResponse> pending = new HashSet<>();
+
+            for (Participant p : participants.get()){
+                pending.add(new ProjectJoinRequestResponse(
+                        p.getId(), p.getUser().getId(), p.getUser().getUsername(),
+                        p.getUser().getProfile().getPhoto().getFileName(), p.getProject().getId(),
+                        p.getProject().getProject_name()
+                ));
+            }
+            return pending;
+        }
+        else return Collections.emptySet();
+    }
 
     public Set<MiniProjectResponse> getAllProjectsWhereUserIsMember(){
         Optional<User> loggedUser = userService.findUserByUsername(
@@ -454,7 +477,32 @@ public class ProjectService {
         else return false;
     }
 
+    @Transactional
+    public void acceptPending(Long pendingId){
+        Optional<User> loggedUser = userService.findUserByUsername(
+                SecurityContextHolder.getContext().getAuthentication().getName()
+        );
 
+        Optional<Participant> participant = participantService.getById(pendingId);
+
+        if(participant.isPresent() && participant.get().getProject().getCreator().equals(loggedUser.get())){
+            participant.get().setPending(false);
+            participantService.updateParticipant(participant.get());
+        }
+    }
+
+    @Transactional
+    public void rejectPending(Long pendingId){
+        Optional<User> loggedUser = userService.findUserByUsername(
+                SecurityContextHolder.getContext().getAuthentication().getName()
+        );
+
+        Optional<Participant> participant = participantService.getById(pendingId);
+
+        if(participant.isPresent() && participant.get().getProject().getCreator().equals(loggedUser.get())){
+            participantService.removeParticipant(participant.get());
+        }
+    }
 
     public void deleteProject(Long id) {
         projectRepository.deleteProject(id);
