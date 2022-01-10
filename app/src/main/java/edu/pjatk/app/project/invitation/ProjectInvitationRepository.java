@@ -31,8 +31,8 @@ public class ProjectInvitationRepository {
         Optional invitation;
         try {
             invitation = Optional.of(
-                    entityManager.createQuery("SELECT invitation FROM ProjectInvitation invitation WHERE invitation.id = :id").
-                            setParameter("id", id).getResultList()
+                    entityManager.createQuery("SELECT invitation FROM ProjectInvitation invitation WHERE invitation.id = :id",
+                                    ProjectInvitation.class).setParameter("id", id).getSingleResult()
             );
         }
         catch (NoResultException e){
@@ -45,14 +45,29 @@ public class ProjectInvitationRepository {
         Optional invitations;
         try {
             invitations = Optional.of(
-                    entityManager.createQuery("SELECT invitation FROM ProjectInvitation invitation WHERE invitation.receiver.id = :id").
-                            setParameter("id", id).getResultList()
+                    entityManager.createQuery("SELECT invitation FROM ProjectInvitation invitation WHERE invitation.receiver.id = :id",
+                                    ProjectInvitation.class).setParameter("id", id).getResultList()
             );
         }
         catch (NoResultException e){
             invitations = Optional.empty();
         }
         return invitations;
+    }
+
+    public Optional<ProjectInvitation> getByUserIdAndProjectId(Long userId, Long projectId){
+        Optional invitation;
+        try {
+            invitation = Optional.of(
+                    entityManager.createQuery("SELECT invitation FROM ProjectInvitation invitation WHERE " +
+                                    "invitation.receiver.id=:userId AND invitation.project.id=:projectId", ProjectInvitation.class).
+                            setParameter("userId", userId).setParameter("projectId", projectId).getSingleResult()
+            );
+        }
+        catch (NoResultException e){
+            invitation = Optional.empty();
+        }
+        return invitation;
     }
 
 }

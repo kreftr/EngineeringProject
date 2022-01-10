@@ -35,6 +35,8 @@ function ProjectList(){
     const [projects, setProjects] = useState([]);
     //Joined projects
     const [joinedProjects, setJoinedProjects] = useState([]);
+    //Invitations
+    const [invitations, setInvitations] = useState([]);
     //Pending requests
     const [pending, setPending] = useState([]);
     //Projects categories
@@ -90,6 +92,14 @@ function ProjectList(){
                 'Authorization': Cookies.get("authorization")
         }}).then(response => {
             setJoinedProjects(response.data)
+        }).catch(err => {
+            console.log(err.response)
+        })
+
+        axios.get(`http://localhost:8080/project/getAllInvitations`, {headers:{
+                'Authorization': Cookies.get("authorization")
+        }}).then(response => {
+            setInvitations(response.data)
         }).catch(err => {
             console.log(err.response)
         })
@@ -169,6 +179,30 @@ function ProjectList(){
 
     function rejectPending(pendingId){
         axios.post(`http://localhost:8080/project/rejectPending/${pendingId}`, null, {headers:{
+                'Authorization': Cookies.get("authorization")
+            }})
+            .then(response => {
+                window.location.reload();
+            })
+            .catch(err => {
+                console.log(err.response)
+            })
+    }
+
+    function acceptInvitation(invitationId){
+        axios.post(`http://localhost:8080/project/acceptInvitation/${invitationId}`, null, {headers:{
+                'Authorization': Cookies.get("authorization")
+            }})
+            .then(response => {
+                window.location.reload();
+            })
+            .catch(err => {
+                console.log(err.response)
+            })
+    }
+
+    function rejectInvitation(invitationId){
+        axios.post(`http://localhost:8080/project/rejectInvitation/${invitationId}`, null, {headers:{
                 'Authorization': Cookies.get("authorization")
             }})
             .then(response => {
@@ -407,11 +441,54 @@ function ProjectList(){
                         </Col>
                         <hr className={"mt-5 mb-4"}/>
                     </Row>
-                    <Row>
-                        <h2>Invitations to project</h2>
-                        <span>...</span>
-                        <hr className={"mt-4 mb-4"}/>
-                    </Row>
+                    {invitations.length > 0 ?
+                        <Accordion className={"mb-4"}>
+                            <Accordion.Item eventKey="0">
+                                <Accordion.Header>
+                                    <h2>
+                                        Invitations to  projects
+                                        <Badge className={"ml-2"} bg="primary">{invitations.length}</Badge>
+                                    </h2>
+                                </Accordion.Header>
+                                <Accordion.Body>
+                                    <ListGroup className={"mt-3"}>
+                                        {
+                                            invitations.map((invitation, key) =>
+                                                <ListGroupItem key={key}>
+                                                    <Row>
+                                                        <Col className={"col-3 PROJECT-thumbnail-section"}>
+                                                            { invitation.projectPhoto ?
+                                                                <Image
+                                                                    src={`http://localhost:8080/photo?filename=${invitation.projectPhoto}`}
+                                                                    width="200px" height="200px"/>
+                                                                :
+                                                                <Image src={default_project_picture}
+                                                                       width="200px" height="200px"/>
+                                                            }
+                                                        </Col>
+                                                        <Col className={"col-6 PROJECT-content-section"}>
+                                                            <h2>You have been invited to</h2>
+                                                            <a href={`/project/${invitation.projectId}`}>
+                                                                <h2>{invitation.projectTitle}</h2>
+                                                            </a>
+                                                        </Col>
+                                                        <Col className={"col-3 PROJECT-button-section b"}>
+                                                            <Button className={"PROJECT-button mt-3 mb-3"} variant={"success"}
+                                                                    onClick={() => acceptInvitation(invitation.invitationId)}>Accept</Button>
+                                                            <Button className={"PROJECT-button mt-3 mb-3"} variant={"danger"}
+                                                                    onClick={() => rejectInvitation(invitation.invitationId)}>Reject</Button>
+                                                        </Col>
+                                                    </Row>
+                                                </ListGroupItem>
+                                            )
+                                        }
+                                    </ListGroup>
+                                </Accordion.Body>
+                            </Accordion.Item>
+                        </Accordion>
+                        :
+                        <></>
+                    }
                     { pending.length > 0 ?
                         <Row>
                             <Accordion className={"mb-4"}>

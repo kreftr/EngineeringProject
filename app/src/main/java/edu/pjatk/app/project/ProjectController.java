@@ -4,6 +4,7 @@ package edu.pjatk.app.project;
 import edu.pjatk.app.request.ProjectRequest;
 import edu.pjatk.app.response.ResponseMessage;
 import edu.pjatk.app.response.project.FullProjectResponse;
+import edu.pjatk.app.response.project.InvitationResponse;
 import edu.pjatk.app.response.project.MiniProjectResponse;
 import edu.pjatk.app.response.project.ProjectJoinRequestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -146,6 +147,15 @@ public class ProjectController {
         }
     }
 
+    @GetMapping(value = "/getAllInvitations")
+    public ResponseEntity getAllInvitations(){
+        Set<InvitationResponse> invitations = projectService.getAllInvitations();
+        if (!invitations.isEmpty()){
+            return new ResponseEntity(invitations,HttpStatus.OK);
+        }
+        else return new ResponseEntity(HttpStatus.NOT_FOUND);
+    }
+
     @PostMapping(value = "/join/{id}")
     public ResponseEntity joinProject(@PathVariable Long id){
 
@@ -210,6 +220,32 @@ public class ProjectController {
         projectService.rejectPending(pendingId);
         return new ResponseEntity(HttpStatus.OK);
     }
+
+    @PostMapping(value = "/inviteToProject/{projectId}", params = "userId")
+    public ResponseEntity inviteToProject(@PathVariable Long projectId, @RequestParam Long userId){
+        if (projectService.inviteToProject(projectId, userId)){
+            return new ResponseEntity(HttpStatus.OK);
+        }
+        else return new ResponseEntity(HttpStatus.CONFLICT);
+    }
+
+    @PostMapping(value = "/acceptInvitation/{invitationId}")
+    public ResponseEntity acceptInvitation(@PathVariable Long invitationId){
+        if (projectService.acceptInvitation(invitationId)){
+            return new ResponseEntity(HttpStatus.OK);
+        }
+        else return new ResponseEntity(HttpStatus.CONFLICT);
+    }
+
+    @PostMapping(value = "/rejectInvitation/{invitationId}")
+    public ResponseEntity rejectInvitation(@PathVariable Long invitationId){
+        if (projectService.rejectInvitation(invitationId)){
+            return new ResponseEntity(HttpStatus.OK);
+        }
+        else return new ResponseEntity(HttpStatus.CONFLICT);
+    }
+
+
 
     @DeleteMapping(value = "/deleteProject/{id}")
     public ResponseEntity<?> deleteProject(@PathVariable long id) {

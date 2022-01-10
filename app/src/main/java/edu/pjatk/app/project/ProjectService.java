@@ -11,6 +11,7 @@ import edu.pjatk.app.project.participant.ParticipantRole;
 import edu.pjatk.app.project.participant.ParticipantService;
 import edu.pjatk.app.request.ProjectRequest;
 import edu.pjatk.app.response.project.FullProjectResponse;
+import edu.pjatk.app.response.project.InvitationResponse;
 import edu.pjatk.app.response.project.MiniProjectResponse;
 import edu.pjatk.app.response.project.ProjectJoinRequestResponse;
 import edu.pjatk.app.user.User;
@@ -254,17 +255,44 @@ public class ProjectService {
         Optional<List<Participant>> participants = participantService.getAllPending(loggedUser.get().getId());
 
         if (participants.isPresent() && participants.get().size() > 0){
-
+            String profilePhoto;
             Set<ProjectJoinRequestResponse> pending = new HashSet<>();
 
             for (Participant p : participants.get()){
+                try {
+                    profilePhoto =  p.getUser().getProfile().getPhoto().getFileName();
+                } catch (NullPointerException e) { profilePhoto = null;  }
                 pending.add(new ProjectJoinRequestResponse(
                         p.getId(), p.getUser().getId(), p.getUser().getUsername(),
-                        p.getUser().getProfile().getPhoto().getFileName(), p.getProject().getId(),
+                        profilePhoto, p.getProject().getId(),
                         p.getProject().getProject_name()
                 ));
             }
             return pending;
+        }
+        else return Collections.emptySet();
+    }
+
+    public Set<InvitationResponse> getAllInvitations(){
+        Optional<User> loggedUser = userService.findUserByUsername(
+                SecurityContextHolder.getContext().getAuthentication().getName()
+        );
+
+        Optional<List<ProjectInvitation>> invitations = projectInvitationService.getAllInvitationsByUserId(loggedUser.get().getId());
+        Set<InvitationResponse> invitationResponses = new HashSet<>();
+
+        if (invitations.isPresent() && invitations.get().size() > 0){
+            String projectPhoto;
+            for (ProjectInvitation invitation : invitations.get()){
+                try {
+                    projectPhoto =  invitation.getProject().getPhoto().getFileName();
+                } catch (NullPointerException e) { projectPhoto = null;  }
+                invitationResponses.add(
+                        new InvitationResponse(invitation.getId(), invitation.getProject().getId(),
+                                projectPhoto, invitation.getProject().getProject_name())
+                );
+            }
+            return invitationResponses;
         }
         else return Collections.emptySet();
     }
@@ -382,46 +410,64 @@ public class ProjectService {
         }
     }
 
+    //If loggedUser is project owner or loggedUser is project's participant with MODERATOR ROLE
     @Transactional
-    public void inviteToProject(Long projectId, Long userId){
+    public boolean inviteToProject(Long projectId, Long userId){
         Optional<User> loggedUser = userService.findUserByUsername(
                 SecurityContextHolder.getContext().getAuthentication().getName()
         );
         Optional<User> userToInvite = userService.findUserById(userId);
         Optional<Project> project = projectRepository.getProjectById(projectId);
+        Optional<ProjectInvitation> invitation = projectInvitationService.getInvitationByUserIdAndProjectId(userId, projectId);
 
-        if (userToInvite.isPresent() && project.isPresent() && project.get().getCreator().equals(loggedUser)){
+        boolean userIsProjectModerator = !new HashSet<>(project.get().getParticipants()).stream().filter(
+                participant -> loggedUser.get().getParticipants().contains(participant) && participant.getParticipantRole().equals(ParticipantRole.MODERATOR)
+        ).collect(Collectors.toSet()).isEmpty();
+
+        boolean userToInviteIsNotAlreadyProjectParticipant = new HashSet<>(project.get().getParticipants()).stream().filter(
+                participant -> userToInvite.get().getParticipants().contains(participant)).collect(Collectors.toSet()).isEmpty();
+
+
+        if ( userToInvite.isPresent() && project.isPresent() && invitation.isEmpty() &&
+                (project.get().getCreator().equals(loggedUser.get()) || userIsProjectModerator)
+                && userToInviteIsNotAlreadyProjectParticipant){
             projectInvitationService.addProjectInvitation(new ProjectInvitation(project.get(), userToInvite.get()));
+            return true;
         }
+        else return false;
     }
 
     @Transactional
-    public void acceptInvitation(Long invitationId){
+    public boolean acceptInvitation(Long invitationId){
         Optional<User> loggedUser = userService.findUserByUsername(
                 SecurityContextHolder.getContext().getAuthentication().getName()
         );
 
         Optional<ProjectInvitation> invitation = projectInvitationService.getInvitationById(invitationId);
 
-        if (invitation.isPresent() && invitation.get().getReceiver().equals(loggedUser)){
+        if (invitation.isPresent() && invitation.get().getReceiver().equals(loggedUser.get())){
             Optional<Project> project = projectRepository.getProjectById(invitation.get().getProject().getId());
             project.get().getParticipants().add(new Participant(loggedUser.get(), project.get(), false, ParticipantRole.PARTICIPANT));
             projectRepository.update(project.get());
             projectInvitationService.removeProjectInvitation(invitation.get());
+            return true;
         }
+        else return false;
     }
 
     @Transactional
-    public void rejectInvitation(Long invitationId){
+    public boolean rejectInvitation(Long invitationId){
         Optional<User> loggedUser = userService.findUserByUsername(
                 SecurityContextHolder.getContext().getAuthentication().getName()
         );
 
         Optional<ProjectInvitation> invitation = projectInvitationService.getInvitationById(invitationId);
 
-        if (invitation.isPresent() && invitation.get().getReceiver().equals(loggedUser)){
+        if (invitation.isPresent() && invitation.get().getReceiver().equals(loggedUser.get())){
             projectInvitationService.removeProjectInvitation(invitation.get());
+            return true;
         }
+        else return false;
     }
 
     @Transactional

@@ -24,6 +24,10 @@ public class ProjectInvitationService {
         return projectInvitationRepository.getByUserId(id);
     }
 
+    public Optional<ProjectInvitation> getInvitationByUserIdAndProjectId(Long userId, Long projectId){
+        return projectInvitationRepository.getByUserIdAndProjectId(userId,  projectId);
+    }
+
     public void addProjectInvitation(ProjectInvitation projectInvitation){
         projectInvitationRepository.add(projectInvitation);
     }
