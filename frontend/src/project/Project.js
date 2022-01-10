@@ -34,10 +34,12 @@ function Project(props){
                         <FaFileAlt className={"mr-2"} size={35}/>
                         Workspace
                     </Button>
+                    <a href={`/project/settings/${props.project.projectId}`}>
                     <Button className={"PROJECT-button"} variant={"danger"}>
                         <FaCogs className={"mr-2"} size={35}/>
                         Settings
                     </Button>
+                    </a>
                 </Col>
             </Row>
         </ListGroupItem>
