@@ -1,14 +1,12 @@
 package edu.pjatk.app.socials.chat;
 
 import edu.pjatk.app.user.User;
-import edu.pjatk.app.user.profile.Profile;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Getter
 @Setter
@@ -22,7 +20,7 @@ public class Message {
     private String content;
     private LocalDateTime message_date;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "conversation_id")
     private Conversation conversation;
 

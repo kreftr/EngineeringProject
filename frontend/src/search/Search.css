@@ -47,3 +47,16 @@
     margin-top: 1%;
     text-align: center;
 }
+
+.SEARCH-project-introduction {
+    font-size: 15px;
+    line-height: 130%;
+}
+
+.SEARCH-title-height {
+    height: 70px;
+}
+
+.SEARCH-intro-height {
+    height: 150px;
+}

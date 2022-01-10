@@ -11,9 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.PostUpdate;
 import javax.validation.Valid;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
 
@@ -50,16 +48,33 @@ public class ProjectController {
 
     @GetMapping(value = "/getProjectByName/{project_name}")
     public ResponseEntity<?> getProjectByName(@PathVariable String project_name) {
-        Optional<Project> project = projectService.getProjectByName(project_name);
-        if (project.isPresent())
+
+        Set<MiniProjectResponse> projects = projectService.getProjectByName(project_name);
+
+        if (projects.isEmpty())
         {
             return new ResponseEntity<>(
-                    project, HttpStatus.OK
+                    new ResponseMessage("No matches for '"+project_name+"'"), HttpStatus.NOT_FOUND
             );
         }
         else {
             return new ResponseEntity<>(
-                    new ResponseMessage("There are no projects!"), HttpStatus.NOT_FOUND
+                    projects, HttpStatus.OK
+            );
+        }
+    }
+
+    @GetMapping(value = "/getProjectByCategory/{title}")
+    public ResponseEntity getProjectByCategory(@PathVariable String title){
+        Set<MiniProjectResponse> projects = projectService.getProjectByCategory(title);
+        if (projects.isEmpty()){
+            return new ResponseEntity<>(
+                    new ResponseMessage("No matches for "+title+" category"), HttpStatus.NOT_FOUND
+            );
+        }
+        else {
+            return new ResponseEntity<>(
+                    projects, HttpStatus.OK
             );
         }
     }
@@ -81,12 +96,97 @@ public class ProjectController {
         }
     }
 
+    @GetMapping(value= "/getProposed")
+    public ResponseEntity getProposedProjects(){
+        Set<MiniProjectResponse> proposedProjects = projectService.getAllProposedProjects();
+        if (proposedProjects.isEmpty()){
+            return new ResponseEntity<>(
+                    new ResponseMessage("We couldn't find any proper project for you :("), HttpStatus.NOT_FOUND
+            );
+        }
+        else {
+            return new ResponseEntity(proposedProjects, HttpStatus.OK);
+        }
+    }
+
+    @PostMapping(value = "/rateProject/{id}", params = "rating")
+    public ResponseEntity rateProject(@PathVariable Long id, @RequestParam int rating){
+
+        if (rating > 0 && rating <= 5){
+            projectService.rateProject(id, rating);
+            return new ResponseEntity(HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping(value = "/getMyRating/{projectId}")
+    public ResponseEntity getMyRating(@PathVariable Long projectId){
+        return new ResponseEntity(projectService.getMyRating(projectId), HttpStatus.OK);
+    }
+
     @PostMapping(value = "/createProject", consumes = {"multipart/form-data"})
     public ResponseEntity<?> createProject(@Valid @RequestPart ProjectRequest projectRequest,
                                            @RequestPart(required = false) MultipartFile projectPhoto) {
 
         projectService.createProject(projectRequest, projectPhoto);
         return new ResponseEntity<>(new ResponseMessage("Project created!"), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/getAllProjectsWhereIsMember")
+    public ResponseEntity getAllProjectsWhereIsMember(){
+        Set<MiniProjectResponse> projects = projectService.getAllProjectsWhereUserIsMember();
+        if (!projects.isEmpty()){
+            return new ResponseEntity(projects, HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping(value = "/join/{id}")
+    public ResponseEntity joinProject(@PathVariable Long id){
+
+        Optional<FullProjectResponse> project = projectService.getProjectById(id);
+
+        if (project.isPresent()){
+            if (project.get().getStatus().equals(ProjectStatus.OPEN.toString())) {
+
+                if (project.get().getAccess().equals(ProjectAccess.PUBLIC.toString()) ||
+                        project.get().getAccess().equals(ProjectAccess.PROTECTED.toString())) {
+                    if(projectService.joinProject(id)) return new ResponseEntity(HttpStatus.OK);
+                    else return new ResponseEntity(new ResponseMessage("You are already a participant in this project"), HttpStatus.BAD_REQUEST);
+                } else {
+                    return new ResponseEntity(new ResponseMessage("You can't join unless project's owner invites you") ,HttpStatus.UNAUTHORIZED);
+                }
+            } else {
+                return new ResponseEntity(
+                        new ResponseMessage("This project is bo longer open"), HttpStatus.UNAUTHORIZED
+                );
+            }
+        }
+        else {
+            return new ResponseEntity(
+                    new ResponseMessage("There is no project with this id"), HttpStatus.NOT_FOUND
+            );
+        }
+    }
+
+    @PostMapping(value = "/leave/{id}")
+    public ResponseEntity leaveProject(@PathVariable Long id){
+
+        Optional<FullProjectResponse> project = projectService.getProjectById(id);
+
+        if (project.isPresent()){
+            if(projectService.leaveProject(id)) return new ResponseEntity(HttpStatus.OK);
+            else return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        else {
+            return new ResponseEntity(
+                    new ResponseMessage("There is no project with this id"), HttpStatus.NOT_FOUND
+            );
+        }
     }
 
     @DeleteMapping(value = "/deleteProject/{id}")

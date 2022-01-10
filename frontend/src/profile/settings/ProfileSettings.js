@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
 import {Alert, Button, Col, Form, Image, Row} from "react-bootstrap";
-import default_profile_picture from "../assets/images/default_profile_picture.jpg";
+import default_profile_picture from "../../assets/images/default_profile_picture.jpg";
 
 
 function ProfileSettings(){

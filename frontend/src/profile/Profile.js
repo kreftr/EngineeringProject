@@ -1,16 +1,20 @@
 import React, {useEffect, useState} from "react";
-import {Container, Tabs, Row, Col, Image, Button, Tab} from "react-bootstrap";
+import {Container, Tabs, Row, Col, Image, Button, Tab, Badge, ListGroup, Card} from "react-bootstrap";
 import default_profile_picture from "../assets/images/default_profile_picture.jpg"
+import default_project_picture from "../assets/images/default_project_picture.jpg"
 import {FaFlag, FaCog, FaUserPlus, FaUserMinus, FaUserClock, FaUserFriends} from "react-icons/fa"
 import axios from "axios";
 import Cookies from "js-cookie"
 import {useParams} from "react-router-dom";
 
 import "./Profile.css"
+import {map} from "react-bootstrap/ElementChildren";
 
 function Profile(){
 
     const {id} = useParams();
+
+    const [projects, setProjects] = useState([]);
 
     const [friendStatus, setFriendStatus] = useState(null);
 
@@ -34,6 +38,14 @@ function Profile(){
                 setLoading(false);
             })
 
+        //Load user's projects
+        axios.get(`http://localhost:8080/project/getAllProjects/${id}`
+        ).then(response => {
+            setProjects(response.data)
+        }).catch(err => {
+            console.log(err.response)
+        })
+
         //Check if is friend
         if (Cookies.get("userId")!==id){
             axios.get(`http://localhost:8080/friends/getFriendStatus/${id}`,
@@ -46,7 +58,7 @@ function Profile(){
                     console.log(err.response)
                 })
         }
-    },[id]);
+    },[]);
 
     function addFriend(){
         axios.post(`http://localhost:8080/friends/addFriend/${id}`,{},
@@ -89,6 +101,16 @@ function Profile(){
                         <span className={"PROFILE-username"}>{profile.username}</span>
                         <span className={"PROFILE-name-surname"}>{profile.name} {profile.surname}</span>
                         <span className={"PROFILE-bio mt-2 mb-3"}>{profile.bio}</span>
+                        {profile.categories.length > 0 ? <h4>Interested in:</h4> : <></>}
+                        { profile.categories.length > 0 ?
+                            <div className={"mb-2 ml-5 mr-5"}>
+                            { profile.categories.map((category, key) =>
+                                <Badge key={key} className={"mr-1"} bg="primary">{category}</Badge>
+                                )}
+                            </div>
+                            :
+                            <></>
+                        }
                         <ul className={"PROFILE-ul-actions"}>
                             { Cookies.get("userId")===id && Cookies.get("authorization") ?
                                 <li>
@@ -145,6 +167,49 @@ function Profile(){
                     <Col className={"col-8"}>
                         <Tabs defaultActiveKey="Projects" className="mb-5" fill>
                             <Tab eventKey="Projects" title="Projects">
+                                { projects.length > 0 ?
+                                    <div className={"mr-5 ml-5 PROFILE-projects-window"}>
+                                        { projects.map((project, key) =>
+                                            <Card key={key} className={"mb-3"}>
+                                                <Card.Body>
+                                                    <a className={"PROFILE-href-styling"} href={`/project/${project.projectId}`}>
+                                                        <Row>
+                                                            <Col className={"col-2"}>
+                                                                { project.projectPhoto ?
+                                                                    <Image src={`http://localhost:8080/photo?filename=${project.projectPhoto}`} width={125} height={125}/>
+                                                                    :
+                                                                    <Image src={default_project_picture} width={125} height={125}/>
+                                                                }
+                                                            </Col>
+                                                            <Col className={"col-10 PROFILE-project-text-padding"}>
+                                                                <Row>
+                                                                    { project.title.length > 49 ?
+                                                                        <h5>{project.title.slice(0,49)+"..."}</h5>
+                                                                        :
+                                                                        <h5>{project.title}</h5>
+                                                                    }
+
+                                                                </Row>
+                                                                <Row className={"PROFILE-project-introduction"}>
+                                                                    { project.introduction.length > 350 ?
+                                                                        <span>{project.introduction.slice(0, 350)+"..."}</span>
+                                                                        :
+                                                                        <span>{project.introduction}</span>
+                                                                    }
+                                                                </Row>
+                                                            </Col>
+                                                        </Row>
+                                                    </a>
+                                                </Card.Body>
+                                            </Card>
+                                        )
+                                        }
+                                    </div>
+                                    :
+                                    <center>
+                                        <h2>{profile.username} does not have any projects</h2>
+                                    </center>
+                                }
                             </Tab>
                             <Tab eventKey="Activity" title="Activity">
                             </Tab>

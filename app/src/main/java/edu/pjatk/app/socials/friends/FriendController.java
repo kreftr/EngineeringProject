@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/friends")
@@ -61,7 +60,7 @@ public class FriendController {
     @GetMapping(value = "/getAllFriends/{user_id}")
     public ResponseEntity<?> getAllFriends(@PathVariable Long user_id) {
 
-        List<FriendResponse> friends = friendService.getAllFriendsByUserId(user_id);
+        List<FriendResponse> friends = friendService.getAllFriendsResponsesByUserId(user_id);
 
         if (!friends.isEmpty())
         {

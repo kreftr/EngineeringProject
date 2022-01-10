@@ -4,6 +4,7 @@ import edu.pjatk.app.response.ConversationResponse;
 import edu.pjatk.app.response.RecentMessageResponse;
 import edu.pjatk.app.user.User;
 import edu.pjatk.app.user.UserService;
+import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -60,6 +61,12 @@ public class ConversationService {
             }
         }
 
+        return conversations;
+    }
+
+    public Optional<List<Conversation>> getAllUserConversations(Long user_id) {
+        Optional<List<Conversation>> conversations;
+        conversations = conversationRepository.getAllUserConversations(user_id);
         return conversations;
     }
 

@@ -9,13 +9,13 @@ import Search from "./search/Search";
 import Registration from "./registration/Registration";
 import Verification from "./registration/Verification";
 import Login from "./login/Login";
-import Settings from "./settings/Settings";
-import ProjectSettings from "./settings/ProjectSettings";
+import Settings from "./profile/settings/Settings";
 import Recovery from "./recovery/Recovery";
 import ProjectView from "./project/ProjectView";
 import ConversationList from "./chat/ConversationList"
 import FriendsList from "./friends/FriendsList"
 import ProjectList from "./project/ProjectList";
+import ProjectWorkspace from "./workspace/ProjectWorkspace";
 
 
 class App extends Component{
@@ -68,6 +68,7 @@ class App extends Component{
                     <Route path={"friends/:id"} element={<FriendsList/>}/>
                     <Route path={"projects"} element={<ProjectList/>}/>
                     <Route path={"project/:id"} element={<ProjectView/>}/>
+                    <Route path={"project/:id/workspace"} element={<ProjectWorkspace/>}/>
                     <Route path={"conversations/:id"} element={<ConversationList/>}/>
                     <Route path={"conversations"} element={<ConversationList/>}/>
                     <Route path={"search"} element={<Search/>}/>

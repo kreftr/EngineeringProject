@@ -30,4 +30,8 @@ public class FullProjectResponse {
     private String authorUsername;
     private String authorPhoto;
 
+    private float averageRating;
+    private int numberOfVotes;
+
+    private Set<Long> participants;
 }
