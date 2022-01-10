@@ -1,5 +1,8 @@
 package edu.pjatk.app;
 
+import edu.pjatk.app.socials.chat.Conversation;
+import edu.pjatk.app.socials.chat.ConversationRepository;
+import edu.pjatk.app.socials.chat.Message;
 import edu.pjatk.app.user.User;
 import edu.pjatk.app.user.UserRole;
 import edu.pjatk.app.user.profile.Profile;
@@ -18,6 +21,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -29,6 +33,15 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 class WebAppTests {
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private ConversationRepository conversationRepository;
+
+    @InjectMocks
+    private Conversation conversation;
+
+    @InjectMocks
+    private Message message;
 
     @InjectMocks
     private Profile profile;
@@ -57,6 +70,18 @@ class WebAppTests {
         assertThat(profile).isNotNull();
         System.out.println(profile);
     }
+
+    @Test
+    void test_conversation() {
+        conversation.setId(1l);
+        conversation.setFirst_user(user);
+        conversation.setSecond_user(user);
+        message.setConversation(conversation);
+
+        conversationRepository.createConversation(conversation);
+        assertThat(conversationRepository.getConversationById(1l)).isNotNull();
+    }
+
 //    @Test
 //    void test_adding_user() {
 //        user.setId(1l);
