@@ -165,10 +165,10 @@ public class ProjectService {
         else return Collections.emptySet();
     }
 
-    public Set<MiniProjectResponse> getAllProjects(Long creator_id) {
+    public Set<MiniProjectResponse> getAllCreatorProjects(Long creator_id) {
 
         Set<MiniProjectResponse> projectResponses = new HashSet<>();
-        Optional<List<Project>> projects = projectRepository.getAllProjects(creator_id);
+        Optional<List<Project>> projects = projectRepository.getAllCreatorProjects(creator_id);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
         if (projects.isPresent() && !projects.get().isEmpty()){
@@ -335,6 +335,7 @@ public class ProjectService {
         else return Collections.emptySet();
     }
 
+    //Rating section
     @Transactional
     public void rateProject(Long id, int ratingValue){
 
@@ -378,6 +379,78 @@ public class ProjectService {
         }
         else return 0;
     }
+
+    public List<FullProjectResponse> getAllNonPrivateProjects(){
+
+        Optional<List<Project>> allProjects = projectRepository.getAllNonPrivateProjects();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        List<FullProjectResponse> responseList = new ArrayList<>();
+
+        if (allProjects.isPresent() && allProjects.get().size() > 0){
+
+            for (Project project : allProjects.get()){
+
+                String projectPhoto, authorPhoto, ytLink, gitLink, fbLink, kickLink;
+                Set<String> categories = new HashSet<>();
+
+                try { projectPhoto = project.getPhoto().getFileName(); } catch (NullPointerException e) { projectPhoto = null;}
+                try { authorPhoto = project.getCreator().getProfile().getPhoto().getFileName(); }
+                catch (NullPointerException e) { authorPhoto = null;}
+                try { ytLink = project.getYoutube_link(); } catch (NullPointerException e) { ytLink = null;}
+                try { gitLink = project.getGithub_link(); } catch (NullPointerException e) { gitLink = null;}
+                try { fbLink = project.getFacebook_link(); } catch (NullPointerException e) { fbLink = null;}
+                try { kickLink = project.getKickstarter_link(); } catch (NullPointerException e) { kickLink = null;}
+
+                for (Category c : project.getCategories()){
+                    categories.add(c.getTitle());
+                }
+
+                //Return average rating if there is more than one vote
+                float averageRating = (project.getRatings().size() > 0 ?
+                        project.getRatings().stream().collect(Collectors.summingInt(Rating::getValue)).floatValue()/project.getRatings().size()
+                        : 0);
+                int numberOfVotes = project.getRatings().size();
+
+                //Return IDs of project members
+                Set<Long> participants = new HashSet<>();
+                for (Participant p : project.getParticipants()){
+                    if (!p.isPending()) participants.add(p.getUser().getId());
+                }
+
+                responseList.add(new FullProjectResponse(
+                        project.getId(), projectPhoto,
+                        project.getProject_name(), project.getProject_introduction(),
+                        project.getProject_description(), project.getCreation_date().format(formatter),
+                        project.getProject_status().name(), project.getProject_access().name(), categories,
+                        ytLink, gitLink, fbLink, kickLink,
+                        project.getCreator().getId(), project.getCreator().getUsername(),
+                        authorPhoto, averageRating, numberOfVotes, participants
+                ));
+
+            }
+            return responseList;
+        }
+        else return Collections.emptyList();
+    }
+
+    public List<FullProjectResponse> getBestOfAll(){
+        List<FullProjectResponse> allProjects = getAllNonPrivateProjects();
+
+        if (allProjects.isEmpty()) return Collections.emptyList();
+        else {
+            allProjects.sort(Comparator.comparing(FullProjectResponse::getNumberOfVotes).reversed());
+
+            List<FullProjectResponse> top10 = new ArrayList<>();
+            for (int i = 0; i < 10; i++) {
+                top10.add(allProjects.get(i));
+            }
+
+            top10.sort(Comparator.comparing(FullProjectResponse::getAverageRating).reversed());
+
+            return top10;
+        }
+    }
+
 
     @Transactional
     public void createProject(ProjectRequest projectRequest, MultipartFile photo){

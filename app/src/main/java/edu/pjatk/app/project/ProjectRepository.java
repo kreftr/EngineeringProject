@@ -37,6 +37,19 @@ public class ProjectRepository {
         return project;
     }
 
+    public Optional<List<Project>> getAllNonPrivateProjects(){
+        Optional projects;
+        try {
+            projects = Optional.of(
+                    entityManager.createQuery("SELECT project FROM Project project WHERE project.project_access<>'PRIVATE'")
+                            .getResultList()
+            );
+        } catch (NoResultException e){
+            projects = Optional.empty();
+        }
+        return projects;
+    }
+
     public Optional<List<Project>> getAllProposedProjects(Long id){
         Optional<List<Project>> projects;
         try {
@@ -76,7 +89,7 @@ public class ProjectRepository {
         return projects;
     }
 
-    public Optional<List<Project>> getAllProjects(Long creator_id) {
+    public Optional<List<Project>> getAllCreatorProjects(Long creator_id) {
         Optional<List<Project>> project;
         try {
             project =  Optional.of(entityManager.createQuery(

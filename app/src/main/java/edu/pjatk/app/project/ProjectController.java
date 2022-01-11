@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -82,8 +83,8 @@ public class ProjectController {
     }
 
     @GetMapping(value = "/getAllProjects/{creator_id}")
-    public ResponseEntity<?> getAllProjects(@PathVariable Long creator_id) {
-        Set<MiniProjectResponse> projects = projectService.getAllProjects(creator_id);
+    public ResponseEntity<?> getAllCreatorProjects(@PathVariable Long creator_id) {
+        Set<MiniProjectResponse> projects = projectService.getAllCreatorProjects(creator_id);
 
         if (!projects.isEmpty())
         {
@@ -127,6 +128,17 @@ public class ProjectController {
     public ResponseEntity getMyRating(@PathVariable Long projectId){
         return new ResponseEntity(projectService.getMyRating(projectId), HttpStatus.OK);
     }
+
+    @GetMapping(value = "/ranking")
+    public ResponseEntity getTopOfAllTime(){
+        List<FullProjectResponse> best = projectService.getBestOfAll();
+        if(!best.isEmpty()){
+            return new ResponseEntity(best, HttpStatus.OK);
+        }
+        else return new ResponseEntity(HttpStatus.NOT_FOUND);
+    }
+
+
 
     @PostMapping(value = "/createProject", consumes = {"multipart/form-data"})
     public ResponseEntity<?> createProject(@Valid @RequestPart ProjectRequest projectRequest,
