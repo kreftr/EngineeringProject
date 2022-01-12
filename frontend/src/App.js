@@ -16,6 +16,7 @@ import ConversationList from "./chat/ConversationList"
 import FriendsList from "./friends/FriendsList"
 import ProjectList from "./project/ProjectList";
 import ProjectWorkspace from "./workspace/ProjectWorkspace";
+import ProjectSettings from "./settings/ProjectSettings";
 
 
 class App extends Component{

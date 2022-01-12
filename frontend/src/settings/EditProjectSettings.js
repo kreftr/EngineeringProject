@@ -2,9 +2,11 @@ import React, {useEffect, useState} from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
 import {Alert, Button, Col, FloatingLabel, Form, FormControl, Image, InputGroup, Modal, Row} from "react-bootstrap";
-import default_project_picture from "../assets/images/default-project-picture.jpg";
+import default_project_picture from "../assets/images/default_project_picture.jpg";
 import {FaFacebookSquare, FaGithubSquare, FaKickstarter, FaYoutube} from "react-icons/all";
 import {useParams} from "react-router-dom";
+import project from "../project/Project";
+
 
 function EditProjectSettings(){
 
@@ -15,71 +17,75 @@ function EditProjectSettings(){
     const [introduction, setIntroduction] = useState();
     const [access, setAccess] = useState();
     const [description, setDescription] = useState();
-    const [category, setCategory] = useState();
+    const [allCategories, setAllCategories] = useState([]);
+    const [projectCategories, setProjectCategories] = useState([]);
     const [ytLink, setYTLink] = useState();
     const [fbLink, setFBLink] = useState();
     const [gitLink, setGitLink] = useState();
     const [kickLink, setKickLink] = useState();
 
-    //Created projects
-    const [projects, setProjects] = useState([]);
-    //Projects categories
-    const [categories, setCategories] = useState([]);
-
     useEffect(() => {
-
-        axios.get("http://localhost:8080/categories/getAll", {headers:{
-                'Authorization': Cookies.get("authorization")
-            }}).then(response => {
-            setCategories(response.data)
-        }).catch(err => {
-            console.log(err.response)
-        })
-
-        axios.get(`http://localhost:8080/project/getProjectById/${id}`, {headers:{
-                'Authorization': Cookies.get("authorization")
-            }}).then(response => {
-            setProjects(response.data)
-        }).catch(err => {
-            console.log(err.response)
-        })
-
         axios.get(`http://localhost:8080/project/getProjectById/${id}`)
             .then(response => {
-                setImg(response.data.profile_photo);
-                setTitle(response.data);
-                setIntroduction(response.data);
-                setAccess(response.data);
-                setDescription(response.data);
-                setCategory(response.data);
-                setYTLink(response.data);
-                setFBLink(response.data);
-                setGitLink(response.data);
-                setKickLink(response.data);
+                setImg(response.data.projectPhoto);
+                setTitle(response.data.title);
+                setIntroduction(response.data.introduction);
+                setAccess(response.data.access);
+                setDescription(response.data.description);
+                setProjectCategories(response.data.categories);
+                setYTLink(response.data.youtubeLink);
+                setFBLink(response.data.facebookLink);
+                setGitLink(response.data.githubLink);
+                setKickLink(response.data.kickstarterLink);
             })
             .catch(err => {
                 console.log(err.response)
             })
+
+        axios.get("http://localhost:8080/categories/getAll", {headers:{
+                'Authorization': Cookies.get("authorization")
+            }}).then(response => {
+            setAllCategories(response.data)
+        }).catch(err => {
+            console.log(err.response)
+        })
+
     },[]);
 
-    const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
     function handleImageChange(e){
         setImg(URL.createObjectURL(e.target.files[0]));
     }
 
+    async function handleProjectEdit(e){
+
+        e.preventDefault();
+
+        let photo = document.getElementById("fileChooser").files[0]
+        let bodyFormData = new FormData();
+        bodyFormData.append("editRequest", new Blob(
+            [JSON.stringify({"title":title, "introduction":introduction, "access":access, "ytLink":ytLink, "fbLink":fbLink, "gitLink":gitLink, "kickLink":kickLink, "categories": projectCategories})],
+            { type: "application/json"}))
+        bodyFormData.append("projectPhoto", photo);
+
+        await axios.post("http://localhost:8080/", bodyFormData, {headers:{
+                'Authorization': Cookies.get("authorization")
+            }})
+        .catch(err => {
+            console.log(err.response)
+        })
+    }
+
     function handleCategories(e){
-        if (category.find(x => x === e.target.value)){
-            setCategory(category.filter(x => x !== e.target.value))
+        if (projectCategories.find(x => x === e.target.value)){
+            setProjectCategories(projectCategories.filter(x => x !== e.target.value))
         }
         else {
-            setCategory([...category, e.target.value])
+            setProjectCategories([...projectCategories, e.target.value])
         }
     }
 
     return(
-            <Form onSubmit={handleClose}>
+            <Form onSubmit={handleProjectEdit}>
                 <Row>
                     <Col>
                         <Row className={"PROJECT_LIST-create-project-pic"}>
@@ -100,10 +106,12 @@ function EditProjectSettings(){
                     <Col>
                         <FloatingLabel label="Title">
                             <Form.Control className={"mb-4"} type="text" placeholder="Project title"
+                                          value={title}
                                           onChange={(e)=>{setTitle(e.target.value)}} required/>
                         </FloatingLabel>
                         <FloatingLabel label="Introduction">
                             <Form.Control
+                                value={introduction}
                                 as="textarea"
                                 placeholder="Short project description"
                                 style={{ resize: 'none', height: '243px' }}
@@ -111,7 +119,7 @@ function EditProjectSettings(){
                                 required
                             />
                         </FloatingLabel>
-                        <Form.Select className={"mt-3"}>
+                        <Form.Select className={"mt-3"} value={access}>
                             <option value="PUBLIC" onClick={(e)=>{setAccess(e.target.value)}}>Public</option>
                             <option value="PRIVATE" onClick={(e)=>{setAccess(e.target.value)}}>Private</option>
                             <option value="PROTECTED" onClick={(e)=>{setAccess(e.target.value)}}>Protected</option>
@@ -121,6 +129,7 @@ function EditProjectSettings(){
                 <Row>
                     <FloatingLabel label="Description">
                         <Form.Control
+                            value={description}
                             as="textarea"
                             placeholder="Description"
                             style={{ resize: 'none', height: '300px' }}
@@ -136,6 +145,7 @@ function EditProjectSettings(){
                         <InputGroup className="mb-3">
                             <InputGroup.Text><FaYoutube size={15}/></InputGroup.Text>
                             <FormControl
+                                value={ytLink}
                                 placeholder="Youtube Link"
                                 type={"text"}
                                 onChange={(e)=>{setYTLink(e.target.value)}}
@@ -144,6 +154,7 @@ function EditProjectSettings(){
                         <InputGroup className="mb-3">
                             <InputGroup.Text><FaFacebookSquare size={15}/></InputGroup.Text>
                             <FormControl
+                                value={fbLink}
                                 placeholder="Facebook Link"
                                 type={"text"}
                                 onChange={(e)=>{setFBLink(e.target.value)}}
@@ -152,6 +163,7 @@ function EditProjectSettings(){
                         <InputGroup className="mb-3">
                             <InputGroup.Text><FaGithubSquare size={15}/></InputGroup.Text>
                             <FormControl
+                                value={gitLink}
                                 placeholder="Github Link"
                                 type={"text"}
                                 onChange={(e)=>{setGitLink(e.target.value)}}
@@ -160,6 +172,7 @@ function EditProjectSettings(){
                         <InputGroup className="mb-3">
                             <InputGroup.Text><FaKickstarter size={15}/></InputGroup.Text>
                             <FormControl
+                                value={kickLink}
                                 placeholder="Kickstarter Link"
                                 type={"text"}
                                 onChange={(e)=>{setKickLink(e.target.value)}}
@@ -173,13 +186,14 @@ function EditProjectSettings(){
                             <Col className={"PROJECT-categories"}>
                                 <div key={`default-checkbox`} className="mb-3">
                                     {
-                                        categories.map((category, key) =>
+                                        allCategories.map((category, key) =>
                                             <Form.Check className={"mt-3"}
                                                         key={key}
                                                         type={"checkbox"}
                                                         label={category}
                                                         value={category}
                                                         name="group1"
+                                                        defaultChecked={projectCategories.includes(category)}
                                                         onClick={(e) => {handleCategories(e)}}
                                             />
                                         )
@@ -191,21 +205,6 @@ function EditProjectSettings(){
                 </Row>
                 <Row className={"mt-3"}>
                     <hr/>
-                    {/*{ projectCreationMessage && responseCode === 400 ?*/}
-                    {/*    <Alert variant={"danger"}>*/}
-                    {/*        <center>*/}
-                    {/*            {projectCreationMessage}*/}
-                    {/*        </center>*/}
-                    {/*    </Alert>*/}
-                    {/*    : projectCreationMessage ?*/}
-                    {/*        <Alert variant={"danger"}>*/}
-                    {/*            <center>*/}
-                    {/*                {projectCreationMessage}*/}
-                    {/*            </center>*/}
-                    {/*        </Alert>*/}
-                    {/*        :*/}
-                    {/*        <></>*/}
-                    {/*}*/}
                     <Col>
                         <Button type="submit" variant="primary" className={"q"}>
                             Save

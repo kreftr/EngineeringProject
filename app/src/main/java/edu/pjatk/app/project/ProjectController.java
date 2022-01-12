@@ -134,6 +134,14 @@ public class ProjectController {
         return new ResponseEntity<>(new ResponseMessage("Project created!"), HttpStatus.OK);
     }
 
+    @PostMapping(value = "/editProject", consumes = {"multipart/form-data"})
+    public ResponseEntity<?> editProject(@Valid @RequestPart ProjectRequest projectRequest,
+                                           @RequestPart(required = false) MultipartFile projectPhoto) {
+
+        projectService.editProject(projectRequest, projectPhoto);
+        return new ResponseEntity<>(new ResponseMessage("Project edited!"), HttpStatus.OK);
+    }
+
     @GetMapping(value = "/getAllProjectsWhereIsMember")
     public ResponseEntity getAllProjectsWhereIsMember(){
         Set<MiniProjectResponse> projects = projectService.getAllProjectsWhereUserIsMember();
