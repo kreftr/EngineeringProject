@@ -17,6 +17,7 @@ import FriendsList from "./friends/FriendsList"
 import ProjectList from "./project/ProjectList";
 import ProjectWorkspace from "./workspace/ProjectWorkspace";
 import Ranking from "./ranking/Ranking";
+import ProjectSettings from "./settings/ProjectSettings";
 
 
 class App extends Component{
@@ -78,6 +79,7 @@ class App extends Component{
                     <Route path={"verification/:token"} element={<Verification/>}/>
                     <Route path={"recovery/:token"} element={<Recovery/>}/>
                     <Route path={"login"} element={<Login/>}/>
+                    <Route path={"project/settings/:id"} element={<ProjectSettings/>}/>
                 </Routes>
             </Router>
         )
