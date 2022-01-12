@@ -19,10 +19,10 @@ function EditProjectSettings(){
     const [description, setDescription] = useState();
     const [allCategories, setAllCategories] = useState([]);
     const [projectCategories, setProjectCategories] = useState([]);
-    const [ytLink, setYTLink] = useState();
-    const [fbLink, setFBLink] = useState();
-    const [gitLink, setGitLink] = useState();
-    const [kickLink, setKickLink] = useState();
+    const [youtubeLink, setYTLink] = useState();
+    const [facebookLink, setFBLink] = useState();
+    const [githubLink, setGitLink] = useState();
+    const [kickstarterLink, setKickLink] = useState();
 
     useEffect(() => {
         axios.get(`http://localhost:8080/project/getProjectById/${id}`)
@@ -62,16 +62,27 @@ function EditProjectSettings(){
 
         let photo = document.getElementById("fileChooser").files[0]
         let bodyFormData = new FormData();
-        bodyFormData.append("editRequest", new Blob(
-            [JSON.stringify({"title":title, "introduction":introduction, "access":access, "ytLink":ytLink, "fbLink":fbLink, "gitLink":gitLink, "kickLink":kickLink, "categories": projectCategories})],
+        bodyFormData.append("projectRequest", new Blob(
+            [JSON.stringify({
+                "title":title,
+                "introduction":introduction,
+                "description":description,
+                "category": projectCategories,
+                "access":access,
+                "youtubeLink":youtubeLink,
+                "facebookLink":facebookLink,
+                "githubLink":githubLink,
+                "kickstarterLink":kickstarterLink
+            })],
             { type: "application/json"}))
         bodyFormData.append("projectPhoto", photo);
 
-        await axios.post("http://localhost:8080/", bodyFormData, {headers:{
+        await axios.post(`http://localhost:8080/project/editProject/${id}`, bodyFormData, {headers:{
                 'Authorization': Cookies.get("authorization")
             }})
         .catch(err => {
             console.log(err.response)
+            console.log(err)
         })
     }
 
@@ -145,7 +156,7 @@ function EditProjectSettings(){
                         <InputGroup className="mb-3">
                             <InputGroup.Text><FaYoutube size={15}/></InputGroup.Text>
                             <FormControl
-                                value={ytLink}
+                                value={youtubeLink}
                                 placeholder="Youtube Link"
                                 type={"text"}
                                 onChange={(e)=>{setYTLink(e.target.value)}}
@@ -154,7 +165,7 @@ function EditProjectSettings(){
                         <InputGroup className="mb-3">
                             <InputGroup.Text><FaFacebookSquare size={15}/></InputGroup.Text>
                             <FormControl
-                                value={fbLink}
+                                value={facebookLink}
                                 placeholder="Facebook Link"
                                 type={"text"}
                                 onChange={(e)=>{setFBLink(e.target.value)}}
@@ -163,7 +174,7 @@ function EditProjectSettings(){
                         <InputGroup className="mb-3">
                             <InputGroup.Text><FaGithubSquare size={15}/></InputGroup.Text>
                             <FormControl
-                                value={gitLink}
+                                value={githubLink}
                                 placeholder="Github Link"
                                 type={"text"}
                                 onChange={(e)=>{setGitLink(e.target.value)}}
@@ -172,7 +183,7 @@ function EditProjectSettings(){
                         <InputGroup className="mb-3">
                             <InputGroup.Text><FaKickstarter size={15}/></InputGroup.Text>
                             <FormControl
-                                value={kickLink}
+                                value={kickstarterLink}
                                 placeholder="Kickstarter Link"
                                 type={"text"}
                                 onChange={(e)=>{setKickLink(e.target.value)}}

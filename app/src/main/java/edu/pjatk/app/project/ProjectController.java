@@ -5,6 +5,7 @@ import edu.pjatk.app.request.ProjectRequest;
 import edu.pjatk.app.response.ResponseMessage;
 import edu.pjatk.app.response.project.FullProjectResponse;
 import edu.pjatk.app.response.project.MiniProjectResponse;
+import org.hibernate.tool.schema.internal.exec.ScriptTargetOutputToFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -134,11 +135,12 @@ public class ProjectController {
         return new ResponseEntity<>(new ResponseMessage("Project created!"), HttpStatus.OK);
     }
 
-    @PostMapping(value = "/editProject", consumes = {"multipart/form-data"})
-    public ResponseEntity<?> editProject(@Valid @RequestPart ProjectRequest projectRequest,
-                                           @RequestPart(required = false) MultipartFile projectPhoto) {
+    @PostMapping(value = "/editProject/{id}", consumes = {"multipart/form-data"})
+    public ResponseEntity<?> editProject(@RequestPart ProjectRequest projectRequest,
+                                         @RequestPart(required = false) MultipartFile projectPhoto,
+                                         @PathVariable Long id) {
 
-        projectService.editProject(projectRequest, projectPhoto);
+        projectService.editProject(projectRequest, projectPhoto, id);
         return new ResponseEntity<>(new ResponseMessage("Project edited!"), HttpStatus.OK);
     }
 

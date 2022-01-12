@@ -360,7 +360,7 @@ public class ProjectService {
     }
 
     @Transactional
-    public void editProject(ProjectRequest projectRequest, MultipartFile photo){
+    public void editProject(ProjectRequest projectRequest, MultipartFile photo, Long id){
 
         Optional<User> loggedUser = userService.findUserByUsername(
                 SecurityContextHolder.getContext().getAuthentication().getName()
@@ -380,6 +380,7 @@ public class ProjectService {
                     projectRequest.getYoutubeLink(), projectRequest.getFacebookLink(), projectRequest.getGithubLink(),
                     projectRequest.getKickstarterLink(), loggedUser.get(), projectPhoto
             );
+            project.setId(id);
             projectRepository.update(project);
         }
     }
