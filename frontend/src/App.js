@@ -15,7 +15,7 @@ import ProjectView from "./project/ProjectView";
 import ConversationList from "./chat/ConversationList"
 import FriendsList from "./friends/FriendsList"
 import ProjectList from "./project/ProjectList";
-import ProjectWorkspace from "./workspace/ProjectWorkspace";
+import Workspace from "./workspace/Workspace";
 import Ranking from "./ranking/Ranking";
 
 
@@ -69,7 +69,7 @@ class App extends Component{
                     <Route path={"friends/:id"} element={<FriendsList/>}/>
                     <Route path={"projects"} element={<ProjectList/>}/>
                     <Route path={"project/:id"} element={<ProjectView/>}/>
-                    <Route path={"project/:id/workspace"} element={<ProjectWorkspace/>}/>
+                    <Route path={"project/:id/workspace"} element={<Workspace/>}/>
                     <Route path={"ranking"} element={<Ranking/>}/>
                     <Route path={"conversations/:id"} element={<ConversationList/>}/>
                     <Route path={"conversations"} element={<ConversationList/>}/>

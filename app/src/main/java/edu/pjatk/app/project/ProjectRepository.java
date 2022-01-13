@@ -20,6 +20,7 @@ public class ProjectRepository {
         this.entityManager = entityManager;
     }
 
+
     public void update(Project project){
         entityManager.merge(project);
     }
@@ -54,7 +55,7 @@ public class ProjectRepository {
         Optional<List<Project>> projects;
         try {
             projects =  Optional.of(entityManager.createQuery(
-                            "select project from Project project where project.project_access <> 'PRIVATE' and project.creator.id<>:id", Project.class)
+                            "select project from Project project where project.project_access<>'PRIVATE' and project.creator.id<>:id", Project.class)
                     .setParameter("id", id).getResultList());
         }
         catch (NoResultException noResultException){

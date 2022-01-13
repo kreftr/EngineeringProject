@@ -32,8 +32,8 @@ public class ParticipantService {
         return participantRepository.getByUserAndProjectIds(userid, projectId);
     }
 
-    public Optional<List<Participant>> getAllWhereUserIsMember(Long userId){
-        return participantRepository.getAllWhereUserIsMemberByUserId(userId);
+    public Optional<List<Participant>> getAllWhereUserJoined(Long userId){
+        return participantRepository.getAllWhereUserJoined(userId);
     }
 
     public Optional<List<Participant>> getAllPending(Long userId){

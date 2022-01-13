@@ -1,0 +1,11 @@
+
+.FILE-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.FILE-hover {
+    cursor: pointer;
+}

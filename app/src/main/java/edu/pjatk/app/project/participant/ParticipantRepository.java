@@ -54,7 +54,7 @@ public class ParticipantRepository {
         return participant;
     }
 
-    public Optional<List<Participant>> getAllWhereUserIsMemberByUserId(Long userId){
+    public Optional<List<Participant>> getAllWhereUserJoined(Long userId){
         Optional participants;
         try {
             participants = Optional.of(

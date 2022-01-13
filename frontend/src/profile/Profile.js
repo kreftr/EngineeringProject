@@ -8,7 +8,7 @@ import Cookies from "js-cookie"
 import {useParams} from "react-router-dom";
 
 import "./Profile.css"
-import {map} from "react-bootstrap/ElementChildren";
+
 
 function Profile(){
 
@@ -39,8 +39,9 @@ function Profile(){
             })
 
         //Load user's projects
-        axios.get(`http://localhost:8080/project/getAllProjects/${id}`
-        ).then(response => {
+        axios.get(`http://localhost:8080/project/getAllProjects/${id}`,
+            {headers: {'Authorization': Cookies.get("authorization")}
+        }).then(response => {
             setProjects(response.data)
         }).catch(err => {
             console.log(err.response)

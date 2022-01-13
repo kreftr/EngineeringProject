@@ -183,3 +183,27 @@ databaseChangeLog:
         stripComments: true
         splitStatements: false
         path: db.changelog/20220109_project_invitation.sql
+  - changeSet:
+      id: 20220111_project_fix_relations_with_files_and_tasks
+      author: Rafał Kreft
+      sqlFile:
+        relativeToChangelogFile: true
+        stripComments: true
+        splitStatements: false
+        path: db.changelog/20220111_project_fix_relations_with_files_and_tasks.sql
+  - changeSet:
+      id: 20220111_file_add_uploader_id
+      author: Rafał Kreft
+      sqlFile:
+        relativeToChangelogFile: true
+        stripComments: true
+        splitStatements: false
+        path: db.changelog/20220111_file_add_uploader_id.sql
+  - changeSet:
+      id: 20220113_file_add_date_column
+      author: Rafał Kreft
+      sqlFile:
+        relativeToChangelogFile: true
+        stripComments: true
+        splitStatements: false
+        path: db.changelog/20220113_file_add_date_column.sql

@@ -19,7 +19,6 @@ function Project(props){
     }
 
     return(
-        <ListGroupItem>
             <Row>
                 <Col className={"col-3 PROJECT-thumbnail-section"}>
                     {props.project.projectPhoto ?
@@ -42,7 +41,7 @@ function Project(props){
                             View
                         </Button>
                     </a>
-                    <Button className={"PROJECT-button mb-2"} variant={"primary"}>
+                    <Button className={"PROJECT-button mb-2"} variant={"primary"} href={`/project/${props.project.projectId}/workspace`}>
                         <FaFileAlt className={"mr-2"} size={35}/>
                         Workspace
                     </Button>
@@ -59,7 +58,6 @@ function Project(props){
                     }
                 </Col>
             </Row>
-        </ListGroupItem>
     );
 
 }

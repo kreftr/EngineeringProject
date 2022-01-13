@@ -11,7 +11,7 @@ function RankedProject(props){
     function profilePhoto(){
         return(
             <a href={`/profile/${props.project.authorId}`}>
-                {props.project.projectPhoto ?
+                {props.project.authorPhoto ?
                     <Image
                         src={`http://localhost:8080/photo?filename=${props.project.authorPhoto}`}
                         width="50px" height="50px" rounded={true}/>
@@ -36,7 +36,7 @@ function RankedProject(props){
                 </Col>
                 <Col className={"col-4"}>
                     <h3>Rating: <Badge pill bg="primary">{props.project.averageRating ? props.project.averageRating : "No Votes"}<FaStar className={"ml-1"}/></Badge></h3>
-                    <h3>Votes: <Badge pill bg="primary">{props.project.numberOfVotes}</Badge></h3>
+                    <h3>Votes: {props.project.numberOfVotes}</h3>
                     <h3>Author: {profilePhoto()}</h3>
                     <ListGroup.Item>
                         {

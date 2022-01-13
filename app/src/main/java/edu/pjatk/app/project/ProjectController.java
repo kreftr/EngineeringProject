@@ -3,10 +3,7 @@ package edu.pjatk.app.project;
 
 import edu.pjatk.app.request.ProjectRequest;
 import edu.pjatk.app.response.ResponseMessage;
-import edu.pjatk.app.response.project.FullProjectResponse;
-import edu.pjatk.app.response.project.InvitationResponse;
-import edu.pjatk.app.response.project.MiniProjectResponse;
-import edu.pjatk.app.response.project.ProjectJoinRequestResponse;
+import edu.pjatk.app.response.project.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +27,8 @@ public class ProjectController {
     private ProjectController(ProjectService projectService){
         this.projectService = projectService;
     }
+
+    //------Projects section endpoints------
 
     @GetMapping(value = "/getProjectById/{id}")
     public ResponseEntity<?> findProjectById(@PathVariable Long id) {
@@ -83,8 +82,8 @@ public class ProjectController {
     }
 
     @GetMapping(value = "/getAllProjects/{creator_id}")
-    public ResponseEntity<?> getAllCreatorProjects(@PathVariable Long creator_id) {
-        Set<MiniProjectResponse> projects = projectService.getAllCreatorProjects(creator_id);
+    public ResponseEntity<?> getProjectsByCreatorId(@PathVariable Long creator_id) {
+        Set<MiniProjectResponse> projects = projectService.getProjectsByCreatorId(creator_id);
 
         if (!projects.isEmpty())
         {
@@ -112,6 +111,19 @@ public class ProjectController {
         }
     }
 
+    @PostMapping(value = "/createProject", consumes = {"multipart/form-data"})
+    public ResponseEntity<?> createProject(@Valid @RequestPart ProjectRequest projectRequest,
+                                           @RequestPart(required = false) MultipartFile projectPhoto) {
+
+        projectService.createProject(projectRequest, projectPhoto);
+        return new ResponseEntity<>(new ResponseMessage("Project created!"), HttpStatus.OK);
+    }
+
+    //-----------------------------------------
+
+
+    //------Rating section endpoints------
+
     @PostMapping(value = "/rateProject/{id}", params = "rating")
     public ResponseEntity rateProject(@PathVariable Long id, @RequestParam int rating){
 
@@ -130,27 +142,22 @@ public class ProjectController {
     }
 
     @GetMapping(value = "/ranking")
-    public ResponseEntity getTopOfAllTime(){
-        List<FullProjectResponse> best = projectService.getBestOfAll();
+    public ResponseEntity getTopRatedProjects(){
+        List<FullProjectResponse> best = projectService.getTopRatedProjects();
         if(!best.isEmpty()){
             return new ResponseEntity(best, HttpStatus.OK);
         }
         else return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 
+    //-----------------------------------
 
 
-    @PostMapping(value = "/createProject", consumes = {"multipart/form-data"})
-    public ResponseEntity<?> createProject(@Valid @RequestPart ProjectRequest projectRequest,
-                                           @RequestPart(required = false) MultipartFile projectPhoto) {
+    //------Membership and invites section------
 
-        projectService.createProject(projectRequest, projectPhoto);
-        return new ResponseEntity<>(new ResponseMessage("Project created!"), HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/getAllProjectsWhereIsMember")
-    public ResponseEntity getAllProjectsWhereIsMember(){
-        Set<MiniProjectResponse> projects = projectService.getAllProjectsWhereUserIsMember();
+    @GetMapping(value = "/getAllProjectsWhereUserJoined")
+    public ResponseEntity getAllProjectsWhereUserJoined(){
+        Set<MiniProjectResponse> projects = projectService.getAllProjectsWhereUserJoined();
         if (!projects.isEmpty()){
             return new ResponseEntity(projects, HttpStatus.OK);
         }
@@ -159,13 +166,16 @@ public class ProjectController {
         }
     }
 
-    @GetMapping(value = "/getAllInvitations")
-    public ResponseEntity getAllInvitations(){
-        Set<InvitationResponse> invitations = projectService.getAllInvitations();
-        if (!invitations.isEmpty()){
-            return new ResponseEntity(invitations,HttpStatus.OK);
+    @GetMapping(value = "/getProjectMembers/{project_id}")
+    public ResponseEntity getProjectMembers(@PathVariable Long project_id){
+        Set<MemberResponse> members = projectService.getProjectMembers(project_id);
+
+        if (members.isEmpty()){
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
-        else return new ResponseEntity(HttpStatus.NOT_FOUND);
+        else {
+            return new ResponseEntity(members, HttpStatus.OK);
+        }
     }
 
     @PostMapping(value = "/join/{id}")
@@ -233,6 +243,15 @@ public class ProjectController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    @GetMapping(value = "/getAllInvitations")
+    public ResponseEntity getAllInvitations(){
+        Set<InvitationResponse> invitations = projectService.getAllInvitations();
+        if (!invitations.isEmpty()){
+            return new ResponseEntity(invitations,HttpStatus.OK);
+        }
+        else return new ResponseEntity(HttpStatus.NOT_FOUND);
+    }
+
     @PostMapping(value = "/inviteToProject/{projectId}", params = "userId")
     public ResponseEntity inviteToProject(@PathVariable Long projectId, @RequestParam Long userId){
         if (projectService.inviteToProject(projectId, userId)){
@@ -257,7 +276,26 @@ public class ProjectController {
         else return new ResponseEntity(HttpStatus.CONFLICT);
     }
 
+    //-----------------------------------------
 
+
+    //------Files section------
+    @GetMapping(value = "/getProjectFiles/{projectId}")
+    public ResponseEntity getProjectFiles(@PathVariable Long projectId){
+
+        Set<FileResponse> responses = projectService.getProjectFiles(projectId);
+
+        if (responses.isEmpty()){
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+        else {
+            return new ResponseEntity(responses, HttpStatus.OK);
+        }
+    }
+    //-------------------------
+
+
+    //------Section to finish------
 
     @DeleteMapping(value = "/deleteProject/{id}")
     public ResponseEntity<?> deleteProject(@PathVariable long id) {
@@ -290,5 +328,7 @@ public class ProjectController {
                 new ResponseMessage("Project status change is complete"), HttpStatus.OK
         );
     }
+
+    //--------------------------
 
 }

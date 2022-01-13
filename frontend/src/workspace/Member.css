@@ -1,0 +1,10 @@
+
+.MEMBER-container {
+    display: inline-flex;
+}
+
+.MEMBER-username {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

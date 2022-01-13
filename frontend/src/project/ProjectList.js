@@ -88,7 +88,7 @@ function ProjectList(){
             console.log(err.response)
         })
 
-        axios.get("http://localhost:8080/project/getAllProjectsWhereIsMember", {headers:{
+        axios.get("http://localhost:8080/project/getAllProjectsWhereUserJoined", {headers:{
                 'Authorization': Cookies.get("authorization")
         }}).then(response => {
             setJoinedProjects(response.data)
@@ -544,7 +544,7 @@ function ProjectList(){
                     }
                     { projects.length > 0 ?
                         <Row>
-                            <Accordion>
+                            <Accordion defaultActiveKey="0">
                                 <Accordion.Item eventKey="0">
                                     <Accordion.Header>
                                         <h2>
@@ -556,9 +556,12 @@ function ProjectList(){
                                         <ListGroup className={"mt-3"}>
                                             {
                                                 projects.map((project, key) =>
-                                                    <ListGroupItem key={key}>
-                                                        <Project project={project}/>
-                                                    </ListGroupItem>
+                                                    <>
+                                                        <ListGroupItem className={"mb-3"} key={key}>
+                                                            <Project project={project}/>
+                                                        </ListGroupItem>
+                                                        <div/>
+                                                    </>
                                                 )
                                             }
                                         </ListGroup>
@@ -567,7 +570,9 @@ function ProjectList(){
                             </Accordion>
                         </Row>
                         :
-                        <h3 className={"mt-3"}>No projects found</h3>
+                        <center>
+                            <h3 className={"mt-3"}>You haven't created any project yet</h3>
+                        </center>
                     }
                     { joinedProjects.length > 0 ?
                         <Row>

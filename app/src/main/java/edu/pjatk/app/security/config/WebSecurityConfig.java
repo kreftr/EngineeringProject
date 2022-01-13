@@ -54,8 +54,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/project/ranking").permitAll()
                 .antMatchers(HttpMethod.POST,  "/profile", "/photo").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/user/changePassword", "/user/deleteAccount", "/friends/**", "/conversation/**",
-                        "/profile/my", "/project/**").hasAnyRole("USER", "ADMIN")
-                .antMatchers( "/file/**", "/task/**").permitAll()
+                        "/profile/my", "/project/**", "/file/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers( "/task/**").permitAll()
                 .anyRequest().authenticated();
     }
 

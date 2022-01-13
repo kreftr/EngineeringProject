@@ -159,10 +159,10 @@ function ProjectView(){
                                                     { project.authorId != parseInt(Cookies.get("userId")) ?
                                                         <>
                                                             <Button className={"mb-3 mt-4"} variant="danger" onClick={() => leave()}>Leave</Button>
-                                                            <Button className={"mb-3"} variant="success">Workspace</Button>
+                                                            <Button className={"mb-3"} variant="success" href={`/project/${project.projectId}/workspace`}>Workspace</Button>
                                                         </>
                                                         :
-                                                        <Button className={"mt-4 mb-3"} variant="success">Workspace</Button>
+                                                        <Button className={"mt-4 mb-3"} variant="success" variant="success" href={`/project/${project.projectId}/workspace`}>Workspace</Button>
                                                     }
                                                     </>
                                                     :

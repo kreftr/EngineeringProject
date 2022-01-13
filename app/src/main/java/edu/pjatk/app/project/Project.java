@@ -63,13 +63,13 @@ public class Project {
     @JoinColumn(name = "project_creator")
     private User creator;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
-    private List<File> file;
+    @OneToMany(mappedBy = "project", cascade = {CascadeType.MERGE, CascadeType.PERSIST},
+            orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<File> files = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
-    private List<Task> task;
+    @OneToMany(mappedBy = "project", cascade = {CascadeType.MERGE, CascadeType.PERSIST},
+            orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Task> task = new ArrayList<>();
 
 
     public Project(String project_name, String project_introduction, String project_description,

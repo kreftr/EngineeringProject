@@ -1,0 +1,2 @@
+ALTER TABLE file ADD COLUMN user_id BIGINT NOT NULL;
+ALTER TABLE file ADD CONSTRAINT file_user_id FOREIGN KEY (user_id) REFERENCES "user" (id);
