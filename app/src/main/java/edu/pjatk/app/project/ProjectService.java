@@ -252,164 +252,6 @@ public class ProjectService {
         else return Collections.emptySet();
     }
 
-    //Requests to join 'protected' project
-    public Set<ProjectJoinRequestResponse> getAllPendingRequests(){
-        Optional<User> loggedUser = userService.findUserByUsername(
-                SecurityContextHolder.getContext().getAuthentication().getName()
-        );
-
-        Optional<List<Participant>> participants = participantService.getAllPending(loggedUser.get().getId());
-
-        if (participants.isPresent() && participants.get().size() > 0){
-            String profilePhoto;
-            Set<ProjectJoinRequestResponse> pending = new HashSet<>();
-
-            for (Participant p : participants.get()){
-                try {
-                    profilePhoto =  p.getUser().getProfile().getPhoto().getFileName();
-                } catch (NullPointerException e) { profilePhoto = null;  }
-                pending.add(new ProjectJoinRequestResponse(
-                        p.getId(), p.getUser().getId(), p.getUser().getUsername(),
-                        profilePhoto, p.getProject().getId(),
-                        p.getProject().getProject_name()
-                ));
-            }
-            return pending;
-        }
-        else return Collections.emptySet();
-    }
-
-    public Set<InvitationResponse> getAllInvitations(){
-        Optional<User> loggedUser = userService.findUserByUsername(
-                SecurityContextHolder.getContext().getAuthentication().getName()
-        );
-
-        Optional<List<ProjectInvitation>> invitations = projectInvitationService.getAllInvitationsByUserId(loggedUser.get().getId());
-        Set<InvitationResponse> invitationResponses = new HashSet<>();
-
-        if (invitations.isPresent() && invitations.get().size() > 0){
-            String projectPhoto;
-            for (ProjectInvitation invitation : invitations.get()){
-                try {
-                    projectPhoto =  invitation.getProject().getPhoto().getFileName();
-                } catch (NullPointerException e) { projectPhoto = null;  }
-                invitationResponses.add(
-                        new InvitationResponse(invitation.getId(), invitation.getProject().getId(),
-                                projectPhoto, invitation.getProject().getProject_name())
-                );
-            }
-            return invitationResponses;
-        }
-        else return Collections.emptySet();
-    }
-
-    //Includes only members with pending = false
-    public Set<MiniProjectResponse> getAllProjectsWhereUserJoined(){
-        Optional<User> loggedUser = userService.findUserByUsername(
-                SecurityContextHolder.getContext().getAuthentication().getName()
-        );
-
-        Optional<List<Participant>> participantOf = participantService.getAllWhereUserJoined(loggedUser.get().getId());
-
-        if (participantOf.isPresent() && participantOf.get().size() > 0){
-
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-            Set<MiniProjectResponse> projectResponses = new HashSet<>();
-            String projectPhoto, authorPhoto;
-
-            for (Participant participant : participantOf.get()){
-                Set<String> categories = new HashSet<>();
-                try { projectPhoto = participant.getProject().getPhoto().getFileName(); } catch (NullPointerException e) { projectPhoto = null;}
-                try { authorPhoto = participant.getProject().getCreator().getProfile().getPhoto().getFileName(); }
-                catch (NullPointerException e) { authorPhoto = null;}
-
-                for (Category c : participant.getProject().getCategories()){
-                    categories.add(c.getTitle());
-                }
-
-                projectResponses.add(
-                        new MiniProjectResponse(
-                                participant.getProject().getId(), projectPhoto, participant.getProject().getProject_name(),
-                                participant.getProject().getProject_introduction(), categories,
-                                participant.getProject().getCreation_date().format(formatter),
-                                participant.getProject().getCreator().getId(),
-                                participant.getProject().getCreator().getUsername(), authorPhoto
-                        )
-                );
-            }
-            return projectResponses;
-        }
-        else return Collections.emptySet();
-    }
-
-    public Set<MemberResponse> getProjectMembers(Long projectId){
-
-        Optional<Project> project = projectRepository.getProjectById(projectId);
-
-        if (project.isPresent()){
-
-            String profilePhoto;
-            Set<MemberResponse> members = new HashSet<>();
-
-            for (Participant participant : project.get().getParticipants()){
-                if (!participant.isPending()){
-                    try { profilePhoto = participant.getUser().getProfile().getPhoto().getFileName(); }
-                    catch (NullPointerException e) { profilePhoto = null; }
-                    members.add(new MemberResponse(participant.getUser().getId(), participant.getUser().getUsername(),
-                                profilePhoto, participant.getParticipantRole().toString())
-                    );
-                }
-            }
-            return members;
-        }
-        else return Collections.emptySet();
-    }
-
-    //Rating section
-    @Transactional
-    public void rateProject(Long id, int ratingValue){
-
-        Optional<Project> project = projectRepository.getProjectById(id);
-        Optional<User> loggedUser = userService.findUserByUsername(
-                SecurityContextHolder.getContext().getAuthentication().getName()
-        );
-
-        if (project.isPresent() && loggedUser.isPresent()){
-
-            Rating newRate = new Rating(ratingValue, loggedUser.get().getProfile(), project.get());
-
-            Optional<Rating> oldRate = project.get().getRatings().stream().filter(
-                    rating -> rating.getProfile().equals(loggedUser.get().getProfile())).findFirst();
-
-            //Check if user already rated this project
-            if (oldRate.isPresent()){
-                for (int i=0; i < project.get().getRatings().size(); i++){
-                    if (project.get().getRatings().get(i).equals(oldRate.get())){
-                        project.get().getRatings().get(i).setValue(ratingValue);
-                    }
-                }
-            } else project.get().getRatings().add(newRate);
-
-            projectRepository.update(project.get());
-        }
-    }
-
-    public int getMyRating(Long projectId){
-        Optional<Project> projectOptional = projectRepository.getProjectById(projectId);
-        Optional<User> loggedUser = userService.findUserByUsername(
-                SecurityContextHolder.getContext().getAuthentication().getName()
-        );
-
-        if (loggedUser.isPresent() && projectOptional.isPresent()){
-            Project project = projectOptional.get();
-            Optional<Rating> rate = project.getRatings().stream().filter(
-                    rating -> rating.getProfile().equals(loggedUser.get().getProfile())).findFirst();
-            if (rate.isPresent()) return rate.get().getValue();
-            else return 0;
-        }
-        else return 0;
-    }
-
     public List<FullProjectResponse> getAllNonPrivateProjects(){
 
         Optional<List<Project>> allProjects = projectRepository.getAllNonPrivateProjects();
@@ -462,55 +304,6 @@ public class ProjectService {
         }
         else return Collections.emptyList();
     }
-
-    public List<FullProjectResponse> getTopRatedProjects(){
-
-        List<FullProjectResponse> allProjects = this.getAllNonPrivateProjects();
-
-        if (allProjects.isEmpty()) return Collections.emptyList();
-        else {
-            allProjects.sort(Comparator.comparing(FullProjectResponse::getNumberOfVotes).reversed());
-
-            List<FullProjectResponse> top10 = new ArrayList<>();
-            for (int i = 0; i < 10; i++) {
-                if(allProjects.size() > i) top10.add(allProjects.get(i));
-            }
-
-            top10.sort(Comparator.comparing(FullProjectResponse::getAverageRating).reversed());
-
-            return top10;
-        }
-    }
-
-
-    public Set<FileResponse> getProjectFiles(Long projectId){
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
-        Optional<Project> project = projectRepository.getProjectById(projectId);
-        if (project.isEmpty()) return Collections.emptySet();
-
-        Optional<User> loggedUser = userService.findUserByUsername(
-                SecurityContextHolder.getContext().getAuthentication().getName()
-        );
-
-        Optional<Participant> participant = participantService.getParticipantByUserAndProject(
-                loggedUser.get().getId(), project.get().getId());
-
-        if (participant.isPresent()){
-
-            Set<FileResponse> fileResponses = new HashSet<>();
-
-            for (File f : project.get().getFiles()){
-                fileResponses.add(new FileResponse(f.getId(), f.getName(), f.getUrl(), f.getUser().getId(),
-                        f.getUser().getUsername(), f.getUser().getProfile().getPhoto().getFileName(), f.getSize(),
-                        f.getUploadDate().format(formatter)));
-            }
-            return fileResponses;
-        }
-        else return Collections.emptySet();
-    }
-
 
     @Transactional
     public void createProject(ProjectRequest projectRequest, MultipartFile photo){
@@ -568,6 +361,283 @@ public class ProjectService {
             project.setId(id);
             projectRepository.update(project);
         }
+    }
+
+
+    //Rating section
+    @Transactional
+    public void rateProject(Long id, int ratingValue){
+
+        Optional<Project> project = projectRepository.getProjectById(id);
+        Optional<User> loggedUser = userService.findUserByUsername(
+                SecurityContextHolder.getContext().getAuthentication().getName()
+        );
+
+        if (project.isPresent() && loggedUser.isPresent()){
+
+            Rating newRate = new Rating(ratingValue, loggedUser.get().getProfile(), project.get());
+
+            Optional<Rating> oldRate = project.get().getRatings().stream().filter(
+                    rating -> rating.getProfile().equals(loggedUser.get().getProfile())).findFirst();
+
+            //Check if user already rated this project
+            if (oldRate.isPresent()){
+                for (int i=0; i < project.get().getRatings().size(); i++){
+                    if (project.get().getRatings().get(i).equals(oldRate.get())){
+                        project.get().getRatings().get(i).setValue(ratingValue);
+                    }
+                }
+            } else project.get().getRatings().add(newRate);
+
+            projectRepository.update(project.get());
+        }
+    }
+
+    public int getMyRating(Long projectId){
+        Optional<Project> projectOptional = projectRepository.getProjectById(projectId);
+        Optional<User> loggedUser = userService.findUserByUsername(
+                SecurityContextHolder.getContext().getAuthentication().getName()
+        );
+
+        if (loggedUser.isPresent() && projectOptional.isPresent()){
+            Project project = projectOptional.get();
+            Optional<Rating> rate = project.getRatings().stream().filter(
+                    rating -> rating.getProfile().equals(loggedUser.get().getProfile())).findFirst();
+            if (rate.isPresent()) return rate.get().getValue();
+            else return 0;
+        }
+        else return 0;
+    }
+
+    public List<FullProjectResponse> getTopRatedProjects(){
+
+        List<FullProjectResponse> allProjects = this.getAllNonPrivateProjects();
+
+        if (allProjects.isEmpty()) return Collections.emptyList();
+        else {
+            allProjects.sort(Comparator.comparing(FullProjectResponse::getNumberOfVotes).reversed());
+
+            List<FullProjectResponse> top10 = new ArrayList<>();
+            for (int i = 0; i < 10; i++) {
+                if(allProjects.size() > i) top10.add(allProjects.get(i));
+            }
+
+            top10.sort(Comparator.comparing(FullProjectResponse::getAverageRating).reversed());
+
+            return top10;
+        }
+    }
+
+
+    //Project files section
+    public Set<FileResponse> getProjectFiles(Long projectId){
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+        Optional<Project> project = projectRepository.getProjectById(projectId);
+        if (project.isEmpty()) return Collections.emptySet();
+
+        Optional<User> loggedUser = userService.findUserByUsername(
+                SecurityContextHolder.getContext().getAuthentication().getName()
+        );
+
+        Optional<Participant> participant = participantService.getParticipantByUserAndProject(
+                loggedUser.get().getId(), project.get().getId());
+
+        if (participant.isPresent()){
+
+            Set<FileResponse> fileResponses = new HashSet<>();
+
+            for (File f : project.get().getFiles()){
+                fileResponses.add(new FileResponse(f.getId(), f.getName(), f.getUrl(), f.getUser().getId(),
+                        f.getUser().getUsername(), f.getUser().getProfile().getPhoto().getFileName(), f.getSize(),
+                        f.getUploadDate().format(formatter)));
+            }
+            return fileResponses;
+        }
+        else return Collections.emptySet();
+    }
+
+
+    //Project roles section
+    @Transactional
+    public boolean promoteMember(Long userId, Long projectId){
+
+        Optional<User> loggedUser = userService.findUserByUsername(
+                SecurityContextHolder.getContext().getAuthentication().getName()
+        );
+        Optional<Participant> loggedParticipant = participantService.getParticipantByUserAndProject(loggedUser.get().getId(), projectId);
+        Optional<Project> project = projectRepository.getProjectById(projectId);
+        Optional<Participant> participant = participantService.getParticipantByUserAndProject(userId, projectId);
+
+        if (loggedUser.isPresent() && loggedParticipant.isPresent() && participant.isPresent() &&
+                project.isPresent() && participant.get().getParticipantRole().equals(ParticipantRole.PARTICIPANT) &&
+                project.get().getCreator().equals(loggedUser.get())){
+            participant.get().setParticipantRole(ParticipantRole.MODERATOR);
+            participantService.updateParticipant(participant.get());
+            return true;
+        }
+        else return false;
+    }
+
+    @Transactional
+    public boolean degradeMember(Long userId, Long projectId){
+        Optional<User> loggedUser = userService.findUserByUsername(
+                SecurityContextHolder.getContext().getAuthentication().getName()
+        );
+        Optional<Participant> loggedParticipant = participantService.getParticipantByUserAndProject(loggedUser.get().getId(), projectId);
+        Optional<Project> project = projectRepository.getProjectById(projectId);
+        Optional<Participant> participant = participantService.getParticipantByUserAndProject(userId, projectId);
+
+        if (loggedUser.isPresent() && loggedParticipant.isPresent() && project.isPresent() &&
+                participant.isPresent() && participant.get().getParticipantRole().equals(ParticipantRole.MODERATOR) &&
+                project.get().getCreator().equals(loggedUser.get())){
+            participant.get().setParticipantRole(ParticipantRole.PARTICIPANT);
+            participantService.updateParticipant(participant.get());
+            return true;
+        }
+        else return false;
+    }
+
+    @Transactional
+    public boolean kickMember(Long userId, Long projectId){
+        Optional<User> loggedUser = userService.findUserByUsername(
+                SecurityContextHolder.getContext().getAuthentication().getName()
+        );
+        Optional<Participant> loggedParticipant = participantService.getParticipantByUserAndProject(loggedUser.get().getId(), projectId);
+        Optional<Project> project = projectRepository.getProjectById(projectId);
+        Optional<Participant> participant = participantService.getParticipantByUserAndProject(userId, projectId);
+
+        if (loggedUser.isPresent() && loggedParticipant.isPresent() && project.isPresent() &&
+                participant.isPresent() && !loggedUser.get().getId().equals(userId) &&
+                !loggedParticipant.get().getParticipantRole().equals(ParticipantRole.PARTICIPANT) &&
+                 !project.get().getCreator().getId().equals(userId)){
+            if (loggedParticipant.get().getParticipantRole().equals(ParticipantRole.OWNER)) {
+                participantService.removeParticipant(participant.get());
+                return true;
+            }
+            else if (loggedParticipant.get().getParticipantRole().equals(ParticipantRole.MODERATOR) && participant.get().getParticipantRole().equals(ParticipantRole.PARTICIPANT)) {
+                participantService.removeParticipant(participant.get());
+                return true;
+            }
+            else return false;
+        }
+        else return false;
+    }
+
+
+    //Membership and invitations section
+    public Set<ProjectJoinRequestResponse> getAllPendingRequests(){
+        //Requests to join 'protected' project
+        Optional<User> loggedUser = userService.findUserByUsername(
+                SecurityContextHolder.getContext().getAuthentication().getName()
+        );
+
+        Optional<List<Participant>> participants = participantService.getAllPending(loggedUser.get().getId());
+
+        if (participants.isPresent() && participants.get().size() > 0){
+            String profilePhoto;
+            Set<ProjectJoinRequestResponse> pending = new HashSet<>();
+
+            for (Participant p : participants.get()){
+                try {
+                    profilePhoto =  p.getUser().getProfile().getPhoto().getFileName();
+                } catch (NullPointerException e) { profilePhoto = null;  }
+                pending.add(new ProjectJoinRequestResponse(
+                        p.getId(), p.getUser().getId(), p.getUser().getUsername(),
+                        profilePhoto, p.getProject().getId(),
+                        p.getProject().getProject_name()
+                ));
+            }
+            return pending;
+        }
+        else return Collections.emptySet();
+    }
+
+    public Set<InvitationResponse> getAllInvitations(){
+        Optional<User> loggedUser = userService.findUserByUsername(
+                SecurityContextHolder.getContext().getAuthentication().getName()
+        );
+
+        Optional<List<ProjectInvitation>> invitations = projectInvitationService.getAllInvitationsByUserId(loggedUser.get().getId());
+        Set<InvitationResponse> invitationResponses = new HashSet<>();
+
+        if (invitations.isPresent() && invitations.get().size() > 0){
+            String projectPhoto;
+            for (ProjectInvitation invitation : invitations.get()){
+                try {
+                    projectPhoto =  invitation.getProject().getPhoto().getFileName();
+                } catch (NullPointerException e) { projectPhoto = null;  }
+                invitationResponses.add(
+                        new InvitationResponse(invitation.getId(), invitation.getProject().getId(),
+                                projectPhoto, invitation.getProject().getProject_name())
+                );
+            }
+            return invitationResponses;
+        }
+        else return Collections.emptySet();
+    }
+
+    public Set<MiniProjectResponse> getAllProjectsWhereUserJoined(){
+        //Includes only members with pending = false
+        Optional<User> loggedUser = userService.findUserByUsername(
+                SecurityContextHolder.getContext().getAuthentication().getName()
+        );
+
+        Optional<List<Participant>> participantOf = participantService.getAllWhereUserJoined(loggedUser.get().getId());
+
+        if (participantOf.isPresent() && participantOf.get().size() > 0){
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            Set<MiniProjectResponse> projectResponses = new HashSet<>();
+            String projectPhoto, authorPhoto;
+
+            for (Participant participant : participantOf.get()){
+                Set<String> categories = new HashSet<>();
+                try { projectPhoto = participant.getProject().getPhoto().getFileName(); } catch (NullPointerException e) { projectPhoto = null;}
+                try { authorPhoto = participant.getProject().getCreator().getProfile().getPhoto().getFileName(); }
+                catch (NullPointerException e) { authorPhoto = null;}
+
+                for (Category c : participant.getProject().getCategories()){
+                    categories.add(c.getTitle());
+                }
+
+                projectResponses.add(
+                        new MiniProjectResponse(
+                                participant.getProject().getId(), projectPhoto, participant.getProject().getProject_name(),
+                                participant.getProject().getProject_introduction(), categories,
+                                participant.getProject().getCreation_date().format(formatter),
+                                participant.getProject().getCreator().getId(),
+                                participant.getProject().getCreator().getUsername(), authorPhoto
+                        )
+                );
+            }
+            return projectResponses;
+        }
+        else return Collections.emptySet();
+    }
+
+    public Set<MemberResponse> getProjectMembers(Long projectId){
+
+        Optional<Project> project = projectRepository.getProjectById(projectId);
+
+        if (project.isPresent()){
+
+            String profilePhoto;
+            Set<MemberResponse> members = new HashSet<>();
+
+            for (Participant participant : project.get().getParticipants()){
+                if (!participant.isPending()){
+                    try { profilePhoto = participant.getUser().getProfile().getPhoto().getFileName(); }
+                    catch (NullPointerException e) { profilePhoto = null; }
+                    members.add(new MemberResponse(participant.getUser().getId(), participant.getUser().getUsername(),
+                            profilePhoto, participant.getParticipantRole().toString())
+                    );
+                }
+            }
+            return members;
+        }
+        else return Collections.emptySet();
     }
 
     @Transactional
@@ -708,6 +778,7 @@ public class ProjectService {
             participantService.removeParticipant(participant.get());
         }
     }
+
 
     public void deleteProject(Long id) {
         projectRepository.deleteProject(id);

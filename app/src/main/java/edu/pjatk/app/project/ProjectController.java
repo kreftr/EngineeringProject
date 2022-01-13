@@ -168,6 +168,41 @@ public class ProjectController {
     //-----------------------------------
 
 
+    //------Roles section------
+
+    @PostMapping(value = "/promoteMember/{userId}", params = "projectId")
+    public ResponseEntity promoteMember(@PathVariable Long userId, @RequestParam Long projectId) {
+        if (projectService.promoteMember(userId, projectId)){
+            return new ResponseEntity(HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
+    }
+
+    @PostMapping(value = "/degradeMember/{userId}", params = "projectId")
+    public ResponseEntity degradeMember(@PathVariable Long userId, @RequestParam Long projectId) {
+        if (projectService.degradeMember(userId, projectId)){
+            return new ResponseEntity(HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
+    }
+
+    @DeleteMapping(value = "/removeMember/{userId}", params = "projectId")
+    public ResponseEntity kickMember(@PathVariable Long userId, @RequestParam Long projectId) {
+        if (projectService.kickMember(userId, projectId)){
+            return new ResponseEntity(HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
+    }
+
+    //-------------------------
+
+
     //------Membership and invites section------
 
     @GetMapping(value = "/getAllProjectsWhereUserJoined")
@@ -180,7 +215,6 @@ public class ProjectController {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
     }
-
 
     @GetMapping(value = "/getProjectMembers/{project_id}")
     public ResponseEntity getProjectMembers(@PathVariable Long project_id){

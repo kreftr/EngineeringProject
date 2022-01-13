@@ -1,5 +1,5 @@
 import "./Workspace.css"
-import {Button, Col, Container, Form, ListGroup, Nav, Row, Tab} from "react-bootstrap";
+import {Button, Col, Container, Form, ListGroup, Modal, Nav, Row, Tab} from "react-bootstrap";
 import {useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
 import axios from "axios";
@@ -7,14 +7,18 @@ import Cookies from "js-cookie";
 import Member from "./Member";
 import File from "./File";
 import {FaFileUpload} from "react-icons/all";
+import {FaUserPlus} from "react-icons/fa";
+import InvitePanel from "./InvitePanel";
 
 
 function Workspace(){
 
     const {id} = useParams();
+    const [memberRole, setMemberRole] = useState(null)
 
     //Files section
     const [fileTermSearch, setFileTermSearch] = useState("");
+    const [files, setFiles] = useState([]);
     const inputFile = useRef(null);
     const onButtonClick = () => {
         // `current` points to the mounted file input element
@@ -33,11 +37,12 @@ function Workspace(){
         })
     }
 
-
-    const [memberRole, setMemberRole] = useState(null)
+    //Members section
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
     const [members, setMembers] = useState([]);
-    const [files, setFiles] = useState([]);
-
+    const [memberTermSearch, setMemberTermSearch] = useState("");
 
     useEffect(() => {
 
@@ -62,7 +67,6 @@ function Workspace(){
         .catch(err => {
             console.log(err.response)
         })
-
     },[])
 
 
@@ -88,9 +92,6 @@ function Workspace(){
                                     </Nav.Item>
                                     <Nav.Item>
                                         <Nav.Link className={"mb-3"} eventKey="members">Members</Nav.Link>
-                                    </Nav.Item>
-                                    <Nav.Item>
-                                        <Nav.Link className={"mb-3"} eventKey="panel">Project panel</Nav.Link>
                                     </Nav.Item>
                                 </Nav>
                             </Col>
@@ -149,10 +150,45 @@ function Workspace(){
                                         }
                                     </Tab.Pane>
                                     <Tab.Pane eventKey={"members"}>
+                                        <Row>
+                                            <Col>
+                                                { memberRole !== 'PARTICIPANT' ?
+                                                    <center>
+                                                        <Button onClick={handleShow}>
+                                                            <h4 className={"WORKSPACE-center-upload-button"}>
+                                                                <FaUserPlus className={"mr-2"} size={35}/>
+                                                                Invite user
+                                                            </h4>
+                                                        </Button>
+                                                        <Modal show={show} onHide={handleClose}>
+                                                            <InvitePanel/>
+                                                        </Modal>
+                                                    </center>
+                                                    :
+                                                    <></>
+                                                }
+                                            </Col>
+                                            <Col className={"WORKSPACE-center-upload-button"}>
+                                                <center>
+                                                    <Form>
+                                                        <Form.Control type="text" placeholder="Search member"
+                                                                      onChange={(e) => setMemberTermSearch(e.target.value)}/>
+                                                    </Form>
+                                                </center>
+                                            </Col>
+                                        </Row>
+                                        <hr/>
                                         <ListGroup>
-                                            { members.map((member, key) =>
+                                            { members.filter((m)=>{
+                                                if (memberTermSearch === ""){
+                                                    return m
+                                                }
+                                                else if (m.username.toLowerCase().includes(memberTermSearch.toLowerCase())){
+                                                    return m
+                                                }
+                                            }).map((member, key) =>
                                                 <div key={key}>
-                                                    <Member member={member}/>
+                                                    <Member member={member} role={memberRole}/>
                                                     <div/>
                                                 </div>
                                             )}
