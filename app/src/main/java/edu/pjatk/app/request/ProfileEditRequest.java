@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.Set;
 
 
 @Getter
@@ -22,4 +23,5 @@ public class ProfileEditRequest {
     @Size(max = 250, message = "{validation.profile.bio.size}")
     private String bio;
 
+    private Set<String> categories;
 }

@@ -62,6 +62,10 @@ public class ConversationRepository {
         entityManager.remove(message);
     }
 
+    public void remove(Conversation conversation){
+        entityManager.remove(conversation);
+    }
+
     public Optional<List<Message>> getAllMessages(Long id) {
         Optional<List<Message>> allMessages;
         try {

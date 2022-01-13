@@ -122,7 +122,7 @@ public class ConversationController {
 
     @GetMapping(value = "/getAllUserConversations")
     public ResponseEntity<?> getAllUserConversations() {
-        List<ConversationResponse> conversations = conversationService.getAllUserConversations();
+        List<ConversationResponse> conversations = conversationService.getAllUserConversationResponse();
 
         if (!conversations.isEmpty())
         {

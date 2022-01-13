@@ -3,12 +3,18 @@ package edu.pjatk.app.user;
 import edu.pjatk.app.email.activation_token.ActivationTokenService;
 import edu.pjatk.app.photo.PhotoService;
 import edu.pjatk.app.request.PasswordChangeRequest;
+import edu.pjatk.app.socials.chat.Conversation;
+import edu.pjatk.app.socials.chat.ConversationService;
+import edu.pjatk.app.socials.friends.Friend;
+import edu.pjatk.app.socials.friends.FriendService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,14 +25,21 @@ public class UserService {
     private final ActivationTokenService activationTokenService;
     private final PhotoService photoService;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final ConversationService conversationService;
+    private final FriendService friendService;
 
+
+    // conversationService https://www.baeldung.com/circular-dependencies-in-spring
     @Autowired
     public UserService(UserRepository userRepository, ActivationTokenService activationTokenService,
-                       PhotoService photoService, BCryptPasswordEncoder passwordEncoder){
+                       PhotoService photoService, BCryptPasswordEncoder passwordEncoder,
+                       @Lazy ConversationService conversationService, @Lazy FriendService friendService){
         this.userRepository = userRepository;
         this.activationTokenService = activationTokenService;
         this.photoService = photoService;
         this.passwordEncoder = passwordEncoder;
+        this.conversationService = conversationService;
+        this.friendService = friendService;
     }
 
 
@@ -41,7 +54,28 @@ public class UserService {
 
     @Transactional
     public void removeUser(User user){
+
         activationTokenService.removeActivationTokenByUser(user);
+        Optional<List<Conversation>> conversations = conversationService.getAllUserConversations(user.getId());
+
+        //Remove user's conversations
+        if (conversations.isPresent())
+        {
+            for (Conversation conversation : conversations.get()) {
+                conversationService.removeConversation(conversation);
+            }
+        }
+
+        //Remove user's friends
+        Optional<List<Friend>> friends = friendService.getAllFriendsByUserId(user.getId());
+        if (friends.isPresent() && !friends.get().isEmpty()){
+            for (Friend friend : friends.get()) friendService.removeFriend(friend);
+        }
+
+        //Remove user's categories
+        user.getProfile().setCategories(Collections.emptySet());
+        userRepository.update(user);
+
         userRepository.remove(user);
     }
 
@@ -50,6 +84,26 @@ public class UserService {
         User user = findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).get();
         if (user.getProfile().getPhoto() != null) photoService.removePhoto(user.getProfile().getPhoto());
         activationTokenService.removeActivationTokenByUser(user);
+
+        //Remove user's conversations
+        Optional<List<Conversation>> conversations = conversationService.getAllUserConversations(user.getId());
+        if (conversations.isPresent() && !conversations.get().isEmpty())
+        {
+            for (Conversation conversation : conversations.get()) {
+                conversationService.removeConversation(conversation);
+            }
+        }
+
+        //Remove user's friends
+        Optional<List<Friend>> friends = friendService.getAllFriendsByUserId(user.getId());
+        if (friends.isPresent() && !friends.get().isEmpty()){
+            for (Friend friend : friends.get()) friendService.removeFriend(friend);
+        }
+
+        //Remove user's categories
+        user.getProfile().setCategories(Collections.emptySet());
+        userRepository.update(user);
+
         userRepository.remove(user);
     }
 

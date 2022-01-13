@@ -17,6 +17,8 @@ public class FullProjectResponse {
     private String introduction;
     private String description;
     private String creationDate;
+    private String status;
+    private String access;
     private Set<String> categories;
 
     private String youtubeLink;
@@ -28,4 +30,8 @@ public class FullProjectResponse {
     private String authorUsername;
     private String authorPhoto;
 
+    private float averageRating;
+    private int numberOfVotes;
+
+    private Set<Long> participants;
 }

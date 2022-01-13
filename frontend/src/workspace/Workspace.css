@@ -1,0 +1,10 @@
+.WORKSPACE-file-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.WORKSPACE-center-upload-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

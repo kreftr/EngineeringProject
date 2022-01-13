@@ -1,0 +1,15 @@
+.RANKING-title {
+    font-size: 55px;
+    text-align: center;
+}
+
+.RANKING-thumbnail-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.RANKING-clickable {
+    cursor: pointer;
+}
+

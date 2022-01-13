@@ -3,6 +3,7 @@ package edu.pjatk.app.project;
 import edu.pjatk.app.file.File;
 import edu.pjatk.app.photo.Photo;
 import edu.pjatk.app.project.category.Category;
+import edu.pjatk.app.project.participant.Participant;
 import edu.pjatk.app.task.Task;
 import edu.pjatk.app.user.User;
 import lombok.Getter;
@@ -11,6 +12,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -47,6 +49,12 @@ public class Project {
     )
     private Set<Category> categories = new HashSet<>();
 
+    @OneToMany(mappedBy = "project", cascade = {CascadeType.MERGE, CascadeType.REMOVE}, orphanRemoval = true)
+    private List<Rating> ratings =  new ArrayList<>();
+
+    @OneToMany(mappedBy = "project", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+    private Set<Participant> participants = new HashSet<>();
+
     @OneToOne(fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "photo_id")
     private Photo photo;
@@ -55,17 +63,13 @@ public class Project {
     @JoinColumn(name = "project_creator")
     private User creator;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
-    private List<User> participants;
+    @OneToMany(mappedBy = "project", cascade = {CascadeType.MERGE, CascadeType.PERSIST},
+            orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<File> files = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
-    private List<File> file;
-
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
-    private List<Task> task;
+    @OneToMany(mappedBy = "project", cascade = {CascadeType.MERGE, CascadeType.PERSIST},
+            orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Task> task = new ArrayList<>();
 
 
     public Project(String project_name, String project_introduction, String project_description,
@@ -85,16 +89,6 @@ public class Project {
         this.kickstarter_link = kickstarter_link;
         this.creator = creator;
         this.photo = photo;
-    }
-
-    public Project(String project_name, String project_description, LocalDateTime creation_date,
-                   Set<Category> categories, ProjectStatus project_status, User creator){
-        this.project_name = project_name;
-        this.project_description = project_description;
-        this.creation_date = creation_date;
-        this.categories = categories;
-        this.project_status = project_status;
-        this.creator = creator;
     }
 
 }

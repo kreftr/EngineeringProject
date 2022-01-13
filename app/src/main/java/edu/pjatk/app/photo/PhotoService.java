@@ -32,7 +32,6 @@ public class PhotoService {
 
         try {
             byte[] data = file.getBytes();
-            //TODO: Find a way to associate the photo with the user in case of database corruption
             String randomName = UUID.randomUUID()+"."+FilenameUtils.getExtension(file.getOriginalFilename());
             Path path = Paths.get(pathToPhotos + randomName);
             Files.write(path, data);
@@ -50,7 +49,6 @@ public class PhotoService {
         try {
             photoRepository.remove(photo);
             File file = new File(pathToPhotos+photo.getFileName());
-            //TODO: Handling the case when the photo is not deleted
             file.delete();
         }
         catch (Exception e){
@@ -59,7 +57,6 @@ public class PhotoService {
     }
 
     public boolean isPhoto(MultipartFile file){
-        //TODO: Find a better way to check if uploaded file is an image
         if (file.getContentType().split("/")[0].equals("image")) return true;
         else return false;
     }

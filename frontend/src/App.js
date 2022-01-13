@@ -12,10 +12,13 @@ import Login from "./login/Login";
 import Settings from "./settings/Settings";
 import Recovery from "./recovery/Recovery";
 import ProjectView from "./project/ProjectView";
-import ConversationList from "./chat/ConversationList";
-import FriendsList from "./friends/FriendsList";
-import Forum from "./forum/Forum"
+import ConversationList from "./chat/ConversationList"
+import FriendsList from "./friends/FriendsList"
 import ProjectList from "./project/ProjectList";
+import Workspace from "./workspace/Workspace";
+import Ranking from "./ranking/Ranking";
+import ProjectSettings from "./settings/ProjectSettings";
+import Forum from "./forum/Forum"
 
 
 class App extends Component{
@@ -68,6 +71,8 @@ class App extends Component{
                     <Route path={"friends/:id"} element={<FriendsList/>}/>
                     <Route path={"projects"} element={<ProjectList/>}/>
                     <Route path={"project/:id"} element={<ProjectView/>}/>
+                    <Route path={"project/:id/workspace"} element={<Workspace/>}/>
+                    <Route path={"ranking"} element={<Ranking/>}/>
                     <Route path={"conversations/:id"} element={<ConversationList/>}/>
                     <Route path={"conversations"} element={<ConversationList/>}/>
                     <Route path={"search"} element={<Search/>}/>

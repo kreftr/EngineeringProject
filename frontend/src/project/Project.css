@@ -1,6 +1,15 @@
 .PROJECT-button-section {
     display: block;
-    background-color: red;
+}
+
+.PROJECT-content-section {
+    overflow-wrap: break-word;
+}
+
+.PROJECT-thumbnail-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .PROJECT-button {

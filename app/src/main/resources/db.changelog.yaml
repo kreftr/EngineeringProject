@@ -144,6 +144,46 @@ databaseChangeLog:
         splitStatements: false
         path: db.changelog/20220101_project_category.sql
   - changeSet:
+      id: 20220104_profile_category
+      author: Rafał Kreft
+      sqlFile:
+        relativeToChangelogFile: true
+        stripComments: true
+        splitStatements: false
+        path: db.changelog/20220104_profile_category.sql
+  - changeSet:
+      id: 20220105_rating
+      author: Rafał Kreft
+      sqlFile:
+        relativeToChangelogFile: true
+        stripComments: true
+        splitStatements: false
+        path: db.changelog/20220105_rating.sql
+  - changeSet:
+      id: 20220108_participant
+      author: Rafał Kreft
+      sqlFile:
+        relativeToChangelogFile: true
+        stripComments: true
+        splitStatements: false
+        path: db.changelog/20220108_participant.sql
+  - changeSet:
+      id: 20220109_participiant_add_column_pending
+      author: Rafał Kreft
+      sqlFile:
+        relativeToChangelogFile: true
+        stripComments: true
+        splitStatements: false
+        path: db.changelog/20220109_participiant_add_column_pending.sql
+  - changeSet:
+      id: 20220109_project_invitation
+      author: Rafał Kreft
+      sqlFile:
+        relativeToChangelogFile: true
+        stripComments: true
+        splitStatements: false
+        path: db.changelog/20220109_project_invitation.sql
+  - changeSet:
       id: 20220111_post
       author: Filip Magdziak
       sqlFile:
@@ -151,3 +191,27 @@ databaseChangeLog:
         stripComments: true
         splitStatements: false
         path: db.changelog/20220111_post.sql
+  - changeSet:
+      id: 20220111_project_fix_relations_with_files_and_tasks
+      author: Rafał Kreft
+      sqlFile:
+        relativeToChangelogFile: true
+        stripComments: true
+        splitStatements: false
+        path: db.changelog/20220111_project_fix_relations_with_files_and_tasks.sql
+  - changeSet:
+      id: 20220111_file_add_uploader_id
+      author: Rafał Kreft
+      sqlFile:
+        relativeToChangelogFile: true
+        stripComments: true
+        splitStatements: false
+        path: db.changelog/20220111_file_add_uploader_id.sql
+  - changeSet:
+      id: 20220113_file_add_date_column
+      author: Rafał Kreft
+      sqlFile:
+        relativeToChangelogFile: true
+        stripComments: true
+        splitStatements: false
+        path: db.changelog/20220113_file_add_date_column.sql

@@ -1,5 +1,6 @@
 package edu.pjatk.app.task;
 
+import edu.pjatk.app.project.Project;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,6 +25,9 @@ public class Task {
     private LocalDateTime creation_date;
     private LocalDateTime expiration_date;
 
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private Project project;
 
     public Task(String task_name, String task_description, String task_status, LocalDateTime creation_date,
                 LocalDateTime expiration_date) {

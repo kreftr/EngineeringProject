@@ -1,6 +1,7 @@
 package edu.pjatk.app.socials.friends;
 
 import edu.pjatk.app.response.FriendResponse;
+import edu.pjatk.app.socials.chat.Conversation;
 import edu.pjatk.app.socials.chat.ConversationService;
 import edu.pjatk.app.user.User;
 import edu.pjatk.app.user.UserService;
@@ -43,16 +44,32 @@ public class FriendService {
         }
     }
 
+    @Transactional
     public boolean deleteFriendByUserId(Long id) {
         Optional<User> loggedUser = userService.findUserByUsername(
                 SecurityContextHolder.getContext().getAuthentication().getName()
         );
         Optional<Friend> friend = friendRepository.getFriendByUserId(loggedUser.get().getId(), id);
         if (loggedUser.isPresent() && friend.isPresent()){
+            Optional<Conversation> friendConversation = conversationService.getConversationByUserId(id);
+            if (friendConversation.isPresent()) conversationService.removeConversation(friendConversation.get());
             friendRepository.deleteFriend(friend.get());
+
+            Optional<List<Conversation>> conversations = conversationService.getAllUserConversations(loggedUser.get().getId());
+            if (conversations.isPresent())
+            {
+                for (Conversation conversation : conversations.get()) {
+                    conversationService.removeConversation(conversation);
+                }
+            }
+
             return true;
         }
         else return false;
+    }
+
+    public void removeFriend(Friend friend){
+        friendRepository.removeFriend(friend);
     }
 
     @Transactional
@@ -105,7 +122,8 @@ public class FriendService {
         else return Optional.empty();
     }
 
-    public List<FriendResponse> getAllFriendsByUserId(Long id) {
+    //Returns responses
+    public List<FriendResponse> getAllFriendsResponsesByUserId(Long id) {
         Optional<List<Friend>> friendList = friendRepository.getAllFriendsByUserId(id);
         Optional<User> user = userService.findUserById(id);
 
@@ -163,6 +181,11 @@ public class FriendService {
             return listToReturn;
         }
         else return Collections.emptyList();
+    }
+
+    //Returns entity models
+    public Optional<List<Friend>> getAllFriendsByUserId(Long id){
+        return friendRepository.getAllFriendsByUserId(id);
     }
 
     public List<FriendResponse> getAllPending(){

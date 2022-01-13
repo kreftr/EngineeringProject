@@ -48,13 +48,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/", "/registration", "/registration/*", "/profile", "/recovery", "/recovery/*",
                         "/user/findUserById/*", "/categories/getAll", "/project/getAllProjects/*",
-                        "/project/getProjectById/*").permitAll()
+                        "/project/getProjectById/*", "/project/getProjectByName/*", "/project/getProjectByCategory/*").permitAll()
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
-                .antMatchers(HttpMethod.GET, "/profile", "/photo", "/project/getAllProjects/*").permitAll()
+                .antMatchers(HttpMethod.GET, "/profile", "/photo", "/project/getAllProjects/*",
+                        "/project/ranking").permitAll()
                 .antMatchers(HttpMethod.POST,  "/profile", "/photo").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/user/changePassword", "/user/deleteAccount", "/friends/**", "/conversation/**",
-                        "/profile/my", "/project/**").hasAnyRole("USER", "ADMIN")
-                .antMatchers( "/file/**", "/task/**").permitAll()
+                        "/profile/my", "/project/**", "/file/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers( "/task/**").permitAll()
                 .anyRequest().authenticated();
     }
 

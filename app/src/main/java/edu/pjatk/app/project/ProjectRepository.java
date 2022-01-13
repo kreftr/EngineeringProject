@@ -12,11 +12,17 @@ import java.util.Optional;
 
 @Repository
 public class ProjectRepository {
+
     private final EntityManager entityManager;
 
     @Autowired
     public ProjectRepository(EntityManager entityManager){
         this.entityManager = entityManager;
+    }
+
+
+    public void update(Project project){
+        entityManager.merge(project);
     }
 
     public Optional<Project> getProjectById(Long id) {
@@ -32,20 +38,59 @@ public class ProjectRepository {
         return project;
     }
 
-    public Optional<Project> getProjectByName(String project_name) {
-        Optional project;
+    public Optional<List<Project>> getAllNonPrivateProjects(){
+        Optional projects;
         try {
-            project =  Optional.of(entityManager.createQuery(
-                            "select project from Project project where project.project_name = :project_name", Project.class)
-                    .setParameter("project_name", project_name).getResultList());
+            projects = Optional.of(
+                    entityManager.createQuery("SELECT project FROM Project project WHERE project.project_access<>'PRIVATE'")
+                            .getResultList()
+            );
+        } catch (NoResultException e){
+            projects = Optional.empty();
         }
-        catch (NoResultException noResultException){
-            project = Optional.empty();
-        }
-        return project;
+        return projects;
     }
 
-    public Optional<List<Project>> getAllProjects(Long creator_id) {
+    public Optional<List<Project>> getAllProposedProjects(Long id){
+        Optional<List<Project>> projects;
+        try {
+            projects =  Optional.of(entityManager.createQuery(
+                            "select project from Project project where project.project_access<>'PRIVATE' and project.creator.id<>:id", Project.class)
+                    .setParameter("id", id).getResultList());
+        }
+        catch (NoResultException noResultException){
+            projects = Optional.empty();
+        }
+        return projects;
+    }
+
+    public Optional<List<Project>> getProjectsByTitle(String project_name) {
+        Optional<List<Project>> projects;
+        try {
+            projects =  Optional.of(entityManager.createQuery(
+                            "select project from Project project where project.project_name like :project_name and project.project_access <> 'PRIVATE'", Project.class)
+                    .setParameter("project_name", project_name+"%").getResultList());
+        }
+        catch (NoResultException noResultException){
+            projects = Optional.empty();
+        }
+        return projects;
+    }
+
+    public Optional<List<Project>> getByCategory(String categoryTitle) {
+        Optional<List<Project>> projects;
+        try {
+            projects =  Optional.of(entityManager.createQuery(
+                            "select project from Project project join project.categories c where c.title = :title and project.project_access <> 'PRIVATE'", Project.class)
+                    .setParameter("title", categoryTitle).getResultList());
+        }
+        catch (NoResultException noResultException){
+            projects = Optional.empty();
+        }
+        return projects;
+    }
+
+    public Optional<List<Project>> getAllCreatorProjects(Long creator_id) {
         Optional<List<Project>> project;
         try {
             project =  Optional.of(entityManager.createQuery(

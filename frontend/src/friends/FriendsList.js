@@ -104,7 +104,7 @@ function FriendsList() {
                         </Col>
                         <Col>
                             <Form>
-                                <Form.Control type="email" placeholder="Search friend"
+                                <Form.Control type="text" placeholder="Search friend"
                                               onChange={(e) => setSearchTerm(e.target.value)}/>
                             </Form>
                         </Col>
