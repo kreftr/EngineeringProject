@@ -1,0 +1,23 @@
+.FORUM-container {
+    margin-top: 2%;
+}
+
+.FORUM-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.FORUM-button {
+    width: 10%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 100%;
+    margin: 0 20px;
+}
+
+.g {
+    justify-content: center;
+    width: 30%;
+    margin: 0 10px;
+}
