@@ -3,7 +3,13 @@ package edu.pjatk.app.project;
 
 import edu.pjatk.app.request.ProjectRequest;
 import edu.pjatk.app.response.ResponseMessage;
+
 import edu.pjatk.app.response.project.*;
+
+import edu.pjatk.app.response.project.FullProjectResponse;
+import edu.pjatk.app.response.project.InvitationResponse;
+import edu.pjatk.app.response.project.MiniProjectResponse;
+import edu.pjatk.app.response.project.ProjectJoinRequestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -119,6 +125,15 @@ public class ProjectController {
         return new ResponseEntity<>(new ResponseMessage("Project created!"), HttpStatus.OK);
     }
 
+    @PostMapping(value = "/editProject/{id}", consumes = {"multipart/form-data"})
+    public ResponseEntity<?> editProject(@RequestPart ProjectRequest projectRequest,
+                                         @RequestPart(required = false) MultipartFile projectPhoto,
+                                         @PathVariable Long id) {
+
+        projectService.editProject(projectRequest, projectPhoto, id);
+        return new ResponseEntity<>(new ResponseMessage("Project edited!"), HttpStatus.OK);
+    }
+
     //-----------------------------------------
 
 
@@ -165,6 +180,7 @@ public class ProjectController {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
     }
+
 
     @GetMapping(value = "/getProjectMembers/{project_id}")
     public ResponseEntity getProjectMembers(@PathVariable Long project_id){

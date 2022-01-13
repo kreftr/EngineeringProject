@@ -1,0 +1,28 @@
+.PROJECTSETTINGS-project-container {
+    margin-top: 2%;
+    font-size: 16px;
+}
+
+.PROJECTSETTINGS-info-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.PROJECTSETTINGS-textarea{
+    resize: none;
+}
+
+.PROJECTSETTINGS-save-button-col {
+    display: flex;
+    justify-content: center;
+}
+
+.PROJECTSETTINGS-save-button {
+    width: 100%;
+}
+
+.PROJECTSETTINGS-grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}

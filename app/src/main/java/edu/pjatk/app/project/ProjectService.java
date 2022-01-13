@@ -545,6 +545,32 @@ public class ProjectService {
 
     //If loggedUser is project owner or loggedUser is project's participant with MODERATOR ROLE
     @Transactional
+    public void editProject(ProjectRequest projectRequest, MultipartFile photo, Long id){
+
+        Optional<User> loggedUser = userService.findUserByUsername(
+                SecurityContextHolder.getContext().getAuthentication().getName()
+        );
+        Photo projectPhoto = (photo != null ? photoService.uploadPhoto(photo) : null);
+
+        if (loggedUser.isPresent())
+        {
+            Set<Category> categories = new HashSet<>();
+            for (String category : projectRequest.getCategory()){
+                categories.add(categoryService.getCategoryByTitle(category).get());
+            }
+
+            Project project = new Project(
+                    projectRequest.getTitle(), projectRequest.getIntroduction(), projectRequest.getDescription(),
+                    LocalDateTime.now(), categories, ProjectStatus.OPEN, projectRequest.getAccess(),
+                    projectRequest.getYoutubeLink(), projectRequest.getFacebookLink(), projectRequest.getGithubLink(),
+                    projectRequest.getKickstarterLink(), loggedUser.get(), projectPhoto
+            );
+            project.setId(id);
+            projectRepository.update(project);
+        }
+    }
+
+    @Transactional
     public boolean inviteToProject(Long projectId, Long userId){
         Optional<User> loggedUser = userService.findUserByUsername(
                 SecurityContextHolder.getContext().getAuthentication().getName()
