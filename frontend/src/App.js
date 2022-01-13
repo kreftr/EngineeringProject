@@ -9,7 +9,7 @@ import Search from "./search/Search";
 import Registration from "./registration/Registration";
 import Verification from "./registration/Verification";
 import Login from "./login/Login";
-import Settings from "./profile/settings/Settings";
+import Settings from "./settings/Settings";
 import Recovery from "./recovery/Recovery";
 import ProjectView from "./project/ProjectView";
 import ConversationList from "./chat/ConversationList"
@@ -18,6 +18,7 @@ import ProjectList from "./project/ProjectList";
 import Workspace from "./workspace/Workspace";
 import Ranking from "./ranking/Ranking";
 import ProjectSettings from "./settings/ProjectSettings";
+import Forum from "./forum/Forum"
 
 
 class App extends Component{
@@ -79,7 +80,7 @@ class App extends Component{
                     <Route path={"verification/:token"} element={<Verification/>}/>
                     <Route path={"recovery/:token"} element={<Recovery/>}/>
                     <Route path={"login"} element={<Login/>}/>
-                    <Route path={"project/settings/:id"} element={<ProjectSettings/>}/>
+                    <Route path={"forum"} element={<Forum/>}/>
                 </Routes>
             </Router>
         )
