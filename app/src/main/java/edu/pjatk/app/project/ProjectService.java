@@ -447,10 +447,14 @@ public class ProjectService {
         if (participant.isPresent()){
 
             Set<FileResponse> fileResponses = new HashSet<>();
+            String profilePhoto;
 
             for (File f : project.get().getFiles()){
+                try {
+                    profilePhoto = f.getUser().getProfile().getPhoto().getFileName();
+                } catch (NullPointerException e) { profilePhoto = null; }
                 fileResponses.add(new FileResponse(f.getId(), f.getName(), f.getUrl(), f.getUser().getId(),
-                        f.getUser().getUsername(), f.getUser().getProfile().getPhoto().getFileName(), f.getSize(),
+                        f.getUser().getUsername(), profilePhoto, f.getSize(),
                         f.getUploadDate().format(formatter)));
             }
             return fileResponses;
