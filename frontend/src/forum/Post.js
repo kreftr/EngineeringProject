@@ -22,11 +22,13 @@ function Post(props) {
                             <Image src={`http://localhost:8080/photo?filename=${props.post.userPhoto}`}
                                    roundedCircle={true}
                                    width = "50px"
-                                    height={"50px"}/>
+                                    height = "50px"/>
                             :
                             <Image
                             src={default_profile_picture}
-                            roundedCircle={true}/>
+                            roundedCircle={true}
+                            width = "50px"
+                            height = "50px"/>
                         }
                     </a>
                     {props.post.userName}
