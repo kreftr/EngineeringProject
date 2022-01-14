@@ -13,6 +13,7 @@ import Recovery from "./recovery/Recovery";
 import ProjectView from "./project/ProjectView";
 import ConversationList from "./chat/ConversationList"
 import FriendsList from "./friends/FriendsList"
+import Settings from "./profile/settings/Settings"
 import ProjectList from "./project/ProjectList";
 import Workspace from "./workspace/Workspace";
 import Ranking from "./ranking/Ranking";
@@ -65,7 +66,7 @@ class App extends Component{
                 </Navbar>
                 <Routes>
                     <Route path={"profile/:id"} element={<Profile/>}/>
-
+                    <Route path={"profile/settings"} element={<Settings/>}/>
                     <Route path={"friends/:id"} element={<FriendsList/>}/>
                     <Route path={"projects"} element={<ProjectList/>}/>
                     <Route path={"project/:id"} element={<ProjectView/>}/>

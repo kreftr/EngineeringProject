@@ -46,7 +46,7 @@ function File(props){
                     </Modal.Header>
                     <Modal.Body className={"FILE-hover"} onClick={() => {setShow(false); setHide(false);}}>
                         <h5>Author: </h5>
-                        { props.file.profilePhoto ?
+                        { props.file.profilePhoto !== null ?
                             <Image className={"mr-1"} src={`http://localhost:8080/photo?filename=${props.file.profilePhoto}`}
                                    height={50} width={50} roundedCircle={true}/>
                             :
