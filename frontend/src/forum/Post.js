@@ -17,9 +17,9 @@ function Post(props) {
                     {props.post.text}
                 </Col>
                 <Col>
-                    <a href={`/profile/${props.post.userr.id}`}>
-                        {   props.post.userr.profile.photo.fileName ?
-                            <Image src={`http://localhost:8080/photo?filename=${props.post.userr.profile.photo.fileName}`}
+                    <a href={`/profile/${props.post.userId}`}>
+                        {   props.post.userPhoto ?
+                            <Image src={`http://localhost:8080/photo?filename=${props.post.userPhoto}`}
                                    roundedCircle={true}
                                    width = "50px"
                                     height={"50px"}/>
@@ -29,14 +29,10 @@ function Post(props) {
                             roundedCircle={true}/>
                         }
                     </a>
-                    {props.post.userr.username}
+                    {props.post.userName}
                 </Col>
                 <Col className={"col-4"}>
-                    {props.post.datee ?
-                        Moment(props.post.datee).format('DD.MM.yyyy HH:mm')
-                        :
-                        <h3> WRONG DATE!</h3>
-                    }
+                    {props.post.datee}
                 </Col>
             </Row>
         </ListGroupItem>

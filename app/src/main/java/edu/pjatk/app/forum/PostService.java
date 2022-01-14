@@ -2,6 +2,7 @@ package edu.pjatk.app.forum;
 
 import edu.pjatk.app.request.PostRequest;
 import edu.pjatk.app.request.ProjectRequest;
+import edu.pjatk.app.response.PostResponse;
 import edu.pjatk.app.user.User;
 import edu.pjatk.app.user.UserService;
 
@@ -12,9 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class PostService {
@@ -74,8 +73,30 @@ public class PostService {
         return postRepository.getPostByUserId(id);
     }
     
-    public Optional<List<Post>> getAllPosts() {
-        return postRepository.getAllPosts();
+    public Set<PostResponse> getAllPosts() {
+        Set<PostResponse> postResponses = new HashSet<>();
+        Optional<List<Post>> posts = postRepository.getAllPosts();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        
+        if(!posts.get().isEmpty() && posts.isPresent()) {
+            String userPhoto;
+            for (Post p : posts.get()) {
+                try {
+                    userPhoto = p.getUserr().getProfile().getPhoto().getFileName();
+                } catch (NullPointerException e) {
+                    userPhoto = null;
+                }
+                postResponses.add(
+                        new PostResponse(
+                                p.getId(), p.getTitle(), p.getText(), p.getDatee().format(formatter),
+                                p.getUserr().getId(), p.getUserr().getUsername(), userPhoto
+                        )
+                );
+            }
+            return postResponses;
+        } else {
+            return Collections.emptySet();
+        }
     }
     
     public Optional<Long> getUserIdFromPost(Long id) {

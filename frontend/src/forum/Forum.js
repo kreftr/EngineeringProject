@@ -52,12 +52,11 @@ function Forum(props){
     }
     
     useEffect(() => {
-        axios.get("http://localhost:8080/post/getAllPosts", {
+        axios.get(`http://localhost:8080/post/getAllPosts`, {
             headers: {
                 'Authorization': Cookies.get("authorization")
             }
         }).then(response => {
-            console.log(response)
             setPosts(response.data)
         }).catch(err => {
             console.log(err.response)
@@ -92,7 +91,7 @@ function Forum(props){
                 </Col>
             </Row>
             <Row>
-                {posts ?
+                {posts.length > 0 ?
                     <ListGroup className={"list-group"}>
                         {
                             posts.map((post, key) =>
