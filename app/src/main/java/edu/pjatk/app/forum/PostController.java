@@ -1,6 +1,7 @@
 package edu.pjatk.app.forum;
 
 import edu.pjatk.app.request.PostRequest;
+import edu.pjatk.app.response.PostResponse;
 import edu.pjatk.app.response.ResponseMessage;
 import edu.pjatk.app.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @CrossOrigin("http://localhost:3000")
 @RestController
@@ -39,7 +41,7 @@ public class PostController {
     
     @GetMapping(value = "/getAllPosts")
     public ResponseEntity<?> getAllPosts() {
-        Optional<List<Post>> allPosts = postService.getAllPosts();
+        Set<PostResponse> allPosts = postService.getAllPosts();
         if(!allPosts.isEmpty()) {
             return new ResponseEntity<>(
                     allPosts, HttpStatus.OK
