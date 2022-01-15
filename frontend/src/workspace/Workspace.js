@@ -7,8 +7,9 @@ import Cookies from "js-cookie";
 import Member from "./Member";
 import File from "./File";
 import {FaFileUpload} from "react-icons/all";
-import {FaUserPlus} from "react-icons/fa";
+import {FaUserFriends, FaUserPlus} from "react-icons/fa";
 import InvitePanel from "./InvitePanel";
+import TeamPanel from "./TeamPanel";
 
 
 function Workspace(){
@@ -38,11 +39,18 @@ function Workspace(){
     }
 
     //Members section
-    const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const [showInvitations, setShowInvitations] = useState(false);
+    const handleCloseInvitations = () => setShowInvitations(false);
+    const handleShowInvitations = () => setShowInvitations(true);
     const [members, setMembers] = useState([]);
     const [memberTermSearch, setMemberTermSearch] = useState("");
+
+    //Teams section
+    const [showTeams, setShowTeams] = useState(false);
+    const handleCloseTeams = () => setShowTeams(false);
+    const handleShowTeams = () => setShowTeams(true);
+    const [teamTermSearch, setTeamTermSearch] = useState("");
+
 
     useEffect(() => {
 
@@ -88,7 +96,7 @@ function Workspace(){
                                         <Nav.Link className={"mb-3"} eventKey="files">Files</Nav.Link>
                                     </Nav.Item>
                                     <Nav.Item>
-                                        <Nav.Link className={"mb-3"} eventKey="teams" disabled={true}>Teams</Nav.Link>
+                                        <Nav.Link className={"mb-3"} eventKey="teams">Teams</Nav.Link>
                                     </Nav.Item>
                                     <Nav.Item>
                                         <Nav.Link className={"mb-3"} eventKey="members">Members</Nav.Link>
@@ -101,7 +109,10 @@ function Workspace(){
                                         Hello
                                     </Tab.Pane>
                                     <Tab.Pane eventKey={"tasks"}>
-                                        World
+                                        <Row>
+                                            <Button>Add Task</Button>
+                                        </Row>
+                                        <hr/>
                                     </Tab.Pane>
                                     <Tab.Pane eventKey={"files"}>
                                         <Row>
@@ -149,18 +160,48 @@ function Workspace(){
                                             </center>
                                         }
                                     </Tab.Pane>
+                                    <Tab.Pane eventKey={"teams"}>
+                                        <Row>
+                                            <Col>
+                                                { memberRole !== 'PARTICIPANT' ?
+                                                    <center>
+                                                        <Button onClick={handleShowTeams}>
+                                                            <h4 className={"WORKSPACE-center-upload-button"}>
+                                                                <FaUserFriends className={"mr-2"} size={35}/>
+                                                                Add team
+                                                            </h4>
+                                                        </Button>
+                                                        <Modal show={showTeams} onHide={handleCloseTeams}>
+                                                            <TeamPanel/>
+                                                        </Modal>
+                                                    </center>
+                                                    :
+                                                    <></>
+                                                }
+                                            </Col>
+                                            <Col className={"WORKSPACE-center-upload-button"}>
+                                                <center>
+                                                    <Form>
+                                                        <Form.Control type="text" placeholder="Search team"
+                                                                      onChange={(e) => setTeamTermSearch(e.target.value)}/>
+                                                    </Form>
+                                                </center>
+                                            </Col>
+                                        </Row>
+                                        <hr/>
+                                    </Tab.Pane>
                                     <Tab.Pane eventKey={"members"}>
                                         <Row>
                                             <Col>
                                                 { memberRole !== 'PARTICIPANT' ?
                                                     <center>
-                                                        <Button onClick={handleShow}>
+                                                        <Button onClick={handleShowInvitations}>
                                                             <h4 className={"WORKSPACE-center-upload-button"}>
                                                                 <FaUserPlus className={"mr-2"} size={35}/>
                                                                 Invite user
                                                             </h4>
                                                         </Button>
-                                                        <Modal show={show} onHide={handleClose}>
+                                                        <Modal show={showInvitations} onHide={handleCloseInvitations}>
                                                             <InvitePanel/>
                                                         </Modal>
                                                     </center>

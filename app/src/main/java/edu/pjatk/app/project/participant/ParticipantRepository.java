@@ -54,6 +54,20 @@ public class ParticipantRepository {
         return participant;
     }
 
+    public Optional<Participant> getBuUsernameAndProjectId(String username, Long projectId){
+        Optional participant;
+        try {
+            participant = Optional.of(
+                    entityManager.createQuery("SELECT participant FROM Participant participant WHERE " +
+                            "participant.user.username=:username AND participant.project.id:=projectId", Participant.class).
+                            setParameter("username", username).setParameter("projectId", projectId).getSingleResult()
+            );
+        } catch (NoResultException e){
+            participant = Optional.empty();
+        }
+        return participant;
+    }
+
     public Optional<List<Participant>> getAllWhereUserJoined(Long userId){
         Optional participants;
         try {

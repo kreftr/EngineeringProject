@@ -32,6 +32,10 @@ public class ParticipantService {
         return participantRepository.getByUserAndProjectIds(userid, projectId);
     }
 
+    public Optional<Participant> getParticipantByUsernameAndProjectId(String username, Long projectId){
+        return participantRepository.getBuUsernameAndProjectId(username, projectId);
+    }
+
     public Optional<List<Participant>> getAllWhereUserJoined(Long userId){
         return participantRepository.getAllWhereUserJoined(userId);
     }
