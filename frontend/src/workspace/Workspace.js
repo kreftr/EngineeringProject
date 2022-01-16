@@ -9,7 +9,8 @@ import File from "./File";
 import {FaFileUpload} from "react-icons/all";
 import {FaUserFriends, FaUserPlus} from "react-icons/fa";
 import InvitePanel from "./InvitePanel";
-import TeamPanel from "./TeamPanel";
+import TeamPanel from "./team/TeamPanel";
+import Team from "./team/Team";
 
 
 function Workspace(){
@@ -38,6 +39,7 @@ function Workspace(){
         })
     }
 
+
     //Members section
     const [showInvitations, setShowInvitations] = useState(false);
     const handleCloseInvitations = () => setShowInvitations(false);
@@ -45,10 +47,12 @@ function Workspace(){
     const [members, setMembers] = useState([]);
     const [memberTermSearch, setMemberTermSearch] = useState("");
 
+
     //Teams section
     const [showTeams, setShowTeams] = useState(false);
     const handleCloseTeams = () => setShowTeams(false);
     const handleShowTeams = () => setShowTeams(true);
+    const [teams, setTeams] = useState([]);
     const [teamTermSearch, setTeamTermSearch] = useState("");
 
 
@@ -75,6 +79,16 @@ function Workspace(){
         .catch(err => {
             console.log(err.response)
         })
+
+        axios.get(`http://localhost:8080/team/getProjectTeams/${id}`,
+            {headers: {'Authorization': Cookies.get("authorization")}
+        }).then(response =>{
+            setTeams(response.data)
+        })
+        .catch(err => {
+            console.log(err.response)
+        })
+
     },[])
 
 
@@ -168,11 +182,11 @@ function Workspace(){
                                                         <Button onClick={handleShowTeams}>
                                                             <h4 className={"WORKSPACE-center-upload-button"}>
                                                                 <FaUserFriends className={"mr-2"} size={35}/>
-                                                                Add team
+                                                                Create team
                                                             </h4>
                                                         </Button>
                                                         <Modal show={showTeams} onHide={handleCloseTeams}>
-                                                            <TeamPanel/>
+                                                            <TeamPanel members={members}/>
                                                         </Modal>
                                                     </center>
                                                     :
@@ -189,6 +203,19 @@ function Workspace(){
                                             </Col>
                                         </Row>
                                         <hr/>
+                                        { teams.filter((t)=>{
+                                            if (teamTermSearch === ""){
+                                                return t
+                                            }
+                                            else if (t.name.toLowerCase().includes(teamTermSearch.toLowerCase())){
+                                                return t
+                                            }
+                                        }).map((team, key) =>
+                                            <div className={"mb-3"}>
+                                                <Team team={team} members={members} role={memberRole} key={key}/>
+                                            </div>
+                                        )
+                                        }
                                     </Tab.Pane>
                                     <Tab.Pane eventKey={"members"}>
                                         <Row>
