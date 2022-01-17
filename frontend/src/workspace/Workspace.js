@@ -1,9 +1,10 @@
 import "./Workspace.css"
-import {Button, Col, Container, Form, ListGroup, Modal, Nav, Row, Tab} from "react-bootstrap";
+import {Button, Col, Container, Form, ListGroup, Modal, Nav, Row, Tab, Tabs} from "react-bootstrap";
 import {useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
+import {TextInput} from 'react-admin'
 import Member from "./Member";
 import File from "./File";
 import {FaFileUpload} from "react-icons/all";
@@ -11,6 +12,7 @@ import {FaUserFriends, FaUserPlus} from "react-icons/fa";
 import InvitePanel from "./InvitePanel";
 import TeamPanel from "./team/TeamPanel";
 import Team from "./team/Team";
+import Clock from "../timestamps/Clock"
 
 
 function Workspace(){
@@ -55,6 +57,21 @@ function Workspace(){
     const [teams, setTeams] = useState([]);
     const [teamTermSearch, setTeamTermSearch] = useState("");
 
+
+    // Clock section
+    const [timerStarted, setTimerStarted] = useState(false)
+    const [timestampDescription, setTimestampDescription] = useState()
+
+    function handleTimestampButton() {
+        setTimerStarted(timerStarted => !timerStarted)
+
+        if (timerStarted === false) {  // start timer
+
+        }
+        else {  // stop timer
+
+        }
+    }
 
     useEffect(() => {
 
@@ -114,6 +131,9 @@ function Workspace(){
                                     </Nav.Item>
                                     <Nav.Item>
                                         <Nav.Link className={"mb-3"} eventKey="members">Members</Nav.Link>
+                                    </Nav.Item>
+                                    <Nav.Item>
+                                        <Nav.Link className={"mb-3"} eventKey="clock">Clock</Nav.Link>
                                     </Nav.Item>
                                 </Nav>
                             </Col>
@@ -261,6 +281,44 @@ function Workspace(){
                                                 </div>
                                             )}
                                         </ListGroup>
+                                    </Tab.Pane>
+                                    <Tab.Pane eventKey={"clock"}>
+                                        <Container>
+                                            <Row>
+                                                <Col className={"col-2"}></Col>
+                                                <Col className={"col-8"}>
+                                                    <Tabs defaultActiveKey="Timestamps list" className="mb-5" fill>
+                                                        <Tab eventKey="Timestamps list" title="Timestamps list">
+                                                            <Row>
+
+                                                            </Row>
+                                                        </Tab>
+                                                        <Tab eventKey="Add timestamp" title="Add timestamp">
+                                                            { memberRole !== 'PARTICIPANT' ?
+                                                                <center>
+                                                                    <row>
+                                                                        <form method={"post"}>
+                                                                            <input type={"text"} placeholder={"Enter description"} value={timestampDescription}/>
+                                                                        </form>
+                                                                        <Clock timerStarted={timerStarted}/>
+                                                                    </row>
+                                                                    <row>
+                                                                        <Button onClick={handleTimestampButton}>
+                                                                            <h4>
+                                                                                Start
+                                                                            </h4>
+                                                                        </Button>
+                                                                    </row>
+                                                                </center>
+                                                                :
+                                                                <></>
+                                                            }
+                                                        </Tab>
+                                                    </Tabs>
+                                                </Col>
+                                                <Col className={"col-2"}></Col>
+                                            </Row>
+                                        </Container>
                                     </Tab.Pane>
                                 </Tab.Content>
                             </Col>
