@@ -1,6 +1,5 @@
 package edu.pjatk.app.timestamp;
 
-import edu.pjatk.app.socials.chat.Conversation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
