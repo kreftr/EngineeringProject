@@ -12,12 +12,14 @@ import InvitePanel from "./InvitePanel";
 import TeamPanel from "./team/TeamPanel";
 import Team from "./team/Team";
 import Clock from "../timestamps/Clock"
+import Timestamp from "../timestamps/Timestamp";
 
 
 function Workspace(){
 
     const {id} = useParams();
     const [memberRole, setMemberRole] = useState(null)
+    const [projectName, setProjectName] = useState("")
 
     //Files section
     const [fileTermSearch, setFileTermSearch] = useState("");
@@ -58,24 +60,54 @@ function Workspace(){
 
 
     // Clock section
+    const [timeCounter, setTimeCounter] = useState(0);  // time counted in seconds
     const [timerStarted, setTimerStarted] = useState(false)
     const [timestampDescription, setTimestampDescription] = useState()
-    const [timestampList, setTimestampList] = useState([])
+    const [timestampList, setTimestampList] = useState(undefined)
     const [timestampButtonText, setTimestampButtonText] = useState("Start")
+    const [timeStart, setTimeStart] = useState(null)
 
     function handleTimestampButton() {
         setTimerStarted(timerStarted => !timerStarted)
 
         if (timerStarted === false) {  // start timer
             setTimestampButtonText("Stop")
+            setTimeStart(Date.now())
         }
         else {  // stop timer
             setTimestampButtonText("Start")
-
-            // TODO 2. wyslij timestampa do bazy
-            // TODO 3. wyczysc input
+            uploadTimestamp()
+            setTimeStart(null)
+            setTimestampDescription("")  // clear input
         }
     }
+
+    function handleTimeChange(newTime) {
+        setTimeCounter(newTime)
+    }
+
+    function uploadTimestamp() {
+        // prepares data to send
+        let bodyFormData = new FormData();
+        bodyFormData.append("timestampRequest", new Blob(
+            [JSON.stringify({
+                "description": timestampDescription,
+                "timeStart": timeStart,
+                "timeEnd": Date.now(),
+                "projectName": projectName,
+                "projectId": id
+            })],
+            { type: "application/json"})
+        )
+
+        // sends data
+        axios.post(`http://localhost:8080/time/addTimestamp`, bodyFormData,
+            {headers:{'Authorization': Cookies.get("authorization")}}
+        ).catch(err => {
+            console.log(err.response)
+        })
+    }
+
 
     useEffect(() => {
 
@@ -109,6 +141,15 @@ function Workspace(){
         .catch(err => {
             console.log(err.response)
         })
+
+        axios.get(`http://localhost:8080/project/getProjectById/${id}`,
+            {headers: {'Authorization': Cookies.get("authorization")}
+            }).then(response =>{
+            setProjectName(response.data.title)
+        })
+            .catch(err => {
+                console.log(err.response)
+            })
 
         axios.get(`http://localhost:8080/time/getUserTimestampsForProject/${id}`,
             {headers: {'Authorization': Cookies.get("authorization")}
@@ -301,12 +342,14 @@ function Workspace(){
                                                 <Col className={"col-8"}>
                                                     <Tabs defaultActiveKey="Timestamps list" className="mb-5" fill>
                                                         <Tab eventKey="Timestamps list" title="Timestamps list">
-                                                            {
+                                                            { timestampList !== undefined ?
                                                                 timestampList.map((timestamp, key) =>
                                                                     <Row key={key}>
-                                                                        { timestamp }
+                                                                        <Timestamp timeData={timestamp}/>
                                                                     </Row>
                                                                 )
+                                                                :
+                                                                <></>
                                                             }
                                                         </Tab>
                                                         <Tab eventKey="Add timestamp" title="Add timestamp">
@@ -317,7 +360,7 @@ function Workspace(){
                                                                             <input type={"text"} placeholder={"Enter description"} value={timestampDescription}
                                                                             onChange={e => setTimestampDescription(e.target.value)}/>
                                                                         </form>
-                                                                        <Clock timerStarted={timerStarted}/>
+                                                                        <Clock timerStarted={timerStarted} onTimeChange={handleTimeChange}/>
                                                                     </row>
                                                                     <row>
                                                                         <Button onClick={handleTimestampButton}>

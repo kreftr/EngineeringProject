@@ -3,12 +3,14 @@ package edu.pjatk.app.timestamp;
 
 import edu.pjatk.app.request.TimestampRequest;
 import edu.pjatk.app.response.ResponseMessage;
+import edu.pjatk.app.response.TimestampResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,11 +26,21 @@ public class TimestampController {
 
     @GetMapping(value = "/getTimestampById/{id}")
     public ResponseEntity<?> getTimestampById(@PathVariable Long id) {
-        Optional<Timestamp> timestamp = timestampService.getTimestampById(id);
-        if (timestamp.isPresent())
+        Optional<Timestamp> timestampOptional = timestampService.getTimestampById(id);
+        if (timestampOptional.isPresent())
         {
+            Timestamp timestamp = timestampOptional.get();
+            TimestampResponse timestampResponse = new TimestampResponse(
+                    timestamp.getId(),
+                    timestamp.getDescription(),
+                    timestamp.getTimeStart(),
+                    timestamp.getTimeEnd(),
+                    timestamp.getProjectName(),
+                    timestamp.getParticipant().getId()
+            );
+
             return new ResponseEntity<>(
-                    timestamp, HttpStatus.OK
+                    timestampResponse, HttpStatus.OK
             );
         }
         else {
@@ -40,11 +52,25 @@ public class TimestampController {
 
     @GetMapping(value = "/getUserTimestampsForProject/{project_id}")
     public ResponseEntity<?> getUserTimestampsForProject(@PathVariable Long project_id) {
-        Optional<List<Timestamp>> timestamps= timestampService.getUserTimestampsForProject(project_id);
-        if (timestamps.isPresent())
+        Optional<List<Timestamp>> timestampsOptional= timestampService.getUserTimestampsForProject(project_id);
+        if (timestampsOptional.isPresent())
         {
+            List<TimestampResponse> timestampResponses = new ArrayList<>();
+            List<Timestamp> timestamps = timestampsOptional.get();
+            for (Timestamp ts: timestamps) {
+                TimestampResponse localResponse = new TimestampResponse(
+                        ts.getId(),
+                        ts.getDescription(),
+                        ts.getTimeStart(),
+                        ts.getTimeEnd(),
+                        ts.getProjectName(),
+                        ts.getParticipant().getId()
+                );
+                timestampResponses.add(localResponse);
+            }
+
             return new ResponseEntity<>(
-                    timestamps, HttpStatus.OK
+                    timestampResponses, HttpStatus.OK
             );
         }
         else {
