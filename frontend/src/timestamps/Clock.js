@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {createRef, useEffect, useState} from "react";
 
 
 function Clock(props) {
@@ -6,35 +6,29 @@ function Clock(props) {
     const [timeCounter, setTimeCounter] = useState(0);  // time counted in seconds
     const [timerStarted, setTimerStarted] = useState(false)
 
-    let intervalId = null;
+    const [intervalId, setIntervalId] = useState(null)
 
     useEffect(() => {
         setTimerStarted(props.timerStarted)
     }, [props])
 
     useEffect(() => {
-        console.log(timerStarted)
         if (timerStarted) {
-            intervalId = setInterval(() => {
+            let intervalId = setInterval(() => {
                 setTimeCounter(timeCounter => timeCounter + 1);
             }, 1000);
+            setIntervalId(intervalId)
         }
-        else {
+        else if (!timerStarted){
             clearInterval(intervalId)
-            intervalId = null
             setTimeCounter(0)
         }
     }, [timerStarted])
 
 
     return (
-        <div>
+        <p>
             {timeCounter}
-        </div>
+        </p>
     )
-
-
-
-
-
 } export default Clock

@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -33,6 +34,22 @@ public class TimestampController {
         else {
             return new ResponseEntity<>(
                     new ResponseMessage("Timestamp with given id not found"), HttpStatus.NOT_FOUND
+            );
+        }
+    }
+
+    @GetMapping(value = "/getUserTimestampsForProject/{project_id}")
+    public ResponseEntity<?> getUserTimestampsForProject(@PathVariable Long project_id) {
+        Optional<List<Timestamp>> timestamps= timestampService.getUserTimestampsForProject(project_id);
+        if (timestamps.isPresent())
+        {
+            return new ResponseEntity<>(
+                    timestamps, HttpStatus.OK
+            );
+        }
+        else {
+            return new ResponseEntity<>(
+                    new ResponseMessage("There are no timestamps for this project yet!"), HttpStatus.NOT_FOUND
             );
         }
     }

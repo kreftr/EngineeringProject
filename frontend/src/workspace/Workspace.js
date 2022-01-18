@@ -4,7 +4,6 @@ import {useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
-import {TextInput} from 'react-admin'
 import Member from "./Member";
 import File from "./File";
 import {FaFileUpload} from "react-icons/all";
@@ -61,15 +60,20 @@ function Workspace(){
     // Clock section
     const [timerStarted, setTimerStarted] = useState(false)
     const [timestampDescription, setTimestampDescription] = useState()
+    const [timestampList, setTimestampList] = useState([])
+    const [timestampButtonText, setTimestampButtonText] = useState("Start")
 
     function handleTimestampButton() {
         setTimerStarted(timerStarted => !timerStarted)
 
         if (timerStarted === false) {  // start timer
-
+            setTimestampButtonText("Stop")
         }
         else {  // stop timer
+            setTimestampButtonText("Start")
 
+            // TODO 2. wyslij timestampa do bazy
+            // TODO 3. wyczysc input
         }
     }
 
@@ -106,6 +110,14 @@ function Workspace(){
             console.log(err.response)
         })
 
+        axios.get(`http://localhost:8080/time/getUserTimestampsForProject/${id}`,
+            {headers: {'Authorization': Cookies.get("authorization")}
+            }).then(response =>{
+            setTimestampList(response.data)
+        })
+            .catch(err => {
+                console.log(err.response)
+            })
     },[])
 
 
@@ -289,23 +301,28 @@ function Workspace(){
                                                 <Col className={"col-8"}>
                                                     <Tabs defaultActiveKey="Timestamps list" className="mb-5" fill>
                                                         <Tab eventKey="Timestamps list" title="Timestamps list">
-                                                            <Row>
-
-                                                            </Row>
+                                                            {
+                                                                timestampList.map((timestamp, key) =>
+                                                                    <Row key={key}>
+                                                                        { timestamp }
+                                                                    </Row>
+                                                                )
+                                                            }
                                                         </Tab>
                                                         <Tab eventKey="Add timestamp" title="Add timestamp">
                                                             { memberRole !== 'PARTICIPANT' ?
                                                                 <center>
                                                                     <row>
                                                                         <form method={"post"}>
-                                                                            <input type={"text"} placeholder={"Enter description"} value={timestampDescription}/>
+                                                                            <input type={"text"} placeholder={"Enter description"} value={timestampDescription}
+                                                                            onChange={e => setTimestampDescription(e.target.value)}/>
                                                                         </form>
                                                                         <Clock timerStarted={timerStarted}/>
                                                                     </row>
                                                                     <row>
                                                                         <Button onClick={handleTimestampButton}>
                                                                             <h4>
-                                                                                Start
+                                                                                {timestampButtonText}
                                                                             </h4>
                                                                         </Button>
                                                                     </row>

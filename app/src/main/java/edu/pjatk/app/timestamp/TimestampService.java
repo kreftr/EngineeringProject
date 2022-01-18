@@ -3,12 +3,15 @@ package edu.pjatk.app.timestamp;
 import edu.pjatk.app.project.participant.Participant;
 import edu.pjatk.app.project.participant.ParticipantService;
 import edu.pjatk.app.request.TimestampRequest;
+import edu.pjatk.app.socials.chat.Conversation;
 import edu.pjatk.app.user.User;
 import edu.pjatk.app.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,6 +31,19 @@ public class TimestampService {
 
     public Optional<Timestamp> getTimestampById(Long id) {
         return timestampRepository.getTimestampById(id);
+    }
+
+    public Optional<List<Timestamp>> getUserTimestampsForProject(Long projectId){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<User> user = userService.findUserByUsername(username);
+
+        if (user.isPresent()) {
+            return timestampRepository.getUserTimestampsForProject(
+                    user.get().getId(), projectId
+            );
+        } else {
+            return Optional.empty();
+        }
     }
 
     public void addTimestamp(TimestampRequest timestampRequest) {
