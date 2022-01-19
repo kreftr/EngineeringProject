@@ -103,7 +103,9 @@ function Workspace(){
         // sends data
         axios.post(`http://localhost:8080/time/addTimestamp`, bodyFormData,
             {headers:{'Authorization': Cookies.get("authorization")}}
-        ).catch(err => {
+        ).then(() => {
+            window.location.reload();
+        }).catch(err => {
             console.log(err.response)
         })
     }
@@ -339,7 +341,7 @@ function Workspace(){
                                         <Container>
                                             <Row>
                                                 <Col className={"col-2"}></Col>
-                                                <Col className={"col-8"}>
+                                                <Col className={"col-12"}>
                                                     <Tabs defaultActiveKey="Timestamps list" className="mb-5" fill>
                                                         <Tab eventKey="Timestamps list" title="Timestamps list">
                                                             { timestampList !== undefined ?
@@ -354,22 +356,27 @@ function Workspace(){
                                                         </Tab>
                                                         <Tab eventKey="Add timestamp" title="Add timestamp">
                                                             { memberRole !== 'PARTICIPANT' ?
-                                                                <center>
-                                                                    <row>
+                                                                <Col className={"col-6"}>
+                                                                    <Row className={"row-4"}>
                                                                         <form method={"post"}>
+                                                                            <h5>Name your task here: </h5>
                                                                             <input type={"text"} placeholder={"Enter description"} value={timestampDescription}
                                                                             onChange={e => setTimestampDescription(e.target.value)}/>
                                                                         </form>
+                                                                    </Row>
+                                                                    <Row>
                                                                         <Clock timerStarted={timerStarted} onTimeChange={handleTimeChange}/>
-                                                                    </row>
-                                                                    <row>
-                                                                        <Button onClick={handleTimestampButton}>
-                                                                            <h4>
-                                                                                {timestampButtonText}
-                                                                            </h4>
-                                                                        </Button>
-                                                                    </row>
-                                                                </center>
+                                                                    </Row>
+                                                                    <Row className={"row-2"}>
+                                                                        <Col className={"col-2"}>
+                                                                            <Button onClick={handleTimestampButton}>
+                                                                                <h4>
+                                                                                    {timestampButtonText}
+                                                                                </h4>
+                                                                            </Button>
+                                                                        </Col>
+                                                                    </Row>
+                                                                </Col>
                                                                 :
                                                                 <></>
                                                             }

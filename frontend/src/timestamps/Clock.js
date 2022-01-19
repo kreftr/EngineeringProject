@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+import {Col} from "react-bootstrap";
 
 
 function Clock(props) {
@@ -29,8 +30,10 @@ function Clock(props) {
 
 
     return (
-        <div>
-            {timeCounter}
-        </div>
+        <center>
+            <h1>
+                {timeCounter}
+            </h1>
+        </center>
     )
 } export default Clock
