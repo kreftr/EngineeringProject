@@ -1,4 +1,4 @@
-import {FaFileAlt, FaFileDownload, FaTrashAlt, FaWindowClose} from "react-icons/fa";
+import {FaFileAlt, FaFileDownload, FaTrashAlt} from "react-icons/fa";
 import {Button, Col, Image, Modal, Row} from "react-bootstrap";
 import "./File.css"
 import axios from "axios";

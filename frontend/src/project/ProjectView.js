@@ -29,7 +29,7 @@ function ProjectView(){
             setStatusCode(err.response.status)
         })
 
-    }, [])
+    }, [id])
 
     function join(){
         axios.post(`http://localhost:8080/project/join/${id}`,null,{headers:{
@@ -156,13 +156,13 @@ function ProjectView(){
                                             <Row>
                                                 {project.participants.includes(parseInt(Cookies.get("userId"))) ?
                                                     <>
-                                                    { project.authorId != parseInt(Cookies.get("userId")) ?
+                                                    { project.authorId !== parseInt(Cookies.get("userId")) ?
                                                         <>
                                                             <Button className={"mb-3 mt-4"} variant="danger" onClick={() => leave()}>Leave</Button>
                                                             <Button className={"mb-3"} variant="success" href={`/project/${project.projectId}/workspace`}>Workspace</Button>
                                                         </>
                                                         :
-                                                        <Button className={"mt-4 mb-3"} variant="success" variant="success" href={`/project/${project.projectId}/workspace`}>Workspace</Button>
+                                                        <Button className={"mt-4 mb-3"} variant="success" href={`/project/${project.projectId}/workspace`}>Workspace</Button>
                                                     }
                                                     </>
                                                     :

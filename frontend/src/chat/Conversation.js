@@ -26,7 +26,7 @@ function Conversation(props) {
             setRecentMessageCode(err.response.status)
             setRecentMessageLoading(false);
         })
-    }, [])
+    }, [props.conversation.conversationId])
 
 
 

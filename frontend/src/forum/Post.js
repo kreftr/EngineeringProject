@@ -1,11 +1,5 @@
-import {Col, Container, Image, ListGroupItem, Row} from "react-bootstrap";
-import {useParams} from "react-router-dom";
-import profile from "../profile/Profile"
+import {Col, Image, ListGroupItem, Row} from "react-bootstrap";
 import default_profile_picture from "../assets/images/default_profile_picture.jpg"
-import {useEffect, useState} from "react";
-import axios from "axios";
-import Cookies from "js-cookie";
-import Moment from 'moment';
 import "./Post.css";
 
 function Post(props) {

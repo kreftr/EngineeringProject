@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import {Col} from "react-bootstrap";
 
 
 function Clock(props) {
@@ -10,10 +9,6 @@ function Clock(props) {
     useEffect(() => {
         setTimerStarted(props.timerStarted)
     }, [props])
-
-    useEffect(() => {  // send time upwards to parent
-        props.onTimeChange(timeCounter)
-    }, [timeCounter])
 
     useEffect(() => {
         if (timerStarted) {
@@ -26,7 +21,7 @@ function Clock(props) {
             clearInterval(intervalId)
             setTimeCounter(0)
         }
-    }, [timerStarted])
+    }, [timerStarted, intervalId])
 
 
     return (

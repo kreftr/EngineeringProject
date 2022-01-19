@@ -1,4 +1,4 @@
-import {Button, Col, Image, ListGroupItem, Row} from "react-bootstrap";
+import {Button, Col, Image, Row} from "react-bootstrap";
 import default_project_picture from "../assets/images/default_project_picture.jpg"
 import React from "react";
 import Cookies from "js-cookie";
@@ -45,7 +45,7 @@ function Project(props){
                         <FaFileAlt className={"mr-2"} size={35}/>
                         Workspace
                     </Button>
-                    { props.project.authorId == Cookies.get("userId") ?
+                    { props.project.authorId === Cookies.get("userId") ?
                         <Button className={"PROJECT-button"} variant={"primary"}>
                             <FaCogs className={"mr-2"} size={35}/>
                             Settings

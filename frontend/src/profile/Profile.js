@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Container, Tabs, Row, Col, Image, Button, Tab, Badge, ListGroup, Card} from "react-bootstrap";
+import {Container, Tabs, Row, Col, Image, Button, Tab, Badge, Card} from "react-bootstrap";
 import default_profile_picture from "../assets/images/default_profile_picture.jpg"
 import default_project_picture from "../assets/images/default_project_picture.jpg"
 import {FaFlag, FaCog, FaUserPlus, FaUserMinus, FaUserClock, FaUserFriends} from "react-icons/fa"
@@ -59,7 +59,7 @@ function Profile(){
                     console.log(err.response)
                 })
         }
-    },[]);
+    },[id]);
 
     function addFriend(){
         axios.post(`http://localhost:8080/friends/addFriend/${id}`,{},

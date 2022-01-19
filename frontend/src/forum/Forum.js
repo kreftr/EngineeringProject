@@ -3,7 +3,6 @@ import {Button, Container, Col, Form, ListGroup, ListGroupItem, Modal, Row} from
 import {useEffect, useState} from "react";
 import "./Forum.css";
 import Post from "./Post";
-import {useParams} from "react-router-dom";
 import Cookies from "js-cookie";
 import {Alert} from "@mui/material";
 

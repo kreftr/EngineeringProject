@@ -73,7 +73,7 @@ function Team(props){
                     {props.team.members.length > 0 ?
                         <ListGroup>
                             {props.team.members.map((member, key) =>
-                                <div className={"mb-2"}>
+                                <div className={"mb-2"} key={key}>
                                     <ListGroupItem key={key}>
                                         <Row className={"TEAM-test"}>
                                             <Col className={"col-2"}>

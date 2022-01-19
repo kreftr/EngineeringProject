@@ -60,7 +60,6 @@ function Workspace(){
 
 
     // Clock section
-    const [timeCounter, setTimeCounter] = useState(0);  // time counted in seconds
     const [timerStarted, setTimerStarted] = useState(false)
     const [timestampDescription, setTimestampDescription] = useState()
     const [timestampList, setTimestampList] = useState(undefined)
@@ -80,10 +79,6 @@ function Workspace(){
             setTimeStart(null)
             setTimestampDescription("")  // clear input
         }
-    }
-
-    function handleTimeChange(newTime) {
-        setTimeCounter(newTime)
     }
 
     function uploadTimestamp() {
@@ -117,7 +112,7 @@ function Workspace(){
             {headers: {'Authorization': Cookies.get("authorization")}
         }).then(response =>{
             setMembers(response.data)
-            let userMember = response.data.filter(project => Number(project.userId) == Number(Cookies.get("userId")));
+            let userMember = response.data.filter(project => Number(project.userId) === Number(Cookies.get("userId")));
             if (userMember.length > 0) setMemberRole(userMember[0].projectRole)
             else setMemberRole(null)
         })
@@ -161,7 +156,7 @@ function Workspace(){
             .catch(err => {
                 console.log(err.response)
             })
-    },[])
+    },[id])
 
 
     return(
@@ -286,7 +281,7 @@ function Workspace(){
                                                 return t
                                             }
                                         }).map((team, key) =>
-                                            <div className={"mb-3"}>
+                                            <div className={"mb-3"} key={key}>
                                                 <Team team={team} members={members} role={memberRole} key={key}/>
                                             </div>
                                         )
@@ -365,7 +360,7 @@ function Workspace(){
                                                                         </form>
                                                                     </Row>
                                                                     <Row>
-                                                                        <Clock timerStarted={timerStarted} onTimeChange={handleTimeChange}/>
+                                                                        <Clock timerStarted={timerStarted}/>
                                                                     </Row>
                                                                     <Row className={"row-2"}>
                                                                         <Col className={"col-2"}>

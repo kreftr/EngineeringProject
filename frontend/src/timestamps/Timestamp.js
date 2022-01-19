@@ -1,11 +1,9 @@
 import React, {useEffect, useState} from "react";
-import {Col, Image, ListGroupItem, Row} from "react-bootstrap";
-import default_profile_picture from "../assets/images/default_profile_picture.jpg";
+import {Col, ListGroupItem, Row} from "react-bootstrap";
 import moment from "moment";
 
 
 function Timestamp(props) {
-    const [id, setId] = useState(null)
     const [description, setDescription] = useState("")
     const [timeStart, setTimeStart] = useState(null)
     const [timeEnd, setTimeEnd] = useState(null)
@@ -13,13 +11,13 @@ function Timestamp(props) {
     const [participantId, setParticipantId] = useState(null)
 
     useEffect(() => {
-        setId(props.timeData.id)
         setDescription(props.timeData.description)
         setTimeStart(props.timeData.timeStart)
         setTimeEnd(props.timeData.timeEnd)
         setProjectName(props.timeData.projectName)
         setParticipantId(props.timeData.participantId)
-    }, [])
+    }, [props.timeData.description, props.timeData.timeStart, props.timeData.timeEnd,
+        props.timeData.projectName, props.timeData.participantId])
 
     // converts date to format hh:mm:ss
     function prettifyDate(prePrettifiedDate) {
@@ -47,10 +45,10 @@ function Timestamp(props) {
                 <Row>
                     <Col className={"col-6"} >
                         <Row className={"row-6"}>
-                            <h3 className={"TIMESTAMP-title"}>Project name: {projectName}</h3>
+                            <h3 className={"TIMESTAMP-title"}>Project: {projectName}</h3>
                         </Row>
                         <Row className={"row-6"}>
-                            <h5 className={"TIMESTAMP-description"}>Project decription: {description}</h5>
+                            <h5 className={"TIMESTAMP-description"}>Description: {description}</h5>
                         </Row>
                     </Col>
                     <Col className={"col-6"}>
