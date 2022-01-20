@@ -257,18 +257,16 @@ public class TaskService {
         Optional<User> loggedUser = userService.findUserByUsername(
                 SecurityContextHolder.getContext().getAuthentication().getName()
         );
-        System.out.println("1");
+
         if (task.isPresent() && loggedUser.isPresent()){
-            System.out.println("2");
+
             Optional<Project> project = projectRepository.getProjectById(task.get().getProject().getId());
             Optional<Participant> loggedParticipant = participantService.getParticipantByUserAndProject(
                     loggedUser.get().getId(), task.get().getProject().getId()
             );
 
-            if (task.get().getParticipant() != null){
-                System.out.println("3");
-                System.out.println(task.get().getParticipant().equals(loggedParticipant.get()));
-                System.out.println(!loggedParticipant.get().getParticipantRole().equals("PARTICIPANT"));
+            if (project.isPresent() && task.get().getParticipant() != null){
+
                 if (task.get().getParticipant().equals(loggedParticipant.get())
                         || !loggedParticipant.get().getParticipantRole().equals("PARTICIPANT")){
                     task.get().setStatus(TaskStatus.IN_PROGRESS);
@@ -277,7 +275,7 @@ public class TaskService {
                 }
                 else return false;
 
-            } else if (task.get().getTeam() != null){
+            } else if (project.isPresent() && task.get().getTeam() != null){
                 System.out.println("4");
                 if (loggedParticipant.get().getTeams().contains(task.get().getTeam())
                         || !loggedParticipant.get().getParticipantRole().equals("PARTICIPANT")){
