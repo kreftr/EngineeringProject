@@ -174,7 +174,6 @@ function ProjectView(){
                                                     }
                                                     </>
                                                 }
-                                                <Button className={"mt-3"} variant="primary">Report</Button>
                                                 <Rating/>
                                             </Row>
                                             :
@@ -232,10 +231,6 @@ function ProjectView(){
                                         <Col></Col>
                                     }
                                 </div>
-                            </Row>
-                            <hr className={"mb-4 mt-4"}/>
-                            <Row>
-                                <h1>Comments</h1>
                             </Row>
                         </div>
                         :

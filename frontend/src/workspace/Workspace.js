@@ -1,16 +1,18 @@
 import "./Workspace.css"
-import {Button, Col, Container, Form, ListGroup, Modal, Nav, Row, Tab} from "react-bootstrap";
+import {Badge, Button, Col, Container, Form, ListGroup, Modal, Nav, Row, Tab} from "react-bootstrap";
 import {useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import Member from "./Member";
 import File from "./File";
-import {FaFileUpload} from "react-icons/all";
+import {FaCalendarPlus, FaFileUpload} from "react-icons/all";
 import {FaUserFriends, FaUserPlus} from "react-icons/fa";
 import InvitePanel from "./InvitePanel";
 import TeamPanel from "./team/TeamPanel";
 import Team from "./team/Team";
+import TaskPanel from "./task/TaskPanel";
+import Task from "./task/Task";
 
 
 function Workspace(){
@@ -56,6 +58,14 @@ function Workspace(){
     const [teamTermSearch, setTeamTermSearch] = useState("");
 
 
+    //Tasks section
+    const [showTasks, setShowTasks] = useState(false);
+    const handleCloseTasks = () => setShowTasks(false);
+    const handleShowTasks = () => setShowTasks(true);
+    const [tasks, setTasks] = useState([]);
+    const [taskTermSearch, setTaskTermSearch] = useState("");
+
+
     useEffect(() => {
 
         axios.get(`http://localhost:8080/project/getProjectMembers/${id}`,
@@ -84,6 +94,16 @@ function Workspace(){
             {headers: {'Authorization': Cookies.get("authorization")}
         }).then(response =>{
             setTeams(response.data)
+        })
+        .catch(err => {
+            console.log(err.response)
+        })
+
+        axios.get(`http://localhost:8080/task/getAllProjectTasks/${id}`,
+            {headers: {'Authorization': Cookies.get("authorization")}
+        }).then(response =>{
+            setTasks(response.data)
+            console.log(response.data)
         })
         .catch(err => {
             console.log(err.response)
@@ -124,9 +144,113 @@ function Workspace(){
                                     </Tab.Pane>
                                     <Tab.Pane eventKey={"tasks"}>
                                         <Row>
-                                            <Button>Add Task</Button>
+                                            <Col>
+                                                { memberRole !== 'PARTICIPANT' ?
+                                                    <center>
+                                                        <Button onClick={() => {handleShowTasks();}}>
+                                                            <h4 className={"WORKSPACE-center-upload-button"}>
+                                                                <FaCalendarPlus className={"mr-2"} size={35}/>
+                                                                Add task
+                                                            </h4>
+                                                        </Button>
+                                                        <Modal show={showTasks} onHide={handleCloseTasks}>
+                                                            <TaskPanel members={members} teams={teams}/>
+                                                        </Modal>
+                                                    </center>
+                                                    :
+                                                    <></>
+                                                }
+                                            </Col>
+                                            <Col className={"WORKSPACE-center-upload-button"}>
+                                                <center>
+                                                    <Form>
+                                                        <Form.Control type="text" placeholder="Search task"
+                                                                      onChange={(e) => setTaskTermSearch(e.target.value)}/>
+                                                    </Form>
+                                                </center>
+                                            </Col>
                                         </Row>
                                         <hr/>
+                                        <Row>
+                                            <Col>
+                                                <center>
+                                                    <h1><Badge bg="danger">To do</Badge></h1>
+                                                </center>
+                                                <hr/>
+                                                { tasks.length > 0 ?
+                                                    <div>
+                                                        { tasks.filter((t)=>{
+                                                            if (taskTermSearch === ""){
+                                                                return t
+                                                            }
+                                                            else if (t.name.toLowerCase().includes(taskTermSearch.toLowerCase())){
+                                                                return t
+                                                            }
+                                                        }).filter((t)=>{
+                                                            if (t.status === "TODO") return t
+                                                        }).map((task, key) =>
+                                                            <div className={"mb-2"} key={key}>
+                                                                <Task task={task} role={memberRole}/>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                    :
+                                                    <></>
+                                                }
+                                            </Col>
+                                            <Col>
+                                                <center>
+                                                    <h1><Badge bg="warning">In progress</Badge></h1>
+                                                </center>
+                                                <hr/>
+                                                { tasks.length > 0 ?
+                                                    <div>
+                                                        { tasks.filter((t)=>{
+                                                            if (taskTermSearch === ""){
+                                                                return t
+                                                            }
+                                                            else if (t.name.toLowerCase().includes(taskTermSearch.toLowerCase())){
+                                                                return t
+                                                            }
+                                                        }).filter((t)=>{
+                                                            if (t.status === "IN_PROGRESS") return t
+                                                        }).map((task, key) =>
+                                                            <div className={"mb-2"} key={key}>
+                                                                <Task task={task} role={memberRole}/>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                    :
+                                                    <></>
+                                                }
+                                            </Col>
+                                            <Col>
+                                                <center>
+                                                    <h1><Badge bg="success">Done</Badge></h1>
+                                                </center>
+                                                <hr/>
+                                                { tasks.length > 0 ?
+                                                    <div>
+                                                        { tasks.filter((t)=>{
+                                                            if (taskTermSearch === ""){
+                                                                return t
+                                                            }
+                                                            else if (t.name.toLowerCase().includes(taskTermSearch.toLowerCase())){
+                                                                return t
+                                                            }
+                                                        }).filter((t)=>{
+                                                            if (t.status === "DONE") return t
+                                                        }).map((task, key) =>
+                                                            <div className={"mb-2"} key={key}>
+                                                                <Task task={task} role={memberRole}/>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                    :
+                                                    <></>
+                                                }
+                                            </Col>
+                                        </Row>
                                     </Tab.Pane>
                                     <Tab.Pane eventKey={"files"}>
                                         <Row>

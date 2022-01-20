@@ -1,6 +1,7 @@
 package edu.pjatk.app.file;
 
 import edu.pjatk.app.project.Project;
+import edu.pjatk.app.project.task.Task;
 import edu.pjatk.app.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,6 +36,10 @@ public class File {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "task_id")
+    private Task task;
+
     public File(String name, String url, Long size, LocalDateTime uploadDate, Project project, User user){
         this.name = name;
         this.url = url;
@@ -43,4 +48,15 @@ public class File {
         this.project = project;
         this.user = user;
     }
+
+    public File(String name, String url, Long size, LocalDateTime uploadDate, Project project, User user, Task task){
+        this.name = name;
+        this.url = url;
+        this.size = size;
+        this.uploadDate = uploadDate;
+        this.project = project;
+        this.user = user;
+        this.task = task;
+    }
+
 }

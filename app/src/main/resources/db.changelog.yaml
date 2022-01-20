@@ -231,3 +231,11 @@ databaseChangeLog:
         stripComments: true
         splitStatements: false
         path: db.changelog/20220113_team_participant.sql
+  - changeSet:
+      id: 20220118_file_task_add_columns_and_relations
+      author: Rafał Kreft
+      sqlFile:
+        relativeToChangelogFile: true
+        stripComments: true
+        splitStatements: false
+        path: db.changelog/20220118_file_task_add_columns_and_relations.sql

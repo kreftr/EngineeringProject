@@ -115,6 +115,10 @@ public class TeamService {
         else return false;
     }
 
+    public Optional<Team> getTeam(Long teamId){
+        return teamRepository.getById(teamId);
+    }
+
     public Set<TeamResponse> getTeams(Long projectId){
 
         Optional<User> loggedUser = userService.findUserByUsername(

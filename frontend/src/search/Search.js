@@ -14,7 +14,6 @@ function Search(){
 
     const [profiles,setProfiles] = useState([]);
     const [projects,setProjects] = useState([]);
-    const [problems,setProblems] = useState([]);
     const [loadingContent, setLoading] = useState(true);
     const [responseMessage, setMessage]  = useState();
 
@@ -30,7 +29,6 @@ function Search(){
     function clearData(){
         setProfiles([])
         setProjects([])
-        setProblems([])
         setMessage("")
     }
 
@@ -48,7 +46,6 @@ function Search(){
             .then(response => {
                 if (inputType === "profile") setProfiles(response.data)
                 else if (inputType === "project" || inputType === "category") setProjects(response.data)
-                else setProblems(response.data)
             })
             .catch(err => {
                 console.log(err.response)
@@ -93,7 +90,6 @@ function Search(){
                                         <option value={"profile"}>User</option>
                                         <option value={"project"}>Project</option>
                                         <option value={"category"}>Project by category</option>
-                                        <option value={"problem"} disabled={true}>Problem</option>
                                     </Form.Select>
                                 </FloatingLabel>
                             </Col>

@@ -154,10 +154,6 @@ function Profile(){
                                                 <h4>Friends</h4>
                                             </Button>
                                         </a>
-                                        <Button className={"PROFILE-icon-placeholder"}>
-                                            <FaFlag className={"PROFILE-icon"}/>
-                                            <h4>Report</h4>
-                                        </Button>
                                     </li>
                                 </>
                                 :
@@ -211,8 +207,6 @@ function Profile(){
                                         <h2>{profile.username} does not have any projects</h2>
                                     </center>
                                 }
-                            </Tab>
-                            <Tab eventKey="Activity" title="Activity">
                             </Tab>
                         </Tabs>
                     </Col>

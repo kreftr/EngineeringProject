@@ -4,7 +4,7 @@ import edu.pjatk.app.file.File;
 import edu.pjatk.app.photo.Photo;
 import edu.pjatk.app.project.category.Category;
 import edu.pjatk.app.project.participant.Participant;
-import edu.pjatk.app.task.Task;
+import edu.pjatk.app.project.task.Task;
 import edu.pjatk.app.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

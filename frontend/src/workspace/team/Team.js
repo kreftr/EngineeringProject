@@ -91,9 +91,13 @@ function Team(props){
                                                 <h1>{member.username}</h1>
                                             </Col>
                                             <Col className={"col-2"}>
-                                                <Button variant={"danger"} onClick={()=>{handleMemberRemoval(member.userId);}}>
-                                                    <FaMinusSquare size={30}/>
-                                                </Button>
+                                                { props.role !== "PARTICIPANT" ?
+                                                    <Button variant={"danger"} onClick={()=>{handleMemberRemoval(member.userId);}}>
+                                                        <FaMinusSquare size={30}/>
+                                                    </Button>
+                                                    :
+                                                    <></>
+                                                }
                                             </Col>
                                         </Row>
                                     </ListGroupItem>

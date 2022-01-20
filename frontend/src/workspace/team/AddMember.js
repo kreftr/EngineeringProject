@@ -30,8 +30,8 @@ function AddMember(props){
             <Modal.Body>
                 <ListGroup className={"TEAM-members-add"}>
                     { props.members.filter(m => {if (!props.team.members.map(n => n.username).includes(m.username)) return m;}).map((member, key) =>
-                        <div>
-                            <ListGroupItem className={"mb-1 TEAM-test"} key={key}>
+                        <div key={key}>
+                            <ListGroupItem className={"mb-1 TEAM-test"}>
                                 <Row className={"TEAM-test"}>
                                     <Col className={"col-3"}>
                                         <a href={`/profile/${member.userId}`} className={"mr-3"}>

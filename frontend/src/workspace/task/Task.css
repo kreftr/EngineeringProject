@@ -1,0 +1,7 @@
+.TASK-name-wrap {
+    overflow-wrap: break-word;
+}
+
+.TASK-no-decoration {
+    text-decoration: none;
+}
