@@ -25,7 +25,7 @@ function Rating(){
             console.log(err.response)
         })
 
-    },[])
+    },[id])
 
     function vote(rating){
         console.log("XD")

@@ -58,27 +58,27 @@ function TeamPanel(props){
                     <hr/>
                     <ListGroup className={"TEAM-members-select"}>
                         { props.members.map((member, key) =>
-                            <div>
-                            <ListGroupItem className={"mb-1 TEAM-test"}>
-                                <h5>
-                                    <Form.Check className={"mt-1 mr-2"}
-                                                key={key}
-                                                type={"checkbox"}
-                                                label={member.username}
-                                                value={member.username}
-                                                onClick={(e) => {handleMemberChange(e)}}
-                                    />
-                                </h5>
-                                <a href={`/profile/${member.userId}`}>
-                                    { member.profilePhoto ?
-                                        <Image src={`http://localhost:8080/photo?filename=${member.profilePhoto}`}
-                                               width={30} height={30} rounded={true}/>
-                                        :
-                                        <Image src={default_profile_picture}
-                                               width={30} height={30} rounded={true}/>
-                                    }
-                                </a>
-                            </ListGroupItem>
+                            <div key={key}>
+                                <ListGroupItem className={"mb-1 TEAM-test"}>
+                                    <h5>
+                                        <Form.Check className={"mt-1 mr-2"}
+                                                    key={key}
+                                                    type={"checkbox"}
+                                                    label={member.username}
+                                                    value={member.username}
+                                                    onClick={(e) => {handleMemberChange(e)}}
+                                        />
+                                    </h5>
+                                    <a href={`/profile/${member.userId}`}>
+                                        { member.profilePhoto ?
+                                            <Image src={`http://localhost:8080/photo?filename=${member.profilePhoto}`}
+                                                   width={30} height={30} rounded={true}/>
+                                            :
+                                            <Image src={default_profile_picture}
+                                                   width={30} height={30} rounded={true}/>
+                                        }
+                                    </a>
+                                </ListGroupItem>
                             </div>
                         )
                         }

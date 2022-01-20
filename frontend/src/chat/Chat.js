@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Container, ListGroup, ListGroupItem} from "react-bootstrap";
 import Message from "./Message"
-import {useParams} from "react-router-dom";
 import Cookies from "js-cookie";
 import axios from "axios";
 import "./Chat.css"
@@ -11,7 +10,6 @@ function Chat(props) {
     const [messages, setMessages] = useState([])
     const [messagesLoading, setMessagesLoading] = useState(true)
     const [messagesCode, setMessagesCode] = useState(null)
-    const {conversation_id} = useParams();
 
     useEffect(() => {
         // messages are collected every certain amount of time from server
@@ -32,7 +30,7 @@ function Chat(props) {
             })
         }, 1000)
         return () => clearInterval(interval)
-    }, [conversation_id])
+    }, [props.conversation.conversationId])
 
     const sendNewMessage = (event) => {
         if (event.key === 'Enter') {

@@ -56,7 +56,7 @@ function FriendsList() {
                 })
         }
 
-    },[])
+    },[id])
 
 
     return (

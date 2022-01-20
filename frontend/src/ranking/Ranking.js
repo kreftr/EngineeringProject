@@ -1,4 +1,4 @@
-import {Col, Container, ListGroup, ListGroupItem, Row, Tab, Tabs} from "react-bootstrap";
+import {Col, Container, ListGroup, ListGroupItem, Row} from "react-bootstrap";
 import "./Ranking.css"
 import React, {useEffect, useState} from "react";
 import axios from "axios";
@@ -18,7 +18,7 @@ function Ranking(){
             console.log(err.response)
         })
 
-    },[])
+    },[best])
 
 
     return(

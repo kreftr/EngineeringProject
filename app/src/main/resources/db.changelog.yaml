@@ -232,6 +232,14 @@ databaseChangeLog:
         splitStatements: false
         path: db.changelog/20220113_team_participant.sql
   - changeSet:
+      id: 20220117_timestamp
+      author: Adam Nawrot
+      sqlFile:
+        relativeToChangelogFile: true
+        stripComments: true
+        splitStatements: false
+        path: db.changelog/20220117_timestamp.sql
+  - changeSet:
       id: 20220118_file_task_add_columns_and_relations
       author: Rafał Kreft
       sqlFile:
@@ -239,3 +247,11 @@ databaseChangeLog:
         stripComments: true
         splitStatements: false
         path: db.changelog/20220118_file_task_add_columns_and_relations.sql
+  - changeSet:
+      id: 20220119_changeTimestampsDatatype
+      author: Adam Nawrot
+      sqlFile:
+        relativeToChangelogFile: true
+        stripComments: true
+        splitStatements: false
+        path: db.changelog/20220119_changeTimestampsDatatype.sql

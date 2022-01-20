@@ -1,5 +1,5 @@
 import "./Workspace.css"
-import {Badge, Button, Col, Container, Form, ListGroup, Modal, Nav, Row, Tab} from "react-bootstrap";
+import {Button, Badge, Col, Container, Form, ListGroup, Modal, Nav, Row, Tab, Tabs} from "react-bootstrap";
 import {useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
 import axios from "axios";
@@ -13,12 +13,15 @@ import TeamPanel from "./team/TeamPanel";
 import Team from "./team/Team";
 import TaskPanel from "./task/TaskPanel";
 import Task from "./task/Task";
+import Clock from "../timestamps/Clock"
+import Timestamp from "../timestamps/Timestamp";
 
 
 function Workspace(){
 
     const {id} = useParams();
     const [memberRole, setMemberRole] = useState(null)
+    const [projectName, setProjectName] = useState("")
 
     //Files section
     const [fileTermSearch, setFileTermSearch] = useState("");
@@ -65,6 +68,52 @@ function Workspace(){
     const [tasks, setTasks] = useState([]);
     const [taskTermSearch, setTaskTermSearch] = useState("");
 
+    // Clock section
+    const [timerStarted, setTimerStarted] = useState(false)
+    const [timestampDescription, setTimestampDescription] = useState()
+    const [timestampList, setTimestampList] = useState(undefined)
+    const [timestampButtonText, setTimestampButtonText] = useState("Start")
+    const [timeStart, setTimeStart] = useState(null)
+
+    function handleTimestampButton() {
+        setTimerStarted(timerStarted => !timerStarted)
+
+        if (timerStarted === false) {  // start timer
+            setTimestampButtonText("Stop")
+            setTimeStart(Date.now())
+        }
+        else {  // stop timer
+            setTimestampButtonText("Start")
+            uploadTimestamp()
+            setTimeStart(null)
+            setTimestampDescription("")  // clear input
+        }
+    }
+
+    function uploadTimestamp() {
+        // prepares data to send
+        let bodyFormData = new FormData();
+        bodyFormData.append("timestampRequest", new Blob(
+            [JSON.stringify({
+                "description": timestampDescription,
+                "timeStart": timeStart,
+                "timeEnd": Date.now(),
+                "projectName": projectName,
+                "projectId": id
+            })],
+            { type: "application/json"})
+        )
+
+        // sends data
+        axios.post(`http://localhost:8080/time/addTimestamp`, bodyFormData,
+            {headers:{'Authorization': Cookies.get("authorization")}}
+        ).then(() => {
+            window.location.reload();
+        }).catch(err => {
+            console.log(err.response)
+        })
+    }
+
 
     useEffect(() => {
 
@@ -72,7 +121,7 @@ function Workspace(){
             {headers: {'Authorization': Cookies.get("authorization")}
         }).then(response =>{
             setMembers(response.data)
-            let userMember = response.data.filter(project => Number(project.userId) == Number(Cookies.get("userId")));
+            let userMember = response.data.filter(project => Number(project.userId) === Number(Cookies.get("userId")));
             if (userMember.length > 0) setMemberRole(userMember[0].projectRole)
             else setMemberRole(null)
         })
@@ -109,7 +158,24 @@ function Workspace(){
             console.log(err.response)
         })
 
-    },[])
+        axios.get(`http://localhost:8080/project/getProjectById/${id}`,
+            {headers: {'Authorization': Cookies.get("authorization")}
+            }).then(response =>{
+            setProjectName(response.data.title)
+        })
+            .catch(err => {
+                console.log(err.response)
+            })
+
+        axios.get(`http://localhost:8080/time/getUserTimestampsForProject/${id}`,
+            {headers: {'Authorization': Cookies.get("authorization")}
+            }).then(response =>{
+            setTimestampList(response.data)
+        })
+            .catch(err => {
+                console.log(err.response)
+            })
+    },[id])
 
 
     return(
@@ -134,6 +200,9 @@ function Workspace(){
                                     </Nav.Item>
                                     <Nav.Item>
                                         <Nav.Link className={"mb-3"} eventKey="members">Members</Nav.Link>
+                                    </Nav.Item>
+                                    <Nav.Item>
+                                        <Nav.Link className={"mb-3"} eventKey="clock">Clock</Nav.Link>
                                     </Nav.Item>
                                 </Nav>
                             </Col>
@@ -335,7 +404,7 @@ function Workspace(){
                                                 return t
                                             }
                                         }).map((team, key) =>
-                                            <div className={"mb-3"}>
+                                            <div className={"mb-3"} key={key}>
                                                 <Team team={team} members={members} role={memberRole} key={key}/>
                                             </div>
                                         )
@@ -385,6 +454,56 @@ function Workspace(){
                                                 </div>
                                             )}
                                         </ListGroup>
+                                    </Tab.Pane>
+                                    <Tab.Pane eventKey={"clock"}>
+                                        <Container>
+                                            <Row>
+                                                <Col className={"col-2"}></Col>
+                                                <Col className={"col-12"}>
+                                                    <Tabs defaultActiveKey="Timestamps list" className="mb-5" fill>
+                                                        <Tab eventKey="Timestamps list" title="Timestamps list">
+                                                            { timestampList !== undefined ?
+                                                                timestampList.map((timestamp, key) =>
+                                                                    <Row key={key}>
+                                                                        <Timestamp timeData={timestamp}/>
+                                                                    </Row>
+                                                                )
+                                                                :
+                                                                <></>
+                                                            }
+                                                        </Tab>
+                                                        <Tab eventKey="Add timestamp" title="Add timestamp">
+                                                            { memberRole !== 'PARTICIPANT' ?
+                                                                <Col className={"col-6"}>
+                                                                    <Row className={"row-4"}>
+                                                                        <form method={"post"}>
+                                                                            <h5>Name your task here: </h5>
+                                                                            <input type={"text"} placeholder={"Enter description"} value={timestampDescription}
+                                                                            onChange={e => setTimestampDescription(e.target.value)}/>
+                                                                        </form>
+                                                                    </Row>
+                                                                    <Row>
+                                                                        <Clock timerStarted={timerStarted}/>
+                                                                    </Row>
+                                                                    <Row className={"row-2"}>
+                                                                        <Col className={"col-2"}>
+                                                                            <Button onClick={handleTimestampButton}>
+                                                                                <h4>
+                                                                                    {timestampButtonText}
+                                                                                </h4>
+                                                                            </Button>
+                                                                        </Col>
+                                                                    </Row>
+                                                                </Col>
+                                                                :
+                                                                <></>
+                                                            }
+                                                        </Tab>
+                                                    </Tabs>
+                                                </Col>
+                                                <Col className={"col-2"}></Col>
+                                            </Row>
+                                        </Container>
                                     </Tab.Pane>
                                 </Tab.Content>
                             </Col>
