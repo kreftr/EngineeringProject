@@ -22,6 +22,7 @@ function ConversationList() {
             }
         }).then((response) => {
             setConversations(response.data);
+            // console.log(response.data)
         }).catch(err => {
             console.log(err.response)
         });

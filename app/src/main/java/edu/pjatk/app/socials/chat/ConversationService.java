@@ -1,20 +1,21 @@
 package edu.pjatk.app.socials.chat;
 
 import edu.pjatk.app.response.ConversationResponse;
+import edu.pjatk.app.response.MessageResponse;
 import edu.pjatk.app.response.RecentMessageResponse;
+import edu.pjatk.app.response.ResponseMessage;
 import edu.pjatk.app.user.User;
 import edu.pjatk.app.user.UserService;
 import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ConversationService {
@@ -31,8 +32,7 @@ public class ConversationService {
     public Optional<Conversation> getConversationById(Long id) {
         return conversationRepository.getConversationById(id);
     }
-
-    public Optional <Conversation> getConversationByUserId(Long user_id) {
+    public Optional<Conversation> getConversationByUserId(Long user_id) {
         Optional<User> loggedUser = userService.findUserByUsername(
                 SecurityContextHolder.getContext().getAuthentication().getName()
         );
@@ -41,6 +41,23 @@ public class ConversationService {
             return conversationRepository.getConversationByUserId(user_id, loggedUser.get().getId());
         }
         else return Optional.empty();
+    }
+
+    public Optional<ConversationResponse> getConversationResponseByUserId(Long user_id) {
+        Optional<User> loggedUser = userService.findUserByUsername(
+                SecurityContextHolder.getContext().getAuthentication().getName()
+        );
+        if (loggedUser.isEmpty()) { return Optional.empty(); }
+
+        Optional<Conversation> conversationOptional = conversationRepository.getConversationByUserId(user_id, loggedUser.get().getId());
+        if (conversationOptional.isEmpty()) { return Optional.empty(); }
+
+        // user we are talking to
+        Optional<User> optional_target_user = userService.findUserById(user_id);
+        if (optional_target_user.isEmpty()) { return Optional.empty(); }
+
+        return Optional.of(new ConversationResponse(conversationOptional.get().getId(), user_id,
+                optional_target_user.get().getUsername(), optional_target_user.get().getProfile().getPhoto().getFileName()));
     }
 
     public List<Conversation> getAllUserConversations(){
@@ -100,8 +117,18 @@ public class ConversationService {
         conversationRepository.remove(conversation);
     }
 
-    public Optional<List<Message>> getAllMessages(Long id){
-        return conversationRepository.getAllMessages(id);
+    public Optional<List<MessageResponse>> getAllMessages(Long id){
+        Optional<List<Message>> optionalMessages = conversationRepository.getAllMessages(id);
+        if (optionalMessages.isEmpty()) { return Optional.empty(); }
+
+        List<MessageResponse> messageResponses = new ArrayList<>();
+        for (Message message: optionalMessages.get()) {
+            MessageResponse tempResponse = new MessageResponse(message.getContent(), message.getUser().getUsername(),
+                    message.getMessage_date().toString(), message.getUser().getProfile().getPhoto().getFileName());
+            messageResponses.add(tempResponse);
+        }
+
+        return Optional.of(messageResponses);
     }
 
     public Optional<RecentMessageResponse> getRecentMessage(Long id){

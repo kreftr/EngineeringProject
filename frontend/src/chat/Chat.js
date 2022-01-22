@@ -11,9 +11,33 @@ function Chat(props) {
     const [messagesLoading, setMessagesLoading] = useState(true)
     const [messagesCode, setMessagesCode] = useState(null)
 
+    // useEffect(() => {
+    //     // messages are collected every certain amount of time from server
+    //     const interval = setInterval(() => {
+    //         axios.get(`http://localhost:8080/conversation/getAllMessages/${props.conversation.conversationId}`, {
+    //             headers: {
+    //                 'Authorization': Cookies.get("authorization")
+    //             }
+    //         })
+    //             .then(response => {
+    //                 setMessagesCode(response.status);
+    //                 setMessages(response.data);
+    //                 console.log(messages)  // TODO delete that line
+    //                 setMessagesLoading(false);
+    //             })
+    //             .catch(err => {
+    //                 setMessagesCode(err.response.status)
+    //                 setMessagesLoading(false);
+    //             })
+    //     }, 1000)
+    //     return () => clearInterval(interval)
+    // }, [props.conversation.conversationId])
+
+
     useEffect(() => {
         // messages are collected every certain amount of time from server
         const interval = setInterval(() => {
+
             axios.get(`http://localhost:8080/conversation/getAllMessages/${props.conversation.conversationId}`, {
                 headers: {
                     'Authorization': Cookies.get("authorization")
@@ -22,6 +46,8 @@ function Chat(props) {
             .then(response => {
                 setMessagesCode(response.status);
                 setMessages(response.data);
+                console.log(props.conversation.conversationId)
+                console.log(messages)  // TODO delete that line
                 setMessagesLoading(false);
             })
             .catch(err => {

@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Image} from "react-bootstrap";
 import "./Message.css"
 import axios from "axios";
+import Cookies from "js-cookie";
 
 
 export default function Message(props) {
@@ -15,7 +16,11 @@ export default function Message(props) {
     const [messageAuthorCode, setMessageAuthorCode] = useState(null)
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/profile?id=${message_author_id}`).then(response => {
+        axios.get(`http://localhost:8080/profile?id=${message_author_id}`, {
+            headers: {
+                'Authorization': Cookies.get("authorization")
+            }
+        }).then(response => {
             setMessageAuthorCode(response.status);
             setMessageAuthorProfile(response.data);
             setMessageAuthorLoading(false);
