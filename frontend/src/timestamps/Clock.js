@@ -12,16 +12,15 @@ function Clock(props) {
 
     useEffect(() => {
         if (timerStarted) {
-            let intervalId = setInterval(() => {
+            setIntervalId(setInterval(() => {
                 setTimeCounter(timeCounter => timeCounter + 1);
-            }, 1000);
-            setIntervalId(intervalId)
+            }, 1000));
         }
         else if (!timerStarted){
             clearInterval(intervalId)
             setTimeCounter(0)
         }
-    }, [timerStarted, intervalId])
+    }, [timerStarted])
 
 
     return (
