@@ -15,7 +15,6 @@ function ConversationList() {
     const [conversation, setConversation] = useState(null);
 
     useEffect(() => {
-
         axios.get(`http://localhost:8080/conversation/getAllUserConversations`, {
             headers: {
                 'Authorization': Cookies.get("authorization")
@@ -52,7 +51,7 @@ function ConversationList() {
                                     <Tab.Content>
                                         {
                                             conversations.map((conversation, key) =>
-                                                <Tab.Pane eventKey={conversation.conversationId}>
+                                                <Tab.Pane eventKey={conversation.conversationId} key={key}>
                                                     <Chat conversation={conversation}/>
                                                 </Tab.Pane>
                                             )

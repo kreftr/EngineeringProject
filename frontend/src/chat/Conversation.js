@@ -17,7 +17,8 @@ function Conversation(props) {
             headers: {
                 'Authorization': Cookies.get("authorization")
             }
-        }).then(response => {
+        })
+            .then(response => {
             setRecentMessageCode(response.status);
             setRecentMessage(response.data);
             setRecentMessageLoading(false);
@@ -27,7 +28,6 @@ function Conversation(props) {
             setRecentMessageLoading(false);
         })
     }, [props.conversation.conversationId])
-
 
 
     return (

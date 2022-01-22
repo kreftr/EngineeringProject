@@ -1,13 +1,16 @@
 package edu.pjatk.app.socials.chat;
 
-import edu.pjatk.app.response.ConversationResponse;
-import edu.pjatk.app.response.RecentMessageResponse;
-import edu.pjatk.app.response.ResponseMessage;
+import edu.pjatk.app.response.*;
+import edu.pjatk.app.timestamp.Timestamp;
+import edu.pjatk.app.user.User;
+import edu.pjatk.app.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,7 +50,7 @@ public class ConversationController {
 
     @GetMapping(value = "/getConversationByUserId/{user_id}")
     public ResponseEntity<?> getConversationByUserId(@PathVariable Long user_id) {
-        Optional<Conversation> conversation = conversationService.getConversationByUserId(user_id);
+        Optional<ConversationResponse> conversation = conversationService.getConversationResponseByUserId(user_id);
         if (conversation.isPresent())
         {
             return new ResponseEntity<>(
@@ -89,12 +92,12 @@ public class ConversationController {
 
     @GetMapping(value = "/getAllMessages/{id}")
     public ResponseEntity<?> getAllMessages(@PathVariable long id) {
-        Optional<List<Message>> messages;
+        Optional<List<MessageResponse>> messages;
         messages = conversationService.getAllMessages(id);
         if (messages.isPresent())
         {
             return new ResponseEntity<>(
-                    messages, HttpStatus.OK
+                    messages.get(), HttpStatus.OK
             );
         }
         else {
