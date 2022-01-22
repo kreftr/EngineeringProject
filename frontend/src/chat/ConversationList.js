@@ -15,14 +15,12 @@ function ConversationList() {
     const [conversation, setConversation] = useState(null);
 
     useEffect(() => {
-
         axios.get(`http://localhost:8080/conversation/getAllUserConversations`, {
             headers: {
                 'Authorization': Cookies.get("authorization")
             }
         }).then((response) => {
             setConversations(response.data);
-            // console.log(response.data)
         }).catch(err => {
             console.log(err.response)
         });
@@ -53,7 +51,7 @@ function ConversationList() {
                                     <Tab.Content>
                                         {
                                             conversations.map((conversation, key) =>
-                                                <Tab.Pane eventKey={conversation.conversationId}>
+                                                <Tab.Pane eventKey={conversation.conversationId} key={key}>
                                                     <Chat conversation={conversation}/>
                                                 </Tab.Pane>
                                             )

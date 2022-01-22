@@ -30,7 +30,6 @@ function Conversation(props) {
     }, [props.conversation.conversationId])
 
 
-
     return (
         <div className={"mb-2 mt-2 CONVERSATION-holder"}>
             <Col className={"col-4"}>
