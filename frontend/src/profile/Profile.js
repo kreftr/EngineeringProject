@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Container, Tabs, Row, Col, Image, Button, Tab, Badge, Card} from "react-bootstrap";
 import default_profile_picture from "../assets/images/default_profile_picture.jpg"
 import default_project_picture from "../assets/images/default_project_picture.jpg"
-import {FaFlag, FaCog, FaUserPlus, FaUserMinus, FaUserClock, FaUserFriends} from "react-icons/fa"
+import {FaCog, FaUserPlus, FaUserMinus, FaUserClock, FaUserFriends} from "react-icons/fa"
 import axios from "axios";
 import Cookies from "js-cookie"
 import {useParams} from "react-router-dom";

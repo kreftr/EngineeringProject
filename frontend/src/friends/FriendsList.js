@@ -113,13 +113,9 @@ function FriendsList() {
                     { friendsCode === 200 && !friendsLoading ?
                         <ListGroup className={"list-group"}>
                             {
-                                friends.filter((f)=>{
-                                    if (searchTerm === ""){
-                                        return f
-                                    } else if (f.username.toLowerCase().includes(searchTerm.toLowerCase())){
-                                        return f
-                                    }
-                                }).map((friend, key) =>
+                                friends.filter(f => searchTerm === "" ||
+                                    f.username.toLowerCase().includes(searchTerm.toLowerCase()))
+                                    .map((friend, key) =>
                                     <ListGroupItem key={key}>
                                         <Friend friend={friend}/>
                                         <hr/>

@@ -29,7 +29,8 @@ function AddMember(props){
             </Modal.Header>
             <Modal.Body>
                 <ListGroup className={"TEAM-members-add"}>
-                    { props.members.filter(m => {if (!props.team.members.map(n => n.username).includes(m.username)) return m;}).map((member, key) =>
+                    { props.members.filter(m => !props.team.members.map(n => n.username).includes(m.username))
+                        .map((member, key) =>
                         <div key={key}>
                             <ListGroupItem className={"mb-1 TEAM-test"}>
                                 <Row className={"TEAM-test"}>

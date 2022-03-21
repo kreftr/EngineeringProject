@@ -98,6 +98,32 @@ public class PostService {
             return Collections.emptySet();
         }
     }
+
+    public List<PostResponse> getRecentPosts() {
+        List<PostResponse> postResponses = new ArrayList<>();
+        Optional<List<Post>> posts = postRepository.getRecentPosts();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+        if(!posts.get().isEmpty() && posts.isPresent()) {
+            String userPhoto;
+            for (Post p : posts.get()) {
+                try {
+                    userPhoto = p.getUserr().getProfile().getPhoto().getFileName();
+                } catch (NullPointerException e) {
+                    userPhoto = null;
+                }
+                postResponses.add(
+                        new PostResponse(
+                                p.getId(), p.getTitle(), p.getText(), p.getDatee().format(formatter),
+                                p.getUserr().getId(), p.getUserr().getUsername(), userPhoto
+                        )
+                );
+            }
+            return postResponses;
+        } else {
+            return Collections.emptyList();
+        }
+    }
     
     public Optional<Long> getUserIdFromPost(Long id) {
         return postRepository.getUserIdFromPost(id);

@@ -37,7 +37,16 @@ function Forum(props){
             .then(response => {
                 setResponseCode(response.status)
                 setResponseMessage(response.data.message)
-                window.location.reload();
+                axios.get(`http://localhost:8080/post/getRecentPosts`, {
+                    headers: {
+                        'Authorization': Cookies.get("authorization")
+                    }
+                }).then(response => {
+                    setPosts(response.data)
+                    handleClose()
+                }).catch(err => {
+                    console.log(err.response)
+                })
             })
             .catch(err => {
                 console.log(err.response)
@@ -51,7 +60,7 @@ function Forum(props){
     }
     
     useEffect(() => {
-        axios.get(`http://localhost:8080/post/getAllPosts`, {
+        axios.get(`http://localhost:8080/post/getRecentPosts`, {
             headers: {
                 'Authorization': Cookies.get("authorization")
             }

@@ -47,7 +47,7 @@ function TaskPanel(props){
         e.preventDefault()
         let dateString = date.addHours(1).toISOString().substring(0,16);
 
-        if (participant && t == null){
+        if (participant && t === null){
             axios.post("http://localhost:8080/task/addForParticipant", {
                 "projectId": id,
                 "name": name,
@@ -62,7 +62,7 @@ function TaskPanel(props){
                 console.log(err.response)
             })
         }
-        else if (t && participant == null){
+        else if (t && participant === null){
             axios.post("http://localhost:8080/task/addForTeam", {
                     "projectId": id,
                     "name": name,
@@ -115,7 +115,7 @@ function TaskPanel(props){
                                                             label={team.name}
                                                             value={team.teamId}
                                                             onClick={(e) => {handleTeamChange(e);}}
-                                                            checked={Number(t) == Number(team.teamId)}
+                                                            checked={Number(t) === Number(team.teamId)}
                                                 />
                                             </h5>
                                         </ListGroupItem>
@@ -136,7 +136,7 @@ function TaskPanel(props){
                                                             label={member.username}
                                                             value={member.userId}
                                                             onClick={(e) => {handleMemberChange(e);}}
-                                                            checked={Number(participant) == Number(member.userId)}
+                                                            checked={Number(participant) === Number(member.userId)}
                                                 />
                                             </h5>
                                             <a href={`/profile/${member.userId}`}>

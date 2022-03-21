@@ -13,8 +13,8 @@ import TeamPanel from "./team/TeamPanel";
 import Team from "./team/Team";
 import TaskPanel from "./task/TaskPanel";
 import Task from "./task/Task";
-import Clock from "../timestamps/Clock"
-import Timestamp from "../timestamps/Timestamp";
+import Clock from "./timestamps/Clock"
+import Timestamp from "./timestamps/Timestamp";
 
 
 function Workspace(){
@@ -23,7 +23,7 @@ function Workspace(){
     const [memberRole, setMemberRole] = useState(null)
     const [projectName, setProjectName] = useState("")
 
-    //Files section
+    // Files section
     const [fileTermSearch, setFileTermSearch] = useState("");
     const [files, setFiles] = useState([]);
     const inputFile = useRef(null);
@@ -45,7 +45,7 @@ function Workspace(){
     }
 
 
-    //Members section
+    // Members section
     const [showInvitations, setShowInvitations] = useState(false);
     const handleCloseInvitations = () => setShowInvitations(false);
     const handleShowInvitations = () => setShowInvitations(true);
@@ -53,7 +53,7 @@ function Workspace(){
     const [memberTermSearch, setMemberTermSearch] = useState("");
 
 
-    //Teams section
+    // Teams section
     const [showTeams, setShowTeams] = useState(false);
     const handleCloseTeams = () => setShowTeams(false);
     const handleShowTeams = () => setShowTeams(true);
@@ -61,16 +61,17 @@ function Workspace(){
     const [teamTermSearch, setTeamTermSearch] = useState("");
 
 
-    //Tasks section
+    // Tasks section
     const [showTasks, setShowTasks] = useState(false);
     const handleCloseTasks = () => setShowTasks(false);
     const handleShowTasks = () => setShowTasks(true);
     const [tasks, setTasks] = useState([]);
     const [taskTermSearch, setTaskTermSearch] = useState("");
 
+
     // Clock section
     const [timerStarted, setTimerStarted] = useState(false)
-    const [timestampDescription, setTimestampDescription] = useState()
+    const [timestampDescription, setTimestampDescription] = useState("")
     const [timestampList, setTimestampList] = useState(undefined)
     const [timestampButtonText, setTimestampButtonText] = useState("Start")
     const [timeStart, setTimeStart] = useState(null)
@@ -108,7 +109,15 @@ function Workspace(){
         axios.post(`http://localhost:8080/time/addTimestamp`, bodyFormData,
             {headers:{'Authorization': Cookies.get("authorization")}}
         ).then(() => {
-            window.location.reload();
+
+            axios.get(`http://localhost:8080/time/getUserTimestampsForProject/${id}`,
+                {headers: {'Authorization': Cookies.get("authorization")}
+                }).then(response =>{
+                setTimestampList(response.data)
+            }).catch(err => {
+                    console.log(err.response)
+                })
+
         }).catch(err => {
             console.log(err.response)
         })
@@ -182,7 +191,7 @@ function Workspace(){
         <Container className={"mt-5"}>
             <Row>
                 {memberRole ?
-                    <Tab.Container id="left-tabs-example" defaultActiveKey="first">
+                    <Tab.Container id="left-tabs-example">
                         <Row>
                             <Col>
                                 <Nav variant="pills" className="flex-column">
@@ -248,16 +257,10 @@ function Workspace(){
                                                 <hr/>
                                                 { tasks.length > 0 ?
                                                     <div>
-                                                        { tasks.filter((t)=>{
-                                                            if (taskTermSearch === ""){
-                                                                return t
-                                                            }
-                                                            else if (t.name.toLowerCase().includes(taskTermSearch.toLowerCase())){
-                                                                return t
-                                                            }
-                                                        }).filter((t)=>{
-                                                            if (t.status === "TODO") return t
-                                                        }).map((task, key) =>
+                                                        { tasks.filter(t => taskTermSearch === "" ||
+                                                            t.name.toLowerCase().includes(taskTermSearch.toLowerCase())
+                                                        ).filter(t => t.status === "TODO")
+                                                            .map((task, key) =>
                                                             <div className={"mb-2"} key={key}>
                                                                 <Task task={task} role={memberRole}/>
                                                             </div>
@@ -274,16 +277,10 @@ function Workspace(){
                                                 <hr/>
                                                 { tasks.length > 0 ?
                                                     <div>
-                                                        { tasks.filter((t)=>{
-                                                            if (taskTermSearch === ""){
-                                                                return t
-                                                            }
-                                                            else if (t.name.toLowerCase().includes(taskTermSearch.toLowerCase())){
-                                                                return t
-                                                            }
-                                                        }).filter((t)=>{
-                                                            if (t.status === "IN_PROGRESS") return t
-                                                        }).map((task, key) =>
+                                                        { tasks.filter(t => taskTermSearch === "" ||
+                                                            t.name.toLowerCase().includes(taskTermSearch.toLowerCase())
+                                                        ).filter(t => t.status === "IN_PROGRESS")
+                                                            .map((task, key) =>
                                                             <div className={"mb-2"} key={key}>
                                                                 <Task task={task} role={memberRole}/>
                                                             </div>
@@ -300,16 +297,10 @@ function Workspace(){
                                                 <hr/>
                                                 { tasks.length > 0 ?
                                                     <div>
-                                                        { tasks.filter((t)=>{
-                                                            if (taskTermSearch === ""){
-                                                                return t
-                                                            }
-                                                            else if (t.name.toLowerCase().includes(taskTermSearch.toLowerCase())){
-                                                                return t
-                                                            }
-                                                        }).filter((t)=>{
-                                                            if (t.status === "DONE") return t
-                                                        }).map((task, key) =>
+                                                        { tasks.filter(t => taskTermSearch === "" ||
+                                                            t.name.toLowerCase().includes(taskTermSearch.toLowerCase())
+                                                        ).filter(t => t.status === "DONE"
+                                                        ).map((task, key) =>
                                                             <div className={"mb-2"} key={key}>
                                                                 <Task task={task} role={memberRole}/>
                                                             </div>
@@ -348,14 +339,9 @@ function Workspace(){
                                         <hr/>
                                         { files.length > 0 ?
                                             <div className={"ml-5 WORKSPACE-file-section"}>
-                                                { files.filter((f)=>{
-                                                    if (fileTermSearch === ""){
-                                                        return f
-                                                    }
-                                                    else if (f.fileName.toLowerCase().includes(fileTermSearch.toLowerCase())){
-                                                        return f
-                                                    }
-                                                }).map((file, key) =>
+                                                { files.filter(f => fileTermSearch === "" ||
+                                                    f.fileName.toLowerCase().includes(fileTermSearch.toLowerCase())
+                                                ).map((file, key) =>
                                                     <div key={key}>
                                                         <File file={file} role={memberRole}/>
                                                     </div>
@@ -396,14 +382,9 @@ function Workspace(){
                                             </Col>
                                         </Row>
                                         <hr/>
-                                        { teams.filter((t)=>{
-                                            if (teamTermSearch === ""){
-                                                return t
-                                            }
-                                            else if (t.name.toLowerCase().includes(teamTermSearch.toLowerCase())){
-                                                return t
-                                            }
-                                        }).map((team, key) =>
+                                        { teams.filter(t => teamTermSearch === "" ||
+                                            t.name.toLowerCase().includes(teamTermSearch.toLowerCase())
+                                        ).map((team, key) =>
                                             <div className={"mb-3"} key={key}>
                                                 <Team team={team} members={members} role={memberRole} key={key}/>
                                             </div>
@@ -440,14 +421,9 @@ function Workspace(){
                                         </Row>
                                         <hr/>
                                         <ListGroup>
-                                            { members.filter((m)=>{
-                                                if (memberTermSearch === ""){
-                                                    return m
-                                                }
-                                                else if (m.username.toLowerCase().includes(memberTermSearch.toLowerCase())){
-                                                    return m
-                                                }
-                                            }).map((member, key) =>
+                                            { members.filter(m => memberTermSearch === "" ||
+                                                m.username.toLowerCase().includes(memberTermSearch.toLowerCase())
+                                            ).map((member, key) =>
                                                 <div key={key}>
                                                     <Member member={member} role={memberRole}/>
                                                     <div/>

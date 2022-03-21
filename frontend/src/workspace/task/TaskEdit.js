@@ -1,5 +1,5 @@
 import {Button, Col, Form, Modal, Row} from "react-bootstrap";
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {useParams} from "react-router-dom";
 import DateTimePicker from "react-datetime-picker";
 import axios from "axios";
@@ -14,7 +14,7 @@ function TaskEdit(props){
     const [description, setDescription] = useState(props.task.description);
     const [date, setDate] = useState(new Date());
 
-    Date.prototype.addHours= function(h){
+    Date.prototype.addHours = function(h){
         this.setHours(this.getHours()+h);
         return this;
     }

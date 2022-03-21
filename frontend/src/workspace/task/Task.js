@@ -1,7 +1,5 @@
-import {Accordion, Button, Col, Image, ListGroup, ListGroupItem, Modal, Row} from "react-bootstrap";
-import TeamEdit from "../team/TeamEdit";
-import AddMember from "../team/AddMember";
-import {FaCogs, FaMinusSquare, FaUserPlus} from "react-icons/fa";
+import {Accordion, Button, Image, Modal, Row} from "react-bootstrap";
+import {FaCogs} from "react-icons/fa";
 import default_profile_picture from "../../assets/images/default_profile_picture.jpg";
 import React, {useState} from "react";
 import "./Task.css"

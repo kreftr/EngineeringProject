@@ -106,6 +106,20 @@ public class PostRepository {
         }
         return posts;
     }
+
+    public Optional<List<Post>> getRecentPosts() {
+        Optional<List<Post>> posts;
+
+        try {
+            posts = Optional.of(entityManager.createQuery(
+                            "SELECT post FROM Post post ORDER BY post.datee DESC", Post.class)
+                    .setMaxResults(20).getResultList());
+        } catch (NoResultException noResultException) {
+            posts = Optional.empty();
+        }
+        return posts;
+    }
+
     public Optional<Long> getUserIdFromPost(Long id) {
         Optional<Long> user_id;
         try {

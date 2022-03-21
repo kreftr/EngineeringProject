@@ -53,6 +53,21 @@ public class PostController {
             );
         }
     }
+
+    @GetMapping(value = "/getRecentPosts")
+    public ResponseEntity<?> getRecentPosts() {
+        List<PostResponse> recentPosts = postService.getRecentPosts();
+        if(!recentPosts.isEmpty()) {
+            return new ResponseEntity<>(
+                    recentPosts, HttpStatus.OK
+            );
+        }
+        else {
+            return new ResponseEntity<>(
+                    new ResponseMessage("There are no projects!"), HttpStatus.NOT_FOUND
+            );
+        }
+    }
     
     @GetMapping(value = "/getUserFromPost/{id}")
     public ResponseEntity<?> getUserIdFromPost(@PathVariable Long id) {
