@@ -49,7 +49,6 @@ class App extends Component{
                                 <Nav.Link href="/search">Search</Nav.Link>
                                 <Nav.Link href="/ranking">Ranking</Nav.Link>
                                 <Nav.Link href="/forum">Forum</Nav.Link>
-                                <Nav.Link href="/aboutUs">About us</Nav.Link>
                             </Nav>
                         </Navbar.Collapse>
                         <Nav className="me-auto">

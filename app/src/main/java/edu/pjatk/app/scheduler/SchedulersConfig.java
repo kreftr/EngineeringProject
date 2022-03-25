@@ -1,11 +1,10 @@
-package edu.pjatk.app.sheduler;
+package edu.pjatk.app.scheduler;
 
 import edu.pjatk.app.email.activation_token.ActivationToken;
 import edu.pjatk.app.email.activation_token.ActivationTokenService;
 import edu.pjatk.app.email.password_recovery.recovery_token.RecoveryToken;
 import edu.pjatk.app.email.password_recovery.recovery_token.RecoveryTokenService;
 import edu.pjatk.app.user.UserService;
-import liquibase.pro.packaged.S;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -16,8 +15,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,7 +54,6 @@ public class SchedulersConfig {
 
     @Scheduled(fixedDelayString = "${scheduler.recovery-token.removal}")
     public void expiredRecoveryTokensRemoval() {
-
         Optional<List<RecoveryToken>> expiredTokens = recoveryTokenService.findExpiredRecoveryTokens();
 
         if (expiredTokens.isPresent() && !expiredTokens.get().isEmpty()){
@@ -72,7 +68,6 @@ public class SchedulersConfig {
         }
     }
 
-//    @Scheduled(fixedDelayString = "1000")  // creates backup every second, debug option
     @Scheduled(cron = "0 0 0 * * *")  // backup every day, at 12pm UTC
     public void databaseBackup() throws IOException, InterruptedException {
         String docker_container = "af221c801274";

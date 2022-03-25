@@ -16,7 +16,7 @@ function Clock(props) {
                 setTimeCounter(timeCounter => timeCounter + 1);
             }, 1000));
         }
-        else if (!timerStarted){
+        else {
             clearInterval(intervalId)
             setTimeCounter(0)
         }
