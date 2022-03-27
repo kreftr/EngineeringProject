@@ -165,6 +165,15 @@ public class ProjectController {
         else return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 
+    @GetMapping(value = "/ranking")
+    public ResponseEntity getTop5RatedProjects(){
+        List<FullProjectResponse> best = projectService.getTopRatedProjects();
+        if(!best.isEmpty()){
+            return new ResponseEntity(best, HttpStatus.OK);
+        }
+        else return new ResponseEntity(HttpStatus.NOT_FOUND);
+    }
+
     //-----------------------------------
 
 
