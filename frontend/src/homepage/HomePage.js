@@ -12,7 +12,7 @@ function Homepage() {
 
     useEffect(() => {
 
-        axios.get(`http://localhost:8080/project/ranking`
+        axios.get(`http://localhost:8080/project/randomRecommended`
         ).then(response => {
             setBest(response.data)
             console.log(best)
@@ -63,7 +63,7 @@ function Homepage() {
                         </ListGroup>
                         :
                         <center>
-                            <h2>There are currently no voted projects</h2>
+                            <h2>There are currently recommendations for your</h2>
                         </center>
                     }
                 </Col>

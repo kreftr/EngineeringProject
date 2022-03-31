@@ -6,8 +6,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @Repository
@@ -41,10 +40,48 @@ public class ProjectRepository {
     public Optional<List<Project>> getAllNonPrivateProjects(){
         Optional projects;
         try {
-            projects = Optional.of(
-                    entityManager.createQuery("SELECT project FROM Project project WHERE project.project_access<>'PRIVATE'")
+            projects = Optional.of(entityManager.createQuery(
+                    "SELECT project FROM Project project WHERE project.project_access<>'PRIVATE'")
                             .getResultList()
             );
+        } catch (NoResultException e){
+            projects = Optional.empty();
+        }
+        return projects;
+    }
+
+    public List<Long> randomUnicalId(Integer numberOfProjects, List<Long> projectIds, List<Long> blacklist){
+        List<Long> uniqueIdList = new ArrayList<>();
+        Random random = new Random();
+        if (projectIds.size()< 10) {
+            uniqueIdList = projectIds;
+            return uniqueIdList;
+        }
+        for (int i = 0; i < numberOfProjects; i++) {
+            int chosenProjectId = random.nextInt(0, projectIds.size() - 1);
+            long randomChosenId = projectIds.get(chosenProjectId);
+            while (blacklist.contains(randomChosenId))  // TODO rozwiazac tego errora z pomoca neta bo jest podejrzany
+            {
+                randomChosenId = projectIds.get(chosenProjectId);
+            }
+            uniqueIdList.add(randomChosenId);
+            blacklist.add(randomChosenId);
+        }
+        return uniqueIdList;
+    }
+
+    public Optional<List<Project>> getRandomRecommendedProjects10(){
+        List<Long> blacklist = new ArrayList<>();
+        List<Long> projectIds = entityManager.createQuery(
+                "SELECT project.id FROM Project project WHERE project.project_access<>'PRIVATE'", Long.class
+                ).getResultList();
+
+        Optional projects;
+        List<Long> selectedProjects = randomUnicalId(10, projectIds, blacklist);
+        try {
+            projects = Optional.of(entityManager.createQuery(
+                            "SELECT project FROM Project project WHERE project.id IN (:selectedProjects)", Project.class)
+                            .setParameter("selectedProjects", selectedProjects).getResultList());
         } catch (NoResultException e){
             projects = Optional.empty();
         }

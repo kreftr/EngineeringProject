@@ -175,6 +175,7 @@ public class ProjectService {
         Optional<List<Project>> projects = projectRepository.getAllCreatorProjects(creator_id);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
+
         if (projectCreator.isPresent() && projects.isPresent() && !projects.get().isEmpty()){
             String projectPhoto, authorPhoto;
 
@@ -426,6 +427,45 @@ public class ProjectService {
 
             return top10;
         }
+    }
+
+    public List<FullProjectResponse> getRandomRecommendedProjects(){
+
+        Optional<List<Project>> allProjects = projectRepository.getRandomRecommendedProjects10();
+        if (allProjects.isEmpty()) return Collections.emptyList();
+
+        List<Project> random10 = allProjects.get();
+        List<FullProjectResponse> random10Response = new ArrayList<>();
+
+        for (Project project: random10) {
+            //Return average rating if there is more than one vote
+            float averageRating = (project.getRatings().size() > 0 ?
+                    ((Integer) project.getRatings().stream().mapToInt(Rating::getValue).sum()).floatValue()/project.getRatings().size()
+                    : 0);
+            int numberOfVotes = project.getRatings().size();
+
+            //Return IDs of project members
+            Set<Long> participants = new HashSet<>();
+            for (Participant p : project.getParticipants()){
+                if (!p.isPending()) participants.add(p.getUser().getId());
+            }
+            Set<String> categoryToString = new HashSet<>();
+            if (!project.getCategories().isEmpty()) {
+                for(Category category: project.getCategories()) {
+                    categoryToString.add(category.toString());
+                }
+            }
+            FullProjectResponse projectResponse = new FullProjectResponse(
+                    project.getId(), project.getPhoto().toString(), project.getProject_name(), project.getProject_introduction(),
+                    project.getProject_description(), project.getCreation_date().toString(), project.getProject_status().toString(),
+                    project.getProject_access().toString(),categoryToString, project.getYoutube_link(), project.getGithub_link(),
+                    project.getFacebook_link(), project.getKickstarter_link(), project.getCreator().getId(),
+                    project.getCreator().getUsername(), project.getCreator().getProfile().getPhoto().toString(),
+                    averageRating, numberOfVotes, participants
+            );
+            random10Response.add(projectResponse);
+        }
+        return random10Response;
     }
 
 
