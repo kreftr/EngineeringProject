@@ -165,6 +165,15 @@ public class ProjectController {
         else return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 
+    @GetMapping(value = "/randomRecommended")
+    public ResponseEntity getRandomRecommendedProjects(){
+        List<FullProjectResponse> best = projectService.getRandomRecommendedProjects();
+        if(!best.isEmpty()){
+            return new ResponseEntity(best, HttpStatus.OK);
+        }
+        else return new ResponseEntity(HttpStatus.NOT_FOUND);
+    }
+
     //-----------------------------------
 
 

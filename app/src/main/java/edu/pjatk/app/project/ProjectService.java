@@ -175,6 +175,7 @@ public class ProjectService {
         Optional<List<Project>> projects = projectRepository.getAllCreatorProjects(creator_id);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
+
         if (projectCreator.isPresent() && projects.isPresent() && !projects.get().isEmpty()){
             String projectPhoto, authorPhoto;
 
@@ -428,6 +429,58 @@ public class ProjectService {
         }
     }
 
+    public List<FullProjectResponse> getRandomRecommendedProjects(){
+
+        Optional<List<Project>> allProjects = projectRepository.getRandomRecommendedProjects10();
+        if (allProjects.isEmpty()) return Collections.emptyList();
+
+        List<Project> random10 = allProjects.get();
+        List<FullProjectResponse> random10Response = new ArrayList<>();
+
+        for (Project project: random10) {
+            //Return average rating if there is more than one vote
+            float averageRating = (project.getRatings().size() > 0 ?
+                    ((Integer) project.getRatings().stream().mapToInt(Rating::getValue).sum()).floatValue()/project.getRatings().size()
+                    : 0);
+            int numberOfVotes = project.getRatings().size();
+
+            //Return IDs of project members
+            Set<Long> participants = new HashSet<>();
+            for (Participant p : project.getParticipants()){
+                if (!p.isPending()) participants.add(p.getUser().getId());
+            }
+
+            Set<String> categories = new HashSet<>();
+            if (!project.getCategories().isEmpty()) {
+                for (Category c : project.getCategories()){
+                    categories.add(c.getTitle());
+                }
+            }
+
+            String projectPhoto = "";
+            if (project.getPhoto() != null) {
+                projectPhoto = project.getPhoto().toString();
+            }
+
+            String userPhoto = "";
+            if (project.getCreator().getProfile().getPhoto() != null) {
+                userPhoto = project.getCreator().getProfile().getPhoto().toString();
+            }
+
+            FullProjectResponse projectResponse = new FullProjectResponse(
+                    project.getId(), projectPhoto, project.getProject_name(), project.getProject_introduction(),
+                    project.getProject_description(), project.getCreation_date().toString(), project.getProject_status().toString(),
+                    project.getProject_access().toString(),categories, project.getYoutube_link(), project.getGithub_link(),
+                    project.getFacebook_link(), project.getKickstarter_link(), project.getCreator().getId(),
+                    project.getCreator().getUsername(), userPhoto,
+                    averageRating, numberOfVotes, participants
+            );
+            System.out.println();
+            random10Response.add(projectResponse);
+        }
+        return random10Response;
+    }
+
 
     //Project files section
     public Set<FileResponse> getProjectFiles(Long projectId){
@@ -515,7 +568,7 @@ public class ProjectService {
         if (loggedUser.isPresent() && loggedParticipant.isPresent() && project.isPresent() &&
                 participant.isPresent() && !loggedUser.get().getId().equals(userId) &&
                 !loggedParticipant.get().getParticipantRole().equals(ParticipantRole.PARTICIPANT) &&
-                 !project.get().getCreator().getId().equals(userId)){
+                !project.get().getCreator().getId().equals(userId)){
             if (loggedParticipant.get().getParticipantRole().equals(ParticipantRole.OWNER)) {
                 participantService.removeParticipant(participant.get());
                 return true;
