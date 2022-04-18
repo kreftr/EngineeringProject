@@ -20,7 +20,7 @@ function Homepage() {
             console.log(err.response)
         })
 
-    },[best])
+    },[])
 
     return (
         <Container className={"homePage-container"}>
@@ -37,25 +37,6 @@ function Homepage() {
                                         <ListGroupItem key={key} className={"mb-3"} as="li">
                                             <ShownProjets project={project}/>
                                         </ListGroupItem>
-                                        {/*<ListGroupItem>*/}
-                                        {/*    <Row>*/}
-                                        {/*        <Col className={"col-3 HOMEPAGE-ranking-thumbnail-clickable"}>*/}
-                                        {/*            <Image src={default_project_picture}*/}
-                                        {/*                   width="200px" height="200px"/>*/}
-                                        {/*        </Col>*/}
-                                        {/*        <Col className={"col-6 HOMEPAGE-ranking-content-section-clickable"}>*/}
-                                        {/*            <h2>Title of the Project</h2>*/}
-                                        {/*            <div className={"HOMEPAGE-project-introduction"}>Introduction of the*/}
-                                        {/*                project*/}
-                                        {/*            </div>*/}
-                                        {/*        </Col>*/}
-                                        {/*        <Col className={"col-3"}>*/}
-                                        {/*            <h3>Rating: <Badge pill bg="primary"><FaStar*/}
-                                        {/*                className={"ml-1"}/></Badge></h3>*/}
-                                        {/*            <h3>Votes: </h3>*/}
-                                        {/*        </Col>*/}
-                                        {/*    </Row>*/}
-                                        {/*</ListGroupItem>*/}
                                         <div/>
                                     </>
                                 )

@@ -35,10 +35,10 @@ function ShownProjets(props){
                 }
             </Col>
             <Col className={"col-4 HOMEPAGE-ranking-content-section HOMEPAGE-clickable"}>
-                <h2>{props.project.title}</h2>
+                <h2 className={"HOMEPAGE-project-title"}>{props.project.title}</h2>
                 <div className={"HOMEPAGE-project-introduction"}>{props.project.introduction}</div>
             </Col>
-            <Col className={"col-4"}>
+            <Col className={"col-3"}>
                 <h3>Author: {profilePhoto()}</h3>
                 <h3>Rating: <Badge pill bg="primary">{props.project.averageRating ?
                     props.project.averageRating : "No Votes"}
@@ -46,7 +46,7 @@ function ShownProjets(props){
                 </Badge></h3>
                 <h3>Votes: {props.project.numberOfVotes}</h3>
             </Col>
-            <Col className={"col-2"}>
+            <Col className={"col-3"}>
                 <h3>Categories: </h3>
                 <ListGroup.Item>
                     {

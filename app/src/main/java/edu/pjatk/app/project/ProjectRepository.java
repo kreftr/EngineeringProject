@@ -53,21 +53,24 @@ public class ProjectRepository {
     public List<Long> randomUnicalId(Integer numberOfProjects, List<Long> projectIds, List<Long> blacklist){
         List<Long> uniqueIdList = new ArrayList<>();
         Random random = new Random();
-        if (projectIds.size()< 10) {
+        if (projectIds.size()<= 10) {
             uniqueIdList = projectIds;
             return uniqueIdList;
         }
-        for (int i = 0; i < numberOfProjects; i++) {
-            int chosenProjectId = random.nextInt(0, projectIds.size() - 1);
-            long randomChosenId = projectIds.get(chosenProjectId);
-            while (blacklist.contains(randomChosenId))  // TODO rozwiazac tego errora z pomoca neta bo jest podejrzany
-            {
-                randomChosenId = projectIds.get(chosenProjectId);
+        else {
+            for (int i = 0; i < numberOfProjects; i++) {
+                int chosenProjectId = random.nextInt(0, projectIds.size() - 1);
+                long randomChosenId = projectIds.get(chosenProjectId);
+                while (blacklist.contains(randomChosenId))
+                {
+                    chosenProjectId = random.nextInt(0, projectIds.size() - 1);
+                    randomChosenId = projectIds.get(chosenProjectId);
+                }
+                uniqueIdList.add(randomChosenId);
+                blacklist.add(randomChosenId);
             }
-            uniqueIdList.add(randomChosenId);
-            blacklist.add(randomChosenId);
+            return uniqueIdList;
         }
-        return uniqueIdList;
     }
 
     public Optional<List<Project>> getRandomRecommendedProjects10(){

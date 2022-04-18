@@ -13,3 +13,12 @@
     cursor: pointer;
 }
 
+.HOMEPAGE-project-introduction {
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+.HOMEPAGE-project-title {
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
