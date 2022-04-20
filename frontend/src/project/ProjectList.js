@@ -69,7 +69,12 @@ function ProjectList(){
     const [gitLink, setGitLink] = useState(null);
     const [kickLink, setKickLink] = useState(null);
 
-
+    function updateState(newAccess) {
+        this.setState({
+            access: newAccess.value
+        });
+    }
+    
     useEffect(() => {
 
         axios.get("http://localhost:8080/categories/getAll", {headers:{
@@ -213,7 +218,8 @@ function ProjectList(){
             })
     }
 
-
+    
+    
 
     return(
         <Container>
@@ -263,7 +269,7 @@ function ProjectList(){
                                                         required
                                                     />
                                                 </FloatingLabel>
-                                                <Form.Select className={"mt-3"}>
+                                                <Form.Select className={"mt-3"} value={this.state.access} onChange={this.updateState}>
                                                     <option value="PUBLIC" onClick={(e)=>{setAccess(e.target.value)}}>Public</option>
                                                     <option value="PRIVATE" onClick={(e)=>{setAccess(e.target.value)}}>Private</option>
                                                     <option value="PROTECTED" onClick={(e)=>{setAccess(e.target.value)}}>Protected</option>

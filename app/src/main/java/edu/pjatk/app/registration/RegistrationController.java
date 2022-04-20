@@ -71,7 +71,6 @@ public class RegistrationController {
             );
         }
         else if (LocalDateTime.now().isAfter(activationToken.get().getExpired())){
-            //TODO: Add possibility to refresh token
             return new ResponseEntity(
                     new ResponseMessage("Token expired"), HttpStatus.GONE
             );

@@ -34,7 +34,8 @@ public class PostService {
         );
         
         Post post = new Post(
-                postRequest.getTitle(), loggedUser.get(), LocalDateTime.now(), postRequest.getText()
+                postRequest.getTitle(), loggedUser.get(), 
+                LocalDateTime.now(), postRequest.getText()
         );
         postRepository.addPost(post);
     }

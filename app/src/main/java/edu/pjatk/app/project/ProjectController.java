@@ -71,6 +71,22 @@ public class ProjectController {
             );
         }
     }
+    @GetMapping(value = "/getProjectByNameNoPrivate/{project_name}")
+    public ResponseEntity<?> getProjectByNameNoPrivate(@PathVariable String project_name) {
+        
+        Set<MiniProjectResponse> projects = projectService.getProjectByNameNoPrivate(project_name);
+        
+        if(projects.isEmpty()) {
+            return new ResponseEntity<>(
+                    new ResponseMessage("No matches for '"+project_name+"'"), HttpStatus.NOT_FOUND
+            );
+        }
+        else {
+            return new ResponseEntity<>(
+                    projects, HttpStatus.OK
+            );
+        }
+    }
 
     @GetMapping(value = "/getProjectByCategory/{title}")
     public ResponseEntity getProjectByCategory(@PathVariable String title){
@@ -254,7 +270,7 @@ public class ProjectController {
                 }
             } else {
                 return new ResponseEntity(
-                        new ResponseMessage("This project is bo longer open"), HttpStatus.UNAUTHORIZED
+                        new ResponseMessage("This project is no longer open"), HttpStatus.UNAUTHORIZED
                 );
             }
         }

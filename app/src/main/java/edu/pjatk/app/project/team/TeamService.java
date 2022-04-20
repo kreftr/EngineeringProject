@@ -48,7 +48,8 @@ public class TeamService {
             Optional<Participant> participant = participantService.getParticipantByUserAndProject(
                     loggedUser.get().getId(), project.get().getId());
 
-            if (participant.isPresent() && !participant.get().getParticipantRole().equals(ParticipantRole.PARTICIPANT)){
+            if (participant.isPresent() && !participant.get().getParticipantRole()
+                    .equals(ParticipantRole.PARTICIPANT)){
 
                 Set<Participant> participantsTeam = new HashSet<>();
 

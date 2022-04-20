@@ -116,7 +116,7 @@ public class ProjectRepository {
         }
         return projects;
     }
-
+    
     public Optional<List<Project>> getByCategory(String categoryTitle) {
         Optional<List<Project>> projects;
         try {

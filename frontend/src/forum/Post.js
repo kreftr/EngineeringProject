@@ -1,5 +1,6 @@
 import {Col, Image, ListGroupItem, Row} from "react-bootstrap";
 import default_profile_picture from "../assets/images/default_profile_picture.jpg"
+
 import "./Post.css";
 
 function Post(props) {

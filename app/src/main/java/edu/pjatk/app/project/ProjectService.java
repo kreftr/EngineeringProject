@@ -102,7 +102,7 @@ public class ProjectService {
         Optional<List<Project>> projectList = projectRepository.getProjectsByTitle(project_name);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-        if (projectList.isPresent() && !projectList.get().isEmpty()){
+        if (projectList.isPresent() && !projectList.get().isEmpty()) {
 
             String projectPhoto, authorPhoto;
 
@@ -130,6 +130,40 @@ public class ProjectService {
         else return Collections.emptySet();
     }
 
+    public Set<MiniProjectResponse> getProjectByNameNoPrivate(String project_name) {
+        Set<MiniProjectResponse> projectResponses = new HashSet<>();
+        Optional<List<Project>> projectList = projectRepository.getProjectsByTitle(project_name);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+        if (projectList.isPresent() && !projectList.get().isEmpty()) {
+            
+            String projectPhoto, authorPhoto;
+            
+            for (Project p : projectList.get()) {
+                if(p.getProject_access().toString() != "PRIVATE") {
+                    Set<String> categories = new HashSet<>();
+                    try { projectPhoto = p.getPhoto().getFileName(); } catch (NullPointerException e) { projectPhoto = null;}
+                    try { authorPhoto = p.getCreator().getProfile().getPhoto().getFileName(); }
+                    catch (NullPointerException e) { authorPhoto = null;}
+
+                    for (Category c : p.getCategories()){
+                        categories.add(c.getTitle());
+                    }
+
+                    projectResponses.add(
+                            new MiniProjectResponse(
+                                    p.getId(), projectPhoto, p.getProject_name(), p.getProject_introduction(),
+                                    categories, p.getCreation_date().format(formatter), p.getCreator().getId(),
+                                    p.getCreator().getUsername(), authorPhoto
+                            )
+                    );
+                }
+            }
+            return projectResponses;
+        }
+        else return Collections.emptySet();
+    }
+    
     public Set<MiniProjectResponse> getProjectByCategory(String categoryTitle){
         Set<MiniProjectResponse> projectResponses = new HashSet<>();
         Optional<List<Project>> projectList = projectRepository.getByCategory(categoryTitle);
@@ -704,20 +738,27 @@ public class ProjectService {
         );
         Optional<User> userToInvite = userService.findUserById(userId);
         Optional<Project> project = projectRepository.getProjectById(projectId);
-        Optional<ProjectInvitation> invitation = projectInvitationService.getInvitationByUserIdAndProjectId(userId, projectId);
+        Optional<ProjectInvitation> invitation = projectInvitationService
+                .getInvitationByUserIdAndProjectId(userId, projectId);
 
-        boolean userIsProjectModerator = !new HashSet<>(project.get().getParticipants()).stream().filter(
-                participant -> loggedUser.get().getParticipants().contains(participant) && participant.getParticipantRole().equals(ParticipantRole.MODERATOR)
+        boolean userIsProjectModerator = !new HashSet<>(project.get()
+                .getParticipants()).stream().filter(
+                participant -> loggedUser.get().getParticipants().contains(participant) && 
+                        participant.getParticipantRole().equals(ParticipantRole.MODERATOR)
         ).collect(Collectors.toSet()).isEmpty();
 
-        boolean userToInviteIsNotAlreadyProjectParticipant = new HashSet<>(project.get().getParticipants()).stream().filter(
-                participant -> userToInvite.get().getParticipants().contains(participant)).collect(Collectors.toSet()).isEmpty();
+        boolean userToInviteIsNotAlreadyProjectParticipant = new HashSet<>(project.get()
+                .getParticipants()).stream().filter(
+                participant -> userToInvite.get().getParticipants().contains(participant))
+                .collect(Collectors.toSet()).isEmpty();
 
 
         if ( userToInvite.isPresent() && project.isPresent() && invitation.isEmpty() &&
                 (project.get().getCreator().equals(loggedUser.get()) || userIsProjectModerator)
                 && userToInviteIsNotAlreadyProjectParticipant){
-            projectInvitationService.addProjectInvitation(new ProjectInvitation(project.get(), userToInvite.get()));
+            projectInvitationService.addProjectInvitation(
+                    new ProjectInvitation(project.get(), userToInvite.get())
+            );
             return true;
         }
         else return false;

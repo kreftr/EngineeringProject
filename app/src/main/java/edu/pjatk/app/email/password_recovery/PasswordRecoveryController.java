@@ -55,7 +55,6 @@ public class PasswordRecoveryController {
                                         @Valid @RequestBody PasswordChangeRequest passwordChangeRequest){
 
         if (!passwordRecoveryService.tokenIsValid(token)){
-            //TODO: Choose the right HttpStatus
             return new ResponseEntity(new ResponseMessage("Invalid token"), HttpStatus.FORBIDDEN);
         }
         else {

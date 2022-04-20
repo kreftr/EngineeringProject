@@ -61,7 +61,8 @@ public class EmailService implements EmailSender {
         try{
             URL res = getClass().getClassLoader().getResource("templates/emails/"+htmlName);
             File htmlFile = Paths.get(res.toURI()).toFile();
-            String htmlToString = Files.readString(Paths.get(htmlFile.getAbsolutePath()), StandardCharsets.UTF_8);
+            String htmlToString = Files.readString(Paths.get(htmlFile.getAbsolutePath()),
+                    StandardCharsets.UTF_8);
             htmlToString = htmlToString.replace("%USERNAME%", username);
             htmlToString = htmlToString.replace("%LINK%", activationLink);
             return htmlToString;

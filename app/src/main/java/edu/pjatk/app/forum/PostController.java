@@ -31,7 +31,7 @@ public class PostController {
                 new ResponseMessage("Post successfully created!"), HttpStatus.OK
         );
     }
-    @PostMapping("/deletePost")
+    @PostMapping("/deletePost/{id}")
     public ResponseEntity deletePostById(@PathVariable Long id) {
         postService.deletePostById(id);
         return new ResponseEntity(
@@ -49,7 +49,7 @@ public class PostController {
         }
         else {
             return new ResponseEntity<>(
-                    new ResponseMessage("There are no projects!"), HttpStatus.NOT_FOUND
+                    new ResponseMessage("There are no posts!"), HttpStatus.NOT_FOUND
             );
         }
     }
