@@ -471,7 +471,7 @@ function ProjectList(){
                                                         </Col>
                                                         <Col className={"col-6 PROJECT-content-section"}>
                                                             <h2>You have been invited to</h2>
-                                                            <a href={`/project/${invitation.projectId}`}>
+                                                            <a className={"PROJECT-invite-project-link"} href={`/project/${invitation.projectId}`}>
                                                                 <h2>{invitation.projectTitle.slice(0,22)}</h2>
                                                             </a>
                                                         </Col>

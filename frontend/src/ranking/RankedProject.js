@@ -51,8 +51,8 @@ function RankedProject(props){
                     </ListGroup.Item>
                 </Col>
                 <Col className={"col-5 PROJECT-content-section RANKING-clickable"} onClick={() => {window.location.replace(`/project/${props.project.projectId}`)}}>
-                    <h2>{props.project.title}</h2>
-                    <div className={"PROJECT-introduction"}>{props.project.introduction}</div>
+                    <h2>{props.project.title.slice(0,19)}</h2>
+                    <div className={"PROJECT-introduction"}>{props.project.introduction.slice(0,150)}</div>
                 </Col>
             </Row>
     );

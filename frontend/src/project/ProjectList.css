@@ -45,13 +45,12 @@
 }
 
 .PROJECT-invite {
-    height: 250px;
+    height: 200px;
 }
 
-.PROJECT-thumbnail-section {
-
+.PROJECT-invite-project-link {
+    text-decoration: none;
+    color: black;
 }
 
-.PROJECT-button-section.b {
-    align-self: center;
-}
+
