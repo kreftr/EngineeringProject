@@ -81,7 +81,7 @@ function Forum(props){
                     Delete Post
                 </Button>
             </Row>
-            <Row>
+            <Row className={"mt-4"}>
                 <Col className={"col-4"}>
                     <h4>
                         Posts

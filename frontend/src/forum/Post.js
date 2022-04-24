@@ -11,7 +11,7 @@ function Post(props) {
                     {props.post.text}
                 </Col>
                 <Col>
-                    <a href={`/profile/${props.post.userId}`}>
+                    <a href={`/profile/${props.post.userId}`} className={"mr-3"}>
                         {   props.post.userPhoto ?
                             <Image src={`http://localhost:8080/photo?filename=${props.post.userPhoto}`}
                                    roundedCircle={true}
@@ -27,7 +27,7 @@ function Post(props) {
                     </a>
                     {props.post.userName}
                 </Col>
-                <Col className={"col-4"}>
+                <Col className={"col-4 POST-date"}>
                     {props.post.datee}
                 </Col>
             </Row>

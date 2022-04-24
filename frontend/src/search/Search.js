@@ -62,10 +62,13 @@ function Search(){
                 <Col className={"col-2"}></Col>
                 <Col className={"col-8"}>
                     <Form onSubmit={handleSubmit}>
-                        <Row>
-                            <Col className={"col-8"}>
+                        <Row className={"align-items-center"}>
+                            <Col className={"SEARCH-search-button-col"}>
+                                <Button type={"submit"} variant={"primary"} size={"lg"}>Search</Button>
+                            </Col>
+                            <Col className={"col-6"}>
                                 { inputType !== "category" && !categories.includes(inputType) ?
-                                    <Form.Floating className="mb-3">
+                                    <Form.Floating>
                                         <Form.Control value={input}
                                                       onChange={(e) => setInput(e.target.value)}
                                                       type={"text"} placeholder={"sample text"} required/>
@@ -92,11 +95,6 @@ function Search(){
                                         <option value={"category"}>Project by category</option>
                                     </Form.Select>
                                 </FloatingLabel>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col className={"SEARCH-search-button-col"}>
-                                <Button type={"submit"} variant={"primary"} size={"lg"}>Search</Button>
                             </Col>
                         </Row>
                     </Form>

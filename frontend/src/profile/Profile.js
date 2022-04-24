@@ -116,7 +116,7 @@ function Profile(){
                             { Cookies.get("userId")===id && Cookies.get("authorization") ?
                                 <li>
                                     <a href={"/profile/settings"}>
-                                        <Button className={"PROFILE-icon-placeholder"}>
+                                        <Button className={"PROFILE-button-small"}>
                                             <FaCog className={"PROFILE-icon"}/>
                                             <h4>Settings</h4>
                                         </Button>
@@ -128,32 +128,32 @@ function Profile(){
                             { Cookies.get("userId")!==id && Cookies.get("authorization") ?
                                 <>
                                     <li>
-                                        { friendStatus === "NOT_FRIEND" ?
-                                            <Button className={"PROFILE-icon-placeholder"} onClick={addFriend}>
-                                                <FaUserPlus className={"PROFILE-icon"}/>
-                                                <h4>Add friend</h4>
-                                            </Button>
-                                        : friendStatus === "FRIEND" ?
-                                            <Button variant={"danger"} className={"PROFILE-icon-placeholder"} onClick={removeFriend}>
-                                                <FaUserMinus className={"PROFILE-icon"}/>
-                                                <h5>Remove friend</h5>
-                                            </Button>
-                                        : friendStatus === "PENDING" ?
-                                            <Button variant={"secondary"} className={"PROFILE-icon-placeholder"} disabled={true}>
-                                                <FaUserClock className={"PROFILE-icon"}/>
-                                                <h5>Pending friend request</h5>
-                                            </Button>
-                                        :
-                                            <></>
-                                        }
-                                    </li>
-                                    <li>
                                         <a href={`/friends/${id}`}>
-                                            <Button className={"PROFILE-icon-placeholder"}>
+                                            <Button className={"PROFILE-button-small"}>
                                                 <FaUserFriends className={"PROFILE-icon"}/>
                                                 <h4>Friends</h4>
                                             </Button>
                                         </a>
+                                    </li>
+                                    <li>
+                                        { friendStatus === "NOT_FRIEND" ?
+                                            <Button className={"PROFILE-button-big"} onClick={addFriend}>
+                                                <FaUserPlus className={"PROFILE-icon"}/>
+                                                <h4>Add friend</h4>
+                                            </Button>
+                                        : friendStatus === "FRIEND" ?
+                                            <Button variant={"danger"} className={"PROFILE-button-big"} onClick={removeFriend}>
+                                                <FaUserMinus className={"PROFILE-icon"}/>
+                                                <h5>Remove friend</h5>
+                                            </Button>
+                                        : friendStatus === "PENDING" ?
+                                            <Button variant={"secondary"} className={"PROFILE-button-big"} disabled={true}>
+                                                <FaUserClock className={"PROFILE-icon"}/>
+                                                <h5>Pending request</h5>
+                                            </Button>
+                                        :
+                                            <></>
+                                        }
                                     </li>
                                 </>
                                 :
@@ -173,7 +173,7 @@ function Profile(){
                                                         <Row>
                                                             <Col className={"col-2"}>
                                                                 { project.projectPhoto ?
-                                                                    <Image src={`http://localhost:8080/photo?filename=${project.projectPhoto}`} width={125} height={125}/>
+                                                                    <Image className={"PROFILE-project-image"} src={`http://localhost:8080/photo?filename=${project.projectPhoto}`} width={125} height={125}/>
                                                                     :
                                                                     <Image src={default_project_picture} width={125} height={125}/>
                                                                 }
