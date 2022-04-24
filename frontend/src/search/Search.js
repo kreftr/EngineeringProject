@@ -142,9 +142,9 @@ function Search(){
                                     return(
                                         <Card  key={key} className={"mt-3 ml-2 mr-2 flex-box"}>
                                             { project.projectPhoto ?
-                                                <Card.Img variant="top" width={"250px"} height={"250px"} src={`http://localhost:8080/photo?filename=${project.projectPhoto}`} />
+                                                <Card.Img style={{width:"250px", height:"250px", margin:"auto"}} variant="top" src={`http://localhost:8080/photo?filename=${project.projectPhoto}`} />
                                                 :
-                                                <Card.Img variant="top" width={"250px"} height={"250px"} src={default_project_picture} />
+                                                <Card.Img style={{width:"250px", height:"250px", margin:"auto"}} variant="top" src={default_project_picture} />
                                             }
                                             <Card.Body>
                                                 <Card.Title>

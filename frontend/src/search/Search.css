@@ -10,14 +10,15 @@
 
 .SEARCH-profile-pic {
     margin-top: 5%;
-    height: 200px;
-    width: 200px;
+    height: 150px;
+    width: 150px;
 }
 
 .SEARCH-username {
     color: #282c34;
     font-size: 175%;
     font-weight: bold;
+    margin-top: 3%;
 }
 
 .SEARCH-name-surname {
@@ -30,7 +31,7 @@
 .SEARCH-grid-container {
     margin-top: 2%;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
 }
 
 .SEARCH-profile-holder {
@@ -54,9 +55,16 @@
 }
 
 .SEARCH-title-height {
-    height: 70px;
+    height: 25px;
 }
 
 .SEARCH-intro-height {
-    height: 150px;
+    height: 50px;
+}
+
+.mt-3.ml-2.mr-2.flex-box {
+    grid-column: span 3;
+    border: outset darkgray;
+    border-radius: 20px;
+    overflow: hidden;
 }
