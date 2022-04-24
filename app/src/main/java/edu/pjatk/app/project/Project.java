@@ -3,12 +3,15 @@ package edu.pjatk.app.project;
 import edu.pjatk.app.file.File;
 import edu.pjatk.app.photo.Photo;
 import edu.pjatk.app.project.category.Category;
+import edu.pjatk.app.project.invitation.ProjectInvitation;
 import edu.pjatk.app.project.participant.Participant;
 import edu.pjatk.app.project.task.Task;
 import edu.pjatk.app.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -55,7 +58,7 @@ public class Project {
     @OneToMany(mappedBy = "project", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     private Set<Participant> participants = new HashSet<>();
 
-    @OneToOne(fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "photo_id")
     private Photo photo;
 
@@ -71,6 +74,9 @@ public class Project {
             orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Task> task = new ArrayList<>();
 
+    @OneToMany(mappedBy = "project", cascade = {CascadeType.ALL},
+            orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<ProjectInvitation> invitations = new ArrayList<>();
 
     public Project(String project_name, String project_introduction, String project_description,
                    LocalDateTime creation_date, Set<Category> categories, ProjectStatus project_status,

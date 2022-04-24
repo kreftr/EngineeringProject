@@ -1,6 +1,6 @@
 import {Button, Col, Image, Row} from "react-bootstrap";
 import default_project_picture from "../assets/images/default_project_picture.jpg"
-import React from "react";
+import React, {useEffect, useState} from "react";
 import Cookies from "js-cookie";
 import "./Project.css"
 import {FaCogs, FaEye, FaFileAlt, FaWindowClose} from "react-icons/fa";
@@ -45,8 +45,8 @@ function Project(props){
                         <FaFileAlt className={"mr-2"} size={35}/>
                         Workspace
                     </Button>
-                    { props.project.authorId === Cookies.get("userId") ?
-                        <Button className={"PROJECT-button"} variant={"primary"}>
+                    { props.project.authorId === Number(Cookies.get("userId")) ?
+                        <Button className={"PROJECT-button"} variant={"primary"} href={`project/projectSettings/${props.project.projectId}`}>
                             <FaCogs className={"mr-2"} size={35}/>
                             Settings
                         </Button>

@@ -20,7 +20,7 @@ public class Category {
     private Long id;
     private String title;
 
-    @ManyToMany(mappedBy = "categories")
+    @ManyToMany(mappedBy = "categories", cascade = CascadeType.ALL)
     private Set<Project> projects = new HashSet<>();
 
     @ManyToMany(mappedBy = "categories")
