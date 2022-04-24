@@ -22,3 +22,9 @@
     word-wrap: break-word;
     white-space: pre-wrap;
 }
+
+.PROJECT-catergory-list {
+    overflow: scroll;
+    word-wrap:break-word;
+    height: 100px;
+}
