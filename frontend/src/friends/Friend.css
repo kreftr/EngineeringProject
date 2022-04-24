@@ -1,7 +1,44 @@
+.FRIEND-nickname{
+    margin-bottom: 0;
+}
+
 .FRIEND-button{
     display: inline-flex;
     align-items: center;
     justify-content: center;
     font-size: 75%;
     margin: 0 15px;
+    height: 60px;
+    width: 180px;
+}
+
+/* icon on a button */
+.FRIEND-button > svg {
+    width: 35px;
+    height: 35px;
+}
+
+/* text on a button */
+.FRIEND-button > h4 {
+    font-size: 26px;
+    margin-bottom: 3px;
+}
+
+.FRIENDLIST-searchbar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.FRIENDLIST-searchbar-form {
+
+}
+
+.FRIENDLIST-friends-div {
+    display: flex;
+    align-items: center;
+}
+
+.FRIENDLIST-friends-text {
+    text-align: center;
 }

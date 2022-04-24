@@ -193,11 +193,8 @@ function Workspace(){
                 {memberRole ?
                     <Tab.Container id="left-tabs-example">
                         <Row>
-                            <Col>
+                            <Col className={"WORKSPACE-left-panel"}>
                                 <Nav variant="pills" className="flex-column">
-                                    <Nav.Item>
-                                        <Nav.Link className={"mb-3"} eventKey="news">News</Nav.Link>
-                                    </Nav.Item>
                                     <Nav.Item>
                                         <Nav.Link className={"mb-3"} eventKey="tasks">Tasks</Nav.Link>
                                     </Nav.Item>
@@ -217,12 +214,9 @@ function Workspace(){
                             </Col>
                             <Col sm={9}>
                                 <Tab.Content>
-                                    <Tab.Pane eventKey={"news"}>
-                                        Hello
-                                    </Tab.Pane>
                                     <Tab.Pane eventKey={"tasks"}>
                                         <Row>
-                                            <Col>
+                                            <Col className={"WORKSPACE-center-upload-div"}>
                                                 { memberRole !== 'PARTICIPANT' ?
                                                     <center>
                                                         <Button onClick={() => {handleShowTasks();}}>
@@ -239,7 +233,7 @@ function Workspace(){
                                                     <></>
                                                 }
                                             </Col>
-                                            <Col className={"WORKSPACE-center-upload-button"}>
+                                            <Col className={"WORKSPACE-center-searchbar"}>
                                                 <center>
                                                     <Form>
                                                         <Form.Control type="text" placeholder="Search task"
@@ -248,12 +242,10 @@ function Workspace(){
                                                 </center>
                                             </Col>
                                         </Row>
-                                        <hr/>
+                                        <hr className={"mb-5"}/>
                                         <Row>
                                             <Col>
-                                                <center>
-                                                    <h1><Badge bg="danger">To do</Badge></h1>
-                                                </center>
+                                                <Badge className={"WORKSPACE-task-badge"} bg="danger" fullWidth>To do</Badge>
                                                 <hr/>
                                                 { tasks.length > 0 ?
                                                     <div>
@@ -271,9 +263,7 @@ function Workspace(){
                                                 }
                                             </Col>
                                             <Col>
-                                                <center>
-                                                    <h1><Badge bg="warning">In progress</Badge></h1>
-                                                </center>
+                                                <Badge className={"WORKSPACE-task-badge"} bg="warning">In progress</Badge>
                                                 <hr/>
                                                 { tasks.length > 0 ?
                                                     <div>
@@ -291,9 +281,7 @@ function Workspace(){
                                                 }
                                             </Col>
                                             <Col>
-                                                <center>
-                                                    <h1><Badge bg="success">Done</Badge></h1>
-                                                </center>
+                                                <Badge className={"WORKSPACE-task-badge"} bg="success">Done</Badge>
                                                 <hr/>
                                                 { tasks.length > 0 ?
                                                     <div>
@@ -314,7 +302,7 @@ function Workspace(){
                                     </Tab.Pane>
                                     <Tab.Pane eventKey={"files"}>
                                         <Row>
-                                            <Col>
+                                            <Col className={"WORKSPACE-center-upload-div"}>
                                                 <center>
                                                     <Button onClick={() => {onButtonClick();}} >
                                                         <h4 className={"WORKSPACE-center-upload-button"}>
@@ -327,7 +315,7 @@ function Workspace(){
                                                     </Button>
                                                 </center>
                                             </Col>
-                                            <Col className={"WORKSPACE-center-upload-button"}>
+                                            <Col className={"WORKSPACE-center-searchbar"}>
                                                 <center>
                                                     <Form>
                                                         <Form.Control type="text" placeholder="Search file"
@@ -355,7 +343,7 @@ function Workspace(){
                                     </Tab.Pane>
                                     <Tab.Pane eventKey={"teams"}>
                                         <Row>
-                                            <Col>
+                                            <Col className={"WORKSPACE-center-upload-div"}>
                                                 { memberRole !== 'PARTICIPANT' ?
                                                     <center>
                                                         <Button onClick={handleShowTeams}>
@@ -372,7 +360,7 @@ function Workspace(){
                                                     <></>
                                                 }
                                             </Col>
-                                            <Col className={"WORKSPACE-center-upload-button"}>
+                                            <Col className={"WORKSPACE-center-searchbar"}>
                                                 <center>
                                                     <Form>
                                                         <Form.Control type="text" placeholder="Search team"
@@ -381,7 +369,7 @@ function Workspace(){
                                                 </center>
                                             </Col>
                                         </Row>
-                                        <hr/>
+                                        <hr className={"mb-5"}/>
                                         { teams.filter(t => teamTermSearch === "" ||
                                             t.name.toLowerCase().includes(teamTermSearch.toLowerCase())
                                         ).map((team, key) =>
@@ -393,7 +381,7 @@ function Workspace(){
                                     </Tab.Pane>
                                     <Tab.Pane eventKey={"members"}>
                                         <Row>
-                                            <Col>
+                                            <Col className={"WORKSPACE-center-upload-div"}>
                                                 { memberRole !== 'PARTICIPANT' ?
                                                     <center>
                                                         <Button onClick={handleShowInvitations}>
@@ -410,7 +398,7 @@ function Workspace(){
                                                     <></>
                                                 }
                                             </Col>
-                                            <Col className={"WORKSPACE-center-upload-button"}>
+                                            <Col className={"WORKSPACE-center-searchbar"}>
                                                 <center>
                                                     <Form>
                                                         <Form.Control type="text" placeholder="Search member"

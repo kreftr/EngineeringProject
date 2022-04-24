@@ -16,7 +16,7 @@ export default function Message(props) {
                 <div>
                     <p className={"message_date"}>{message_date_short}</p>
                     <Image className={"message_avatar"} src={`http://localhost:8080/photo?filename=${message_avatar_path}`}
-                    roundedCircle={true} width="35px" height="35px"/>
+                    roundedCircle={true}/>
                     <p className={"message_nickname"}>{message_author_nickname}</p>
                     <p className={"message_content"}>{message_content}</p>
                 </div>

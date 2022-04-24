@@ -13,10 +13,11 @@ function RankedProject(props){
             <a href={`/profile/${props.project.authorId}`}>
                 {props.project.authorPhoto ?
                     <Image
-                        src={`http://localhost:8080/photo?filename=${props.project.authorPhoto}`}
-                        width="50px" height="50px" rounded={true}/>
+                        className={"RANKEDPROJECT-avatar"}
+                        src={`http://localhost:8080/photo?filename=${props.project.authorPhoto}`} rounded={true}
+                    />
                     :
-                    <Image src={default_profile_picture} width="50px" height="50px" rounded={true}/>
+                    <Image className={"RANKEDPROJECT-avatar"} src={default_profile_picture} rounded={true}/>
                 }
             </a>
         );
@@ -26,18 +27,21 @@ function RankedProject(props){
             <Row>
                 <Col className={"col-3 RANKING-thumbnail-section RANKING-clickable"} onClick={() => {window.location.replace(`/project/${props.project.projectId}`)}}>
                     {props.project.projectPhoto ?
-                        <Image
+                        <Image className={"RANKEDPROJECT-projectphoto"}
                             src={`http://localhost:8080/photo?filename=${props.project.projectPhoto}`}
-                            width="200px" height="200px"/>
+                        />
                         :
-                        <Image src={default_project_picture}
-                               width="200px" height="200px"/>
+                        <Image className={"RANKEDPROJECT-projectphoto"} src={default_project_picture}/>
                     }
                 </Col>
                 <Col className={"col-4"}>
-                    <h3>Rating: <Badge pill bg="primary">{props.project.averageRating ? props.project.averageRating : "No Votes"}<FaStar className={"ml-1"}/></Badge></h3>
-                    <h3>Votes: {props.project.numberOfVotes}</h3>
-                    <h3>Author: {profilePhoto()}</h3>
+                    <h3 className={"RANKEDPROJECT-rating-text"}>Rating:</h3>
+                    <Badge className={"RANKEDPROJECT-rating-badge"}
+                           pill bg="primary">{props.project.averageRating ? props.project.averageRating : "No Votes"}
+                        <FaStar className={"ml-1"}/>
+                    </Badge>
+                    <h3 className={"RANKEDPROJECT-author-text"}>Author: {profilePhoto()}</h3>
+                    <h3 className={"RANKEDPROJECT-votes-text"}>Votes: {props.project.numberOfVotes}</h3>
                     <ListGroup.Item className={"PROJECT-catergory-list"}>
                         {
                             props.project.categories.sort().map((category, key) =>
