@@ -25,7 +25,7 @@ public class Timestamp {
     private Date timeEnd;
     private String projectName;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE})
     @JoinColumn(name = "participant_id")
     private Participant participant;  // participant timestamp belongs to
 
