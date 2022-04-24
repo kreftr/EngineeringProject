@@ -46,7 +46,7 @@ function Project(props){
                         Workspace
                     </Button>
                     { props.project.authorId === Number(Cookies.get("userId")) ?
-                        <Button className={"PROJECT-button"} variant={"primary"}>
+                        <Button className={"PROJECT-button"} variant={"primary"} href={`project/projectSettings/${props.project.projectId}`}>
                             <FaCogs className={"mr-2"} size={35}/>
                             Settings
                         </Button>

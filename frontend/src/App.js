@@ -19,6 +19,7 @@ import Workspace from "./workspace/Workspace";
 import Ranking from "./ranking/Ranking";
 import Forum from "./forum/Forum"
 import HomePage from "./homepage/HomePage";
+import ProjectSettings from "./settings/ProjectSettings";
 
 
 class App extends Component{
@@ -69,6 +70,7 @@ class App extends Component{
                     <Route path={"/"} element={<HomePage/>}/>
                     <Route path={"profile/:id"} element={<Profile/>}/>
                     <Route path={"profile/settings"} element={<Settings/>}/>
+                    <Route path={"project/projectSettings/:id"} element={<ProjectSettings/>}/>
                     <Route path={"friends/:id"} element={<FriendsList/>}/>
                     <Route path={"projects"} element={<ProjectList/>}/>
                     <Route path={"project/:id"} element={<ProjectView/>}/>
