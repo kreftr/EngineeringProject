@@ -19,7 +19,7 @@ function Project(props){
     }
 
     return(
-            <Row>
+            <Row className={"PROJECT-section"}>
                 <Col className={"col-3 PROJECT-thumbnail-section"}>
                     {props.project.projectPhoto ?
                         <Image
@@ -31,8 +31,8 @@ function Project(props){
                     }
                 </Col>
                 <Col className={"col-6 PROJECT-content-section"}>
-                    <h2>{props.project.title}</h2>
-                    <div className={"PROJECT-introduction"}>{props.project.introduction}</div>
+                    <h2>{props.project.title.slice(0,22)}</h2>
+                    <div className={"PROJECT-introduction"}>{props.project.introduction.slice(0,150)+"..."}</div>
                 </Col>
                 <Col className={"col-3 PROJECT-button-section b"}>
                     <a href={`/project/${props.project.projectId}`}>

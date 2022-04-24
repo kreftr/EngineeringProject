@@ -43,3 +43,15 @@
 .example::-webkit-scrollbar {
     display: none;
 }
+
+.PROJECT-invite {
+    height: 250px;
+}
+
+.PROJECT-thumbnail-section {
+
+}
+
+.PROJECT-button-section.b {
+    align-self: center;
+}
