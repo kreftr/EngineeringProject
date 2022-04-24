@@ -19,7 +19,6 @@ function ProjectView(){
 
 
     useEffect(() => {
-
         axios.get(`http://localhost:8080/project/getProjectById/${id}`
         ).then(response => {
             setProject(response.data)
@@ -28,7 +27,6 @@ function ProjectView(){
             console.log(err.response)
             setStatusCode(err.response.status)
         })
-
     }, [id])
 
     function join(){
