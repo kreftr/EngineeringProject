@@ -118,7 +118,7 @@ function Profile(){
                                     <a href={"/profile/settings"}>
                                         <Button className={"PROFILE-button-small"}>
                                             <FaCog className={"PROFILE-icon"}/>
-                                            <h4>Settings</h4>
+                                            <h5>Settings</h5>
                                         </Button>
                                     </a>
                                 </li>
@@ -131,7 +131,7 @@ function Profile(){
                                         <a href={`/friends/${id}`}>
                                             <Button className={"PROFILE-button-small"}>
                                                 <FaUserFriends className={"PROFILE-icon"}/>
-                                                <h4>Friends</h4>
+                                                <h5>Friends</h5>
                                             </Button>
                                         </a>
                                     </li>
@@ -139,7 +139,7 @@ function Profile(){
                                         { friendStatus === "NOT_FRIEND" ?
                                             <Button className={"PROFILE-button-big"} onClick={addFriend}>
                                                 <FaUserPlus className={"PROFILE-icon"}/>
-                                                <h4>Add friend</h4>
+                                                <h5>Add friend</h5>
                                             </Button>
                                         : friendStatus === "FRIEND" ?
                                             <Button variant={"danger"} className={"PROFILE-button-big"} onClick={removeFriend}>
