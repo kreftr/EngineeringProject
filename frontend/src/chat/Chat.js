@@ -4,51 +4,36 @@ import Message from "./Message"
 import Cookies from "js-cookie";
 import axios from "axios";
 import "./Chat.css"
+import * as SockJS from 'sockjs-client';
+import * as Stomp from 'stompjs';
 
 function Chat(props) {
     const [inputValue, setInputValue] = useState("");
     const [messages, setMessages] = useState([])
     const [messagesLoading, setMessagesLoading] = useState(true)
     const [messagesCode, setMessagesCode] = useState(null)
+    const [stompClient, setStompClient] = useState(null)
 
     useEffect(() => {
-        // messages are collected every certain amount of time from server
-        const interval = setInterval(() => {
-            axios.get(`http://localhost:8080/conversation/getAllMessages/${props.conversation.conversationId}`, {
-                headers: {
-                    'Authorization': Cookies.get("authorization")
-                }
+        setStompClient(Stomp.over('ws://localhost:8080/chat'))
+        stompClient.connect({}, function() {
+            stompClient.subscribe('/topic/messages', function(messageOutput) {
+                showNewMessage(messageOutput.body)
             })
-            .then(response => {
-                setMessagesCode(response.status);
-                setMessages(response.data);
-                setMessagesLoading(false);
-            })
-            .catch(err => {
-                setMessagesCode(err.response.status)
-                setMessagesLoading(false);
-            })
-        }, 1000)
-        return () => clearInterval(interval)
-    }, [props.conversation.conversationId])
+        })
+    }, [])
+
+    function showNewMessage(messageOutput) {
+        console.log(messageOutput)
+    }
 
     const sendNewMessage = (event) => {
         if (event.key === 'Enter') {
-            let author_id = Cookies.get("userId")
-            axios.post(`http://localhost:8080/conversation/addMessage/${props.conversation.conversationId}/${author_id}/${inputValue}`, {}, {
-                headers: {
-                    'Authorization': Cookies.get("authorization")
-                }
-            }).then()
-            axios.get(`http://localhost:8080/conversation/getAllMessages/${props.conversation.conversationId}`, {
-                headers: {
-                    'Authorization': Cookies.get("authorization")
-                }
-            }).then(response => {
-                setMessagesCode(response.status);
-                setMessages(response.data);
-                document.getElementById("message_sender_input").value = ""  // clear input after
-            })
+            stompClient.send("/app/chat", {}, JSON.stringify({
+                'conversation_id': props.conversation.conversationId,
+                'author_id': Cookies.get("userId"), 'text': inputValue
+            }))
+            document.getElementById("message_sender_input").value = ""  // clear input after
         }
     }
 

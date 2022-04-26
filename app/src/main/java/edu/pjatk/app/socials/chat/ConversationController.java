@@ -7,6 +7,8 @@ import edu.pjatk.app.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -64,6 +66,11 @@ public class ConversationController {
         }
     }
 
+    @MessageMapping("/chat")
+    @SendTo("/topic/messages")
+    public Message sendMessage(Message message) {
+        return message;
+    }
 
     @PostMapping(value = "/addMessage/{conversation_id}/{author_id}/{text}")
     public ResponseEntity<?> addMessage(@PathVariable Long conversation_id, 
