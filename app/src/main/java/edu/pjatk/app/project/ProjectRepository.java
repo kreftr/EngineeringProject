@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.util.*;
 
@@ -141,6 +142,34 @@ public class ProjectRepository {
             project = Optional.empty();
         }
         return project;
+    }
+
+    public Optional<List<Project>> getProjectsByTitleWithPagination(String projectTitle, int pageNumber, int pageSize){
+        Optional<List<Project>> projects;
+        try {
+            Query query = entityManager.createQuery("select project from Project project where project.project_name like :project_name and project.project_access <> 'PRIVATE'");
+            query.setParameter("project_name", projectTitle+"%");
+            query.setFirstResult((pageNumber-1) * pageSize);
+            query.setMaxResults(pageSize);
+            projects = Optional.of(query.getResultList());
+        }
+        catch (NoResultException noResultException){
+            projects = Optional.empty();
+        }
+        return projects;
+    }
+
+    public Optional<Long> getProjectsNumberByTitle(String projectTitle) {
+        Optional<Long> projectsNumber;
+        try {
+            projectsNumber =  Optional.of(entityManager.createQuery(
+                            "select count(project.id) from Project project where project.project_name like :project_name and project.project_access <> 'PRIVATE'", Long.class)
+                    .setParameter("project_name", projectTitle+"%").getSingleResult());
+        }
+        catch (NoResultException noResultException){
+            projectsNumber = Optional.empty();
+        }
+        return projectsNumber;
     }
 
     @Transactional

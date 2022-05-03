@@ -137,4 +137,13 @@ public class UserService {
         return userRepository.findBySimilarUsername(username);
     }
 
+    public Long getUsersNumber(String username) {
+        Optional<Long> number = userRepository.getUsersNumberByUsername(username);
+        return number.isPresent() ? number.get() : 0;
+    }
+
+    public Optional<List<User>> findUsersWithPagination(String username, int pageNumber, int pageSize) {
+        return userRepository.getUsersByUsernameWithPagination(username, pageNumber, pageSize);
+    }
+
 }

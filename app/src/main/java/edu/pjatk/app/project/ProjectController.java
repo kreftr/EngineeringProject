@@ -24,7 +24,6 @@ import java.util.Set;
 @CrossOrigin("http://localhost:3000")
 @RestController
 @RequestMapping("/project")
-
 public class ProjectController {
 
     private final ProjectService projectService;
@@ -71,6 +70,31 @@ public class ProjectController {
             );
         }
     }
+
+    @GetMapping(value = "/getProjectByNameWithPagination/{project_name}")
+    public ResponseEntity<?> getProjectByNameWithPagination(@PathVariable String project_name,
+                                                            @RequestParam int pageNumber, @RequestParam int pageSize) {
+        List<MiniProjectResponse> projects =
+                projectService.getProjectsByNameWithPagination(project_name, pageNumber, pageSize);
+
+        if (projects.isEmpty())
+        {
+            return new ResponseEntity<>(
+                    new ResponseMessage("No matches for '"+project_name+"'"), HttpStatus.NOT_FOUND
+            );
+        }
+        else {
+            return new ResponseEntity<>(
+                    projects, HttpStatus.OK
+            );
+        }
+    }
+
+    @GetMapping(value = "/getProjectsNumberByTitle/{project_name}")
+    public ResponseEntity<?> getProjectsNumberByTitle(@PathVariable String project_name) {
+        return new ResponseEntity<>(projectService.getProjectsNumberByTitle(project_name), HttpStatus.OK);
+    }
+
     @GetMapping(value = "/getProjectByNameNoPrivate/{project_name}")
     public ResponseEntity<?> getProjectByNameNoPrivate(@PathVariable String project_name) {
         

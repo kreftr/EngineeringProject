@@ -1,9 +1,10 @@
-import {Col, Container, Row, Form, FloatingLabel, Button, Image, Card} from "react-bootstrap";
+import {Col, Container, Row, Form, FloatingLabel, Button, Image, Card, Pagination} from "react-bootstrap";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import "./Search.css"
 import default_profile_picture from "../assets/images/default_profile_picture.jpg"
 import default_project_picture from "../assets/images/default_project_picture.jpg"
+import Cookies from "js-cookie";
 
 function Search(){
 
@@ -16,6 +17,12 @@ function Search(){
     const [projects,setProjects] = useState([]);
     const [loadingContent, setLoading] = useState(true);
     const [responseMessage, setMessage]  = useState();
+
+
+    //Pagination
+    const [pageNumber, setPageNumber] = useState(1);
+    const [projectsNumber, setProjectsNumber] = useState();
+    const [profilesNumber, setProfilesNumber] = useState();
 
     useEffect(() => {
         axios.get("http://localhost:8080/categories/getAll"
@@ -35,24 +42,119 @@ function Search(){
     async function handleSubmit(e){
         e.preventDefault()
         clearData()
-
+        setPageNumber(1)
         let url = "http://localhost:8080/"
-        if (inputType === "profile") url = `http://localhost:8080/${inputType}?username=${input}`
-        else if (inputType === "project") url = `http://localhost:8080/${inputType}/getProjectByName/${input}`
-        else if (inputType === "category") url = `http://localhost:8080/project/getProjectByCategory/${selectedCategory}`
-        else url = `http://localhost:8080/${inputType}?title=${input}`
-
-        await axios.get(url)
-            .then(response => {
-                if (inputType === "profile") setProfiles(response.data)
-                else if (inputType === "project" || inputType === "category") setProjects(response.data)
-            })
-            .catch(err => {
-                console.log(err.response)
-                if (err.response.status === 404) setMessage(err.response.data.message)
-                else setMessage("Server error!")
-            })
+        if (inputType === "profile") getProfilesPagination(input)
+        else if (inputType === "project") getProjectsPagination(input)
+        else if (inputType === "category") {
+            url = `http://localhost:8080/project/getProjectByCategory/${selectedCategory}`
+            await axios.get(url)
+                .then(response => {
+                    if (inputType === "profile") setProfiles(response.data)
+                    else if (inputType === "project" || inputType === "category") setProjects(response.data)
+                })
+                .catch(err => {
+                    console.log(err.response)
+                    if (err.response.status === 404) setMessage(err.response.data.message)
+                    else setMessage("Server error!")
+                })
+        }
         setLoading(false)
+    }
+
+    async function getProjectsPagination(title){
+        clearData();
+
+        await axios.get(`http://localhost:8080/project/getProjectsNumberByTitle/${title}`
+        ).then(response => {
+            setProjectsNumber(response.data)
+        })
+        .catch(err => {
+            if (err.response.status === 404) setMessage(err.response.data.message)
+            else setMessage("Server error!")
+        })
+
+        await axios.get(`http://localhost:8080/project/getProjectByNameWithPagination/${title}?pageNumber=1&pageSize=3`
+        ).then(response => {
+            setProjects(response.data)
+        })
+        .catch(err => {
+            if (err.response.status === 404) setMessage(err.response.data.message)
+            else setMessage("Server error!")
+        })
+    }
+
+    async function getProfilesPagination(username) {
+        clearData();
+
+        await axios.get(`http://localhost:8080/profile/number?username=${username}`
+        ).then(response => {
+            setProfilesNumber(response.data)
+        })
+        .catch(err => {
+            if (err.response.status === 404) setMessage(err.response.data.message)
+            else setMessage("Server error!")
+        })
+
+        await axios.get(`http://localhost:8080/profile/pagination?username=${username}&pageNumber=1&pageSize=3`
+        ).then(response => {
+            setProfiles(response.data)
+        })
+        .catch(err => {
+            if (err.response.status === 404) setMessage(err.response.data.message)
+            else setMessage("Server error!")
+        })
+    }
+
+    async function getProfilesByPage(i) {
+        setLoading(true)
+        await axios.get(`http://localhost:8080/profile/pagination?username=${input}&pageNumber=${i}&pageSize=3`
+        )
+        .then(response => {
+            setProfiles(response.data)
+            setLoading(false)
+        })
+        .catch(err => {
+            if (err.response.status === 404) setMessage(err.response.data.message)
+            else setMessage("Server error!")
+        })
+    }
+
+    async function getProjectsByPage(i) {
+        setLoading(true)
+        await axios.get(`http://localhost:8080/project/getProjectByNameWithPagination/${input}?pageNumber=${i}&pageSize=3`
+        )
+        .then(response => {
+            setProjects(response.data)
+            setLoading(false)
+        })
+        .catch(err => {
+            if (err.response.status === 404) setMessage(err.response.data.message)
+            else setMessage("Server error!")
+        })
+    }
+
+    function renderPagination(pageSize) {
+        let x = 0;
+        if (inputType === "profile") x = profilesNumber / pageSize
+        else if (inputType === "project") x = projectsNumber / pageSize
+        return(
+            <Pagination className={"mt-4 d-flex justify-content-center"}>
+                {[...Array(Math.ceil(x))].map((x, i) =>
+                    <Pagination.Item key={i} active={i+1 === pageNumber} onClick={(e) => {
+                        setPageNumber(i+1);
+                        if (inputType === "profile") {
+                            setProjects([])
+                            getProfilesByPage(i+1)
+                        }
+                        else if (inputType === "project") {
+                            setProfiles([])
+                            getProjectsByPage(i+1);
+                        }
+                    }}>{i+1}</Pagination.Item>
+                )}
+            </Pagination>
+        );
     }
 
 
@@ -86,7 +188,11 @@ function Search(){
                             <Col className={"col-4"}>
                                 <FloatingLabel label={"What are you looking for?"}>
                                     <Form.Select value={inputType}
-                                                 onChange={(e) => setInputType(e.target.value)}>
+                                                 onChange={(e) => {
+                                                     clearData()
+                                                     setPageNumber(1)
+                                                     setInputType(e.target.value)
+                                                 }}>
                                         <option value={"profile"}>User</option>
                                         <option value={"project"}>Project</option>
                                         <option value={"category"}>Project by category</option>
@@ -170,6 +276,11 @@ function Search(){
                         </div>
                         :
                         <div></div>
+                    }
+                    { projects.length || profiles.length ?
+                        renderPagination(3)
+                        :
+                        <></>
                     }
                 </Col>
                 <Col className={"col-1"}></Col>

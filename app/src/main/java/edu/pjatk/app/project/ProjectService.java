@@ -340,6 +340,46 @@ public class ProjectService {
         else return Collections.emptyList();
     }
 
+    //Pagination
+    public List<MiniProjectResponse> getProjectsByNameWithPagination(String project_name, int pageNumber, int pageSize) {
+
+        List<MiniProjectResponse> projectResponses = new ArrayList<>();
+        Optional<List<Project>> projectList = projectRepository.getProjectsByTitleWithPagination(project_name, pageNumber, pageSize);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+        if (projectList.isPresent() && !projectList.get().isEmpty()) {
+
+            String projectPhoto, authorPhoto;
+
+            for (Project p : projectList.get()){
+
+                Set<String> categories = new HashSet<>();
+                try { projectPhoto = p.getPhoto().getFileName(); } catch (NullPointerException e) { projectPhoto = null;}
+                try { authorPhoto = p.getCreator().getProfile().getPhoto().getFileName(); }
+                catch (NullPointerException e) { authorPhoto = null;}
+
+                for (Category c : p.getCategories()){
+                    categories.add(c.getTitle());
+                }
+
+                projectResponses.add(
+                        new MiniProjectResponse(
+                                p.getId(), projectPhoto, p.getProject_name(), p.getProject_introduction(),
+                                categories, p.getCreation_date().format(formatter), p.getCreator().getId(),
+                                p.getCreator().getUsername(), authorPhoto
+                        )
+                );
+            }
+            return projectResponses;
+        }
+        else return Collections.emptyList();
+    }
+
+    public Long getProjectsNumberByTitle(String title) {
+        Optional<Long> number = projectRepository.getProjectsNumberByTitle(title);
+        return number.isPresent() ? number.get() : 0;
+    }
+
     @Transactional
     public void createProject(ProjectRequest projectRequest, MultipartFile photo){
 

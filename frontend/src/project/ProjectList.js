@@ -69,7 +69,11 @@ function ProjectList(){
     const [gitLink, setGitLink] = useState(null);
     const [kickLink, setKickLink] = useState(null);
 
-
+    function updateState(newAccess) {
+        this.setState({
+            access: newAccess.value
+        });
+    }
 
     useEffect(() => {
 
@@ -213,8 +217,6 @@ function ProjectList(){
                 console.log(err.response)
             })
     }
-
-
 
 
     return(

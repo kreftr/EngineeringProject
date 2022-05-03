@@ -5,7 +5,6 @@ import edu.pjatk.app.request.ProfileEditRequest;
 import edu.pjatk.app.response.profile.FullProfileResponse;
 import edu.pjatk.app.response.ResponseMessage;
 import edu.pjatk.app.response.profile.MiniProfileResponse;
-import net.bytebuddy.pool.TypePool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Null;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -80,5 +77,23 @@ public class ProfileController {
         else {
             return new ResponseEntity(Map.of("error", "Unsupported photo format"), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping(value = "/pagination")
+    public ResponseEntity getProfile(@RequestParam String username, @RequestParam int pageNumber,
+                                     @RequestParam int pageSize) {
+        Optional<List<MiniProfileResponse>> profiles = profileService.findProfilesWithPagination(username, pageNumber, pageSize);
+        if (profiles.isEmpty()) {
+            return new ResponseEntity(
+                new ResponseMessage("No matches for '"+username+"'"), HttpStatus.NOT_FOUND
+            );
+        } else {
+            return new ResponseEntity(profiles.get(), HttpStatus.OK);
+        }
+    }
+
+    @GetMapping(value = "/number")
+    public ResponseEntity getProfilesNumber(@RequestParam String username) {
+        return new ResponseEntity(profileService.getProfilesNumberByUsername(username), HttpStatus.OK);
     }
 }

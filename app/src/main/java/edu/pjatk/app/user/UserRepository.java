@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.Query;
 import java.util.List;
 import java.util.Optional;
 
@@ -82,6 +83,33 @@ public class UserRepository {
                             .setParameter("username", username+"%").getResultList()
             );
         } catch (NoResultException noResultException){
+            users = Optional.empty();
+        }
+        return users;
+    }
+
+    public Optional<Long> getUsersNumberByUsername(String username) {
+        Optional<Long> usersNumber;
+        try {
+            usersNumber = Optional.of(entityManager.createQuery(
+                    "select count(user.id) from User user where user.username like :username", Long.class)
+                    .setParameter("username", username+"%").getSingleResult()
+            );
+        } catch (NoResultException noResultException) {
+            usersNumber = Optional.empty();
+        }
+        return usersNumber;
+    }
+
+    public Optional<List<User>> getUsersByUsernameWithPagination(String username, int pageNumber, int pageSize) {
+        Optional<List<User>> users;
+        try {
+            Query query = entityManager.createQuery("select user from User user where user.username like :username");
+            query.setParameter("username", username+"%");
+            query.setFirstResult((pageNumber-1) * pageSize);
+            query.setMaxResults(pageSize);
+            users = Optional.of(query.getResultList());
+        } catch (NoResultException noResultException) {
             users = Optional.empty();
         }
         return users;

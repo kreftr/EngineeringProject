@@ -71,7 +71,6 @@ public class ProfileService {
         }
         else {
             String photoFileName;
-            //TODO: find better way of handling hibernate null photo reference exception
             Profile profile = user.get().getProfile();
             try {
                 photoFileName = profile.getPhoto().getFileName();
@@ -89,6 +88,33 @@ public class ProfileService {
 
     public Optional<List<MiniProfileResponse>> findProfilesByUsername(String username){
         Optional<List<User>> users = userService.findUsersBySimilarUsername(username);
+        List<MiniProfileResponse> profilesResponse = new ArrayList<>();
+        String photoFileName;
+        if (users.get().isEmpty()){
+            return Optional.empty();
+        }
+        else {
+            for (User user : users.get()){
+                try {
+                    photoFileName = user.getProfile().getPhoto().getFileName();
+                } catch (Exception e) {
+                    photoFileName = null;
+                }
+                profilesResponse.add(new MiniProfileResponse(
+                        user.getId(), user.getUsername(), user.getProfile().getName(),
+                        user.getProfile().getSurname(), photoFileName
+                ));
+            }
+            return Optional.of(profilesResponse);
+        }
+    }
+
+    public Long getProfilesNumberByUsername(String username) {
+        return userService.getUsersNumber(username);
+    }
+
+    public Optional<List<MiniProfileResponse>> findProfilesWithPagination(String username, int pageNumber, int pageSize) {
+        Optional<List<User>> users = userService.findUsersWithPagination(username, pageNumber, pageSize);
         List<MiniProfileResponse> profilesResponse = new ArrayList<>();
         String photoFileName;
         if (users.get().isEmpty()){
