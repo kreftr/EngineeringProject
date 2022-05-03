@@ -52,7 +52,6 @@ function Chat(props) {
         }
     }
 
-    // TODO new messages stack down infinitely, fix this
     return (
         <Container className={"container"}>
             { messagesCode === 200 && !messagesLoading ?
@@ -68,7 +67,8 @@ function Chat(props) {
                     </ListGroup>
                     <div id={"message_sender"}>
                         <input className={"CHAT-input mt-4"} id={"message_sender_input"} type="text"
-                               onChange={event => setInputValue(event.target.value)} onKeyDown={sendNewMessage}/>
+                               onChange={event => setInputValue(event.target.value)} onKeyDown={sendNewMessage}
+                               placeholder={"Write message"}/>
                     </div>
                 </div>
                 :

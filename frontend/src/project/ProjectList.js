@@ -460,7 +460,7 @@ function ProjectList(){
                                         {
                                             invitations.map((invitation, key) =>
                                                 <ListGroupItem key={key}>
-                                                    <Row>
+                                                    <Row className={"PROJECT-invite"}>
                                                         <Col className={"col-3 PROJECT-thumbnail-section"}>
                                                             { invitation.projectPhoto ?
                                                                 <Image
@@ -473,8 +473,8 @@ function ProjectList(){
                                                         </Col>
                                                         <Col className={"col-6 PROJECT-content-section"}>
                                                             <h2>You have been invited to</h2>
-                                                            <a href={`/project/${invitation.projectId}`}>
-                                                                <h2>{invitation.projectTitle}</h2>
+                                                            <a className={"PROJECT-invite-project-link"} href={`/project/${invitation.projectId}`}>
+                                                                <h2>{invitation.projectTitle.slice(0,22)}</h2>
                                                             </a>
                                                         </Col>
                                                         <Col className={"col-3 PROJECT-button-section b"}>

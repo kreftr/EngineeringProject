@@ -29,7 +29,7 @@ function Ranking(){
                     <h1 className={"RANKING-title mb-4"}>Top 10 Projects</h1>
                     <hr/>
                     { best.length > 0 ?
-                        <ListGroup className={"mt-3"} as="ol" numbered={true}>
+                        <ListGroup className={"RANKING-projects-list mt-3"} as="ol" numbered={true}>
                             {
                                 best.map((project, key) =>
                                     <>

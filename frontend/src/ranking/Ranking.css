@@ -1,6 +1,7 @@
 .RANKING-title {
     font-size: 55px;
     text-align: center;
+    font-family: "GARAMOND", serif;
 }
 
 .RANKING-thumbnail-section {
@@ -13,6 +14,49 @@
     cursor: pointer;
 }
 
+/* project number */
+.RANKING-projects-list li:before{
+    font-size: 32px;
+    font-weight: bold;
+    font-family: 'Abril Fatface', serif;
+    float: left;
+    padding-right: 10px;
+}
+
+.RANKEDPROJECT-avatar {
+    margin-left: 5px;
+    width: 30px;
+    height: 30px;
+}
+
+.RANKEDPROJECT-projectphoto {
+    width: 200px;
+    height: 200px;
+}
+
+.RANKEDPROJECT-rating-badge {
+    margin-top: 12px;
+    margin-left: 10px;
+}
+
+.RANKEDPROJECT-rating-text {
+    margin-top: 10px;
+    font-size: 22px;
+    float: left;
+}
+
+.RANKEDPROJECT-author-text {
+    padding-top: 10px;
+    font-size: 22px;
+    clear: both;
+}
+
+.RANKEDPROJECT-votes-text {
+    padding-top: 5px;
+    font-size: 16px;
+    color: gray;
+}
+
 .HOMEPAGE-project-introduction {
     word-wrap: break-word;
     white-space: pre-wrap;
@@ -21,4 +65,10 @@
 .HOMEPAGE-project-title {
     word-wrap: break-word;
     white-space: pre-wrap;
+}
+
+.PROJECT-catergory-list {
+    overflow: scroll;
+    word-wrap:break-word;
+    height: 100px;
 }

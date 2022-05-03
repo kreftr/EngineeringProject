@@ -164,10 +164,13 @@ function Search(){
                 <Col className={"col-2"}></Col>
                 <Col className={"col-8"}>
                     <Form onSubmit={handleSubmit}>
-                        <Row>
-                            <Col className={"col-8"}>
+                        <Row className={"align-items-center"}>
+                            <Col className={"SEARCH-search-button-col"}>
+                                <Button type={"submit"} variant={"primary"} size={"lg"}>Search</Button>
+                            </Col>
+                            <Col className={"col-6"}>
                                 { inputType !== "category" && !categories.includes(inputType) ?
-                                    <Form.Floating className="mb-3">
+                                    <Form.Floating>
                                         <Form.Control value={input}
                                                       onChange={(e) => setInput(e.target.value)}
                                                       type={"text"} placeholder={"sample text"} required/>
@@ -198,11 +201,6 @@ function Search(){
                                         <option value={"category"}>Project by category</option>
                                     </Form.Select>
                                 </FloatingLabel>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col className={"SEARCH-search-button-col"}>
-                                <Button type={"submit"} variant={"primary"} size={"lg"}>Search</Button>
                             </Col>
                         </Row>
                     </Form>
@@ -248,9 +246,9 @@ function Search(){
                                     return(
                                         <Card  key={key} className={"mt-3 ml-2 mr-2 flex-box"}>
                                             { project.projectPhoto ?
-                                                <Card.Img variant="top" width={"250px"} height={"250px"} src={`http://localhost:8080/photo?filename=${project.projectPhoto}`} />
+                                                <Card.Img style={{width:"250px", height:"250px", margin:"auto"}} variant="top" src={`http://localhost:8080/photo?filename=${project.projectPhoto}`} />
                                                 :
-                                                <Card.Img variant="top" width={"250px"} height={"250px"} src={default_project_picture} />
+                                                <Card.Img style={{width:"250px", height:"250px", margin:"auto"}} variant="top" src={default_project_picture} />
                                             }
                                             <Card.Body>
                                                 <Card.Title>

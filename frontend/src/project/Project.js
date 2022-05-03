@@ -1,6 +1,6 @@
 import {Button, Col, Image, Row} from "react-bootstrap";
 import default_project_picture from "../assets/images/default_project_picture.jpg"
-import React from "react";
+import React, {useEffect, useState} from "react";
 import Cookies from "js-cookie";
 import "./Project.css"
 import {FaCogs, FaEye, FaFileAlt, FaWindowClose} from "react-icons/fa";
@@ -19,7 +19,7 @@ function Project(props){
     }
 
     return(
-            <Row>
+            <Row className={"PROJECT-section"}>
                 <Col className={"col-3 PROJECT-thumbnail-section"}>
                     {props.project.projectPhoto ?
                         <Image
@@ -31,8 +31,8 @@ function Project(props){
                     }
                 </Col>
                 <Col className={"col-6 PROJECT-content-section"}>
-                    <h2>{props.project.title}</h2>
-                    <div className={"PROJECT-introduction"}>{props.project.introduction}</div>
+                    <h2>{props.project.title.slice(0,22)}</h2>
+                    <div className={"PROJECT-introduction"}>{props.project.introduction.slice(0,150)+"..."}</div>
                 </Col>
                 <Col className={"col-3 PROJECT-button-section b"}>
                     <a href={`/project/${props.project.projectId}`}>
@@ -45,8 +45,8 @@ function Project(props){
                         <FaFileAlt className={"mr-2"} size={35}/>
                         Workspace
                     </Button>
-                    { props.project.authorId === Cookies.get("userId") ?
-                        <Button className={"PROJECT-button"} variant={"primary"}>
+                    { props.project.authorId === Number(Cookies.get("userId")) ?
+                        <Button className={"PROJECT-button"} variant={"primary"} href={`project/projectSettings/${props.project.projectId}`}>
                             <FaCogs className={"mr-2"} size={35}/>
                             Settings
                         </Button>

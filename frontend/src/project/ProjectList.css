@@ -43,3 +43,14 @@
 .example::-webkit-scrollbar {
     display: none;
 }
+
+.PROJECT-invite {
+    height: 200px;
+}
+
+.PROJECT-invite-project-link {
+    text-decoration: none;
+    color: black;
+}
+
+

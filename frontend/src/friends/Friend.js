@@ -40,7 +40,7 @@ function Friend(props) {
             <Col className={"col-4"}>
                 <a href={`/profile/${props.friend.id}`} style={{ textDecoration: 'none' }}>
                     <div className={"ml-3"}>
-                        <h2>{props.friend.username}</h2>
+                        <h2 className={"FRIEND-nickname"}>{props.friend.username}</h2>
                         { props.friend.name || props.friend.surname ?
                             <h4 className={"INVITATION-name-surname"}>{props.friend.name} {props.friend.surname}</h4>
                             :

@@ -3,6 +3,7 @@ import {Accordion, Badge, Col, Container, Form, ListGroup, ListGroupItem, Row} f
 import Cookies from "js-cookie";
 import Friend from "./Friend";
 import axios from "axios";
+import "./FriendsList.css"
 import Invitation from "./Invitation";
 import {useParams} from "react-router-dom";
 
@@ -73,7 +74,7 @@ function FriendsList() {
                                     </h3>
                                 </Accordion.Header>
                                 <hr/>
-                                <Accordion.Body>
+                                <Accordion.Body className={"Accordion-body"}>
                                     <ListGroup className={"list-group"}>
                                         {
                                             pending.map((friend, key) =>
@@ -97,13 +98,13 @@ function FriendsList() {
                 <Col className={"col-2"}></Col>
                 <Col className={"col-8"}>
                     <Row>
-                        <Col>
-                            <h1>
+                        <Col className={"FRIENDLIST-friends-div"}>
+                            <h1 className={"FRIENDLIST-friends-text"}>
                                 Friends <Badge bg="secondary">{friends.length}</Badge>
                             </h1>
                         </Col>
-                        <Col>
-                            <Form>
+                        <Col className={"FRIENDLIST-searchbar"}>
+                            <Form className={"FRIENDLIST-searchbar-form"}>
                                 <Form.Control type="text" placeholder="Search friend"
                                               onChange={(e) => setSearchTerm(e.target.value)}/>
                             </Form>
