@@ -7,8 +7,10 @@ import edu.pjatk.app.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +27,9 @@ public class ConversationController {
     public ConversationController(ConversationService conversationService) {
         this.conversationService = conversationService;
     }
+
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
 
     @PostMapping(value = "/createConversation/{user_id}")
     public ResponseEntity<?> createConversation(@PathVariable Long user_id) {
@@ -66,10 +71,10 @@ public class ConversationController {
         }
     }
 
-    @MessageMapping("/chat")
-    @SendTo("/topic/messages")
-    public Message sendMessage(Message message) {
-        return message;
+    @MessageMapping("/chat/{to}")
+    public void sendMessage(@DestinationVariable String to, Long conversation,Message message) {
+        System.out.println("message: " + message.getContent() + " from " + to);
+        simpMessagingTemplate.convertAndSend("/topic/messages" + to + conversation, message);
     }
 
     @PostMapping(value = "/addMessage/{conversation_id}/{author_id}/{text}")
