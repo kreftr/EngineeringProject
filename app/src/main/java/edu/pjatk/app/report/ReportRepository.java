@@ -31,6 +31,19 @@ public class ReportRepository {
         entityManager.merge(report);
     }
 
+    public Optional<Report> getReport(Long id) {
+        Optional<Report> report;
+        try {
+            report = Optional.of(
+                    entityManager.createQuery("SELECT r FROM Report r WHERE r.id=:id", Report.class)
+                            .setParameter("id", id).getSingleResult()
+                    );
+        } catch (NoResultException e) {
+            report = Optional.empty();
+        }
+        return report;
+    }
+
     public Optional<List<Report>> getReports() {
         Optional<List<Report>> reports;
         try {

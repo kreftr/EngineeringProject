@@ -42,4 +42,14 @@ public class ReportController {
         }
     }
 
+    @DeleteMapping
+    public ResponseEntity removeReport(@RequestParam Long id) {
+        ReportResultEnum result = reportService.remove(id);
+        if (ReportResultEnum.REMOVED.equals(result)) {
+            return new ResponseEntity("Removed", HttpStatus.OK);
+        } else {
+            return new ResponseEntity("Not found", HttpStatus.NO_CONTENT);
+        }
+    }
+
 }

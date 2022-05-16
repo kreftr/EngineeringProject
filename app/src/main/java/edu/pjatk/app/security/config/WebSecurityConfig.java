@@ -58,6 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/profile/my", "/project/**", "/file/**", "/team/**", "/task/**").hasAnyRole("USER", "ADMIN")
                 .antMatchers(HttpMethod.POST, "/report").hasAnyRole("USER", "ADMIN")
                 .antMatchers(HttpMethod.GET, "/report").hasRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/report").hasRole("ADMIN")
                 .anyRequest().authenticated();
     }
 

@@ -58,4 +58,15 @@ public class ReportService {
         }
     }
 
+    @Transactional
+    public ReportResultEnum remove(Long id) {
+        Optional<Report> report = reportRepository.getReport(id);
+        if (report.isPresent()) {
+            reportRepository.remove(report.get());
+            return ReportResultEnum.REMOVED;
+        } else {
+            return ReportResultEnum.NOT_FOUND;
+        }
+    }
+
 }
