@@ -71,10 +71,10 @@ public class ConversationController {
         }
     }
 
-    @MessageMapping("/chat/{to}")
-    public void sendMessage(@DestinationVariable String to, Long conversation,Message message) {
+    @MessageMapping("/{to}")
+    public void sendMessage(@DestinationVariable String to, Message message) {  // to represents conversation id
         System.out.println("message: " + message.getContent() + " from " + to);
-        simpMessagingTemplate.convertAndSend("/topic/messages" + to + conversation, message);
+        simpMessagingTemplate.convertAndSend("/topic/messages" + to, message);
     }
 
     @PostMapping(value = "/addMessage/{conversation_id}/{author_id}/{text}")

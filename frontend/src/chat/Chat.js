@@ -1,117 +1,102 @@
 import React, {useEffect, useState} from 'react';
-import {Container, ListGroup, ListGroupItem} from "react-bootstrap";
-import Message from "./Message"
-import Cookies from "js-cookie";
-import axios from "axios";
-import "./Chat.css"
-import * as SockJS from 'sockjs-client';
-import * as Stomp from 'stompjs';
+import {Col, Container, Nav, Row, Tab} from "react-bootstrap";
+import Cookies from "js-cookie"
+import axios from "axios"
+import Conversation from "./Conversation"
+import * as SockJS from "sockjs-client";
+import * as Stomp from "stompjs";
+import './Chat.css'
 
-function Chat(props) {
+function Chat() {
+
     const [inputValue, setInputValue] = useState("");
-    // const [messages, setMessages] = useState([])
-    const [messagesLoading, setMessagesLoading] = useState(true)
-    const [messagesCode, setMessagesCode] = useState(null)
-    // const [stompClient, setStompClient] = useState(null)
+    const [conversations, setConversations] = useState([]);
+    const [activeConversation, setActiveConversation] = useState(null);
 
-    // useEffect(() => {
-    //     setStompClient(Stomp.over('ws://localhost:8080/chat'))
-    // }, [])
-    //
-    // useEffect(() => {
-    //     if (stompClient !== null) {
-    //         stompClient.connect({}, function() {
-    //             stompClient.subscribe('/topic/messages', function(messageOutput) { // TODO poprawic na /topic/messages/conversation_id
-    //                 showNewMessage(messageOutput.body)
-    //             })
-    //         })
-    //     }
-    // }, [stompClient])
+    const [socket] = useState(new SockJS('http:localhost:8080'))  // TODO + '/conversation'
+    const [stompClient] = useState(Stomp.over(socket))
 
 
-    //TODO uncomment new code
-    // let stompClient;
-    // let selectedUser;
-    // function connectToChat(username) {
-    //     console.log("connecting to chat...")
-    //     let socket = new SockJS('http:localhost:8080' + '/chat');
-    //     stompClient = Stomp.over(socket);
-    //     stompClient.connect({}, function (frame) {
-    //         console.log("connected to: " + frame);
-    //         stompClient.subscribe("topic/messages/" + username, function (response) {
-    //             let data = JSON.parse(response.body);
-    //             console.log(data);
-    //             render(data.content, data.conversation_id, data.author_id)
-    //         });
-    //     });
-    // }
-    //
-    // function render(message, userName, conversation) {
-    //     console.log(message, userName, conversation)
-    // }
-    //
-    // function sendMsg(username, message, conversation) {
-    //     stompClient.send("app/chat/" + selectedUser, {}, JSON.stringify({
-    //         content: message,
-    //         conversation_id: conversation,
-    //         author_id: username
-    //     }));
-    // }
-    //
-    // function sendMessage(message) {
-    //     let username = "asd";
-    //     let conversation = 1;
-    //     sendMsg(username, message, conversation)
-    // }
+    useEffect(() => {
+        axios.get(`http://localhost:8080/conversation/getAllUserConversations`, {
+            headers: {
+                'Authorization': Cookies.get("authorization")
+            }
+        }).then((response) => {
+            setConversations(response.data);
+        }).catch(err => {
+            console.log(err.response)
+        });
+    }, []);
 
+    function connectToChat() {
+        // console.log("Connecting to chat...")
+        stompClient.connect({}, function (frame) {
+            console.log("Connected to: " + frame);
+            stompClient.subscribe("/topic/messages/" + activeConversation.conversationId, function (response) {  // TODO + selectedUser
+                let data = JSON.parse(response.body);
+                console.log(data.content, data.author_id, data.conversation_id)
+            });
+        });
+    }
 
-
-
-
-    // function showNewMessage(messageOutput) {
-    //     console.log(messageOutput)
-    // }
-
-    // const sendNewMessage = (event) => {
-    //     if (event.key === 'Enter') {
-    //         stompClient.send("/app/chat", {}, JSON.stringify({  // TODO poprawic na /app/chat/conversation_id
-    //             'conversation_id': props.conversation.conversationId,
-    //             'author_id': Cookies.get("userId"),
-    //             'text': inputValue
-    //         }))
-    //         document.getElementById("message_sender_input").value = ""  // clear input after
-    //     }
-    // }
+    function sendMessage(message) {
+        stompClient.send("/conversation/" + activeConversation.conversationId, {}, JSON.stringify({  // todo app/conversation/
+            content: message,
+            conversation_id: activeConversation.conversationId,
+            author_id: activeConversation.userId
+        }));
+    }
 
     return (
-        // <input className={"CHAT-input mt-4"} id={"message_sender_input"} type="text"
-        //        onChange={event => setInputValue(event.target.value)} onKeyDown={sendMessage}
-        //        placeholder={"Write message"}/>
-        <></>
-
-
-        // <Container className={"container"}>
-        //     { messagesCode === 200 && !messagesLoading ?
-        //         <div>
-        //             {/*<ListGroup className={"list-group CHAT-window"}>*/}
-        //             {/*    {*/}
-        //             {/*        messages.map((message, key) =>*/}
-        //             {/*            <ListGroupItem key={key}>*/}
-        //             {/*                <Message message={message}/>*/}
-        //             {/*            </ListGroupItem>*/}
-        //             {/*        )*/}
-        //             {/*    }*/}
-        //             {/*</ListGroup>*/}
-        //             <div id={"message_sender"}>
-        //                 <input className={"CHAT-input mt-4"} id={"message_sender_input"} type="text"
-        //                        onChange={event => setInputValue(event.target.value)} onKeyDown={sendMessage}
-        //                        placeholder={"Write message"}/>
-        //             </div>
-        //         </div>
-        //         :
-        //         <></>
-        //     }
-        // </Container>
+            <Container className={"mt-5 container"}>
+                { conversations ?
+                    <Tab.Container>
+                        <Row>
+                            <Col className={"col-4"}>
+                                <Nav variant="pills" className="flex-column">
+                                    {
+                                        conversations.map((conversation, key) =>
+                                            <Nav.Item key={key}>
+                                                <Nav.Link eventKey={conversation.conversationId}
+                                                          onClick={() => {
+                                                              setActiveConversation(conversation);
+                                                              connectToChat();
+                                                          }}>
+                                                    <Conversation conversation={conversation}/>
+                                                </Nav.Link>
+                                            </Nav.Item>
+                                        )
+                                    }
+                                </Nav>
+                            </Col>
+                            <Col className={"col-8"}>
+                                { activeConversation !== null ?
+                                    <Tab.Content>
+                                        {
+                                            conversations.map((conversation, key) =>
+                                                <Tab.Pane eventKey={conversation.conversationId} key={key}>
+                                                    <input className={"CHAT-input mt-4"} id={"message_sender_input"} type="text"
+                                                           onChange={event => setInputValue(event.target.value)}
+                                                           placeholder={"Write message"}
+                                                           onKeyDown={ event => {
+                                                               if (event.key === 'Enter') { sendMessage(inputValue) }
+                                                            }}
+                                                    />
+                                                </Tab.Pane>
+                                            )
+                                        }
+                                    </Tab.Content>
+                                   :
+                                    <></>
+                                }
+                            </Col>
+                        </Row>
+                    </Tab.Container>
+                :
+                    <></>
+                }
+            </Container>
     );
 }
 export default Chat;
