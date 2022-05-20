@@ -8,8 +8,9 @@ function Post(props) {
         <ListGroupItem>
             <Row>
                 <Col className={"col-4"} >
-                   <h3 className={"FORUM-content"}>{props.post.title}</h3>
-                    {props.post.text}
+                    <a href={`/post/${props.post.postId}`} className={"mr-3"}>
+                        <h3 className={"FORUM-content"}>{props.post.title}</h3>
+                    </a>
                 </Col>
                 <Col>
                     <a href={`/profile/${props.post.userId}`} className={"mr-3"}>
@@ -26,7 +27,7 @@ function Post(props) {
                             height = "50px"/>
                         }
                     </a>
-                    {props.post.userName}
+                        {props.post.userName}
                 </Col>
                 <Col className={"col-4 POST-date"}>
                     {props.post.datee}

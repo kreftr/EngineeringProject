@@ -20,6 +20,7 @@ public class CommentController {
     public CommentController(CommentService commentService) {
         this.commentService = commentService;
     }
+    
     @PostMapping(value = "/createCommentPost/{postId}")
     public ResponseEntity createCommentPost(@PathVariable Long postId, @RequestBody CommentRequest commentRequest) {
         commentService.createCommentForPost(commentRequest, postId);
@@ -47,7 +48,7 @@ public class CommentController {
         }
     }
 
-    @GetMapping(value = "/getPostComments/{projectId}")
+    @GetMapping(value = "/getPostComments/{postId}")
     public ResponseEntity<?> getPostComments(@PathVariable Long postId) {
         Set<CommentResponse> allComments = commentService.getAllCommentsByPostId(postId);
         if(allComments.isEmpty()) {

@@ -11,15 +11,16 @@ import Verification from "./registration/Verification";
 import Login from "./login/Login";
 import Recovery from "./recovery/Recovery";
 import ProjectView from "./project/ProjectView";
-import ConversationList from "./chat/ConversationList"
-import FriendsList from "./friends/FriendsList"
-import Settings from "./profile/settings/Settings"
+import ConversationList from "./chat/ConversationList";
+import FriendsList from "./friends/FriendsList";
+import Settings from "./profile/settings/Settings";
 import ProjectList from "./project/ProjectList";
 import Workspace from "./workspace/Workspace";
 import Ranking from "./ranking/Ranking";
-import Forum from "./forum/Forum"
+import Forum from "./forum/Forum";
 import HomePage from "./homepage/HomePage";
 import ProjectSettings from "./settings/ProjectSettings";
+import Thread from "./forum/Thread";
 
 
 class App extends Component{
@@ -84,6 +85,7 @@ class App extends Component{
                     <Route path={"recovery/:token"} element={<Recovery/>}/>
                     <Route path={"login"} element={<Login/>}/>
                     <Route path={"forum"} element={<Forum/>}/>
+                    <Route path={"post/:id"} element={<Thread/>}/>
                 </Routes>
             </Router>
         </>

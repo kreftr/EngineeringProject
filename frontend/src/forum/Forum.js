@@ -1,10 +1,11 @@
 import axios from "axios";
-import {Button, Container, Col, Form, ListGroup, ListGroupItem, Modal, Row} from "react-bootstrap";
+import {Button, Col, Container, Form, ListGroup, ListGroupItem, Modal, Row} from "react-bootstrap";
 import {useEffect, useState} from "react";
-import "./Forum.css";
-import Post from "./Post";
 import Cookies from "js-cookie";
 import {Alert} from "@mui/material";
+
+import "./Forum.css";
+import Post from "./Post";
 
 function Forum(props){
     const [posts, setPosts] = useState([]);

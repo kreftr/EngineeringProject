@@ -3,6 +3,7 @@ package edu.pjatk.app.forum;
 import edu.pjatk.app.request.PostRequest;
 import edu.pjatk.app.response.PostResponse;
 import edu.pjatk.app.response.ResponseMessage;
+import edu.pjatk.app.response.profile.FullProfileResponse;
 import edu.pjatk.app.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,6 +38,19 @@ public class PostController {
         return new ResponseEntity(
                 new ResponseMessage("Post successfully deleted!"), HttpStatus.OK
         );
+    }
+
+    @RequestMapping(params = "id", method = RequestMethod.GET)
+    public ResponseEntity getPost(@RequestParam Long id){
+        Optional<PostResponse> post = postService.findPostById(id);
+        if (post.isEmpty()){
+            return new ResponseEntity(
+                    new ResponseMessage("Post does not exist"), HttpStatus.NOT_FOUND
+            );
+        }
+        else {
+            return new ResponseEntity(post.get(),HttpStatus.OK);
+        }
     }
     
     @GetMapping(value = "/getAllPosts")

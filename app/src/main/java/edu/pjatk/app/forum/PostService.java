@@ -58,8 +58,18 @@ public class PostService {
         postRepository.updatePost(post);
     }
     
-    public Optional<Post> findPostById(Long id) {
-        return postRepository.getPostById(id);
+    public Optional<PostResponse> findPostById(Long id) {
+        Optional<Post> post = postRepository.getPostById(id);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        
+        String userPhoto;
+        try {
+            userPhoto = post.get().getUserr().getProfile().getPhoto().getFileName();
+        } catch (NullPointerException e ) {
+            userPhoto = null;
+        }
+        return Optional.of(new PostResponse(post.get().getId(), post.get().getTitle(), post.get().getText(),
+                post.get().getDatee().format(formatter), post.get().getUserr().getId(), post.get().getUserr().getUsername(), userPhoto));
     }
     
     public Optional<Post> findPostByTitle(String title) {
