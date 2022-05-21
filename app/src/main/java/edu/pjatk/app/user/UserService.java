@@ -1,5 +1,6 @@
 package edu.pjatk.app.user;
 
+import edu.pjatk.app.email.EmailService;
 import edu.pjatk.app.email.activation_token.ActivationTokenService;
 import edu.pjatk.app.photo.PhotoService;
 import edu.pjatk.app.request.PasswordChangeRequest;
@@ -119,6 +120,18 @@ public class UserService {
     public void changePassword(User user, PasswordChangeRequest passwordChangeRequest){
         user.setPassword(passwordEncoder.encode(passwordChangeRequest.getNewPassword()));
         userRepository.update(user);
+    }
+
+    @Transactional
+    public void updateEmailNotification(Boolean isNotificationEnabled){
+        User user = findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).get();
+        user.setEmailNotification(isNotificationEnabled);
+        userRepository.update(user);
+    }
+
+    public Boolean getEmailNotification(){
+        User user = findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).get();
+        return user.getEmailNotification();
     }
 
     public Optional<User> findUserById(Long id){

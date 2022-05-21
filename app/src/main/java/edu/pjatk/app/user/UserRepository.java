@@ -115,4 +115,18 @@ public class UserRepository {
         return users;
     }
 
+    public Optional<List<Long>> getAllUsersIdWithNotificationOn(){
+        Optional listOfIds;
+        try {
+            listOfIds = Optional.of(
+                    entityManager.createQuery(
+                                    "SELECT user.id FROM User user WHERE user.emailNotification = true", Long.class)
+                            .getResultList()
+            );
+        } catch (NoResultException noResultException){
+            listOfIds = Optional.empty();
+        }
+        return listOfIds;
+    }
+
 }

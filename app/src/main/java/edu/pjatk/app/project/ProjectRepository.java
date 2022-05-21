@@ -1,5 +1,6 @@
 package edu.pjatk.app.project;
 
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -7,6 +8,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 
@@ -98,6 +101,24 @@ public class ProjectRepository {
             projects =  Optional.of(entityManager.createQuery(
                             "select project from Project project where project.project_access<>'PRIVATE' and project.creator.id<>:id", Project.class)
                     .setParameter("id", id).getResultList());
+        }
+        catch (NoResultException noResultException){
+            projects = Optional.empty();
+        }
+        return projects;
+    }
+
+    public Optional<List<Project>> getAllFromLastMonth(){
+        Optional<List<Project>> projects;
+
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, -1);
+        LocalDateTime date = cal.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+
+        try {
+            projects =  Optional.of(entityManager.createQuery(
+                            "SELECT project FROM Project project WHERE project.project_access='PUBLIC' and project.creation_date >= :date", Project.class)
+                    .setParameter("date", date).getResultList());
         }
         catch (NoResultException noResultException){
             projects = Optional.empty();

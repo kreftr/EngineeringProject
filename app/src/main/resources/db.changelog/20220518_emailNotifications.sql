@@ -1,0 +1,1 @@
+ALTER TABLE "user" ADD COLUMN emailNotification BOOLEAN NOT NULL default TRUE;

@@ -31,7 +31,7 @@ public class Profile {
     @JoinColumn(name = "photo_id")
     private Photo photo;
 
-    @ManyToMany(cascade = {CascadeType.ALL})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     @JoinTable(
             name = "profile_category",
             joinColumns = {@JoinColumn(name = "profile_id")},
