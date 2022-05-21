@@ -1,7 +1,8 @@
 import {Alert, Button, Col, Form, Row, Modal} from "react-bootstrap";
-import React, {useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
+import {Checkbox} from "@mui/material";
 
 
 function AccountSettings(){
@@ -15,6 +16,32 @@ function AccountSettings(){
     const [confirmNewPassword, setConfirmNewPassword] = useState();
     const [responseMessage, setResponseMessage] = useState();
     const [responseCode, setCode] = useState();
+    const [emailNotifications, setEmailNotifications] = useState(false);
+    const [isNotificationLoading, setIsNotificationLoading] = useState(false);
+
+    useEffect(() => {
+        axios.get("http://localhost:8080/user/getEmailNotification", {headers:{
+                'Authorization': Cookies.get("authorization")
+            }}).then(response => {
+                setEmailNotifications(response.data);
+
+        }).catch(err => {
+            console.log(err.response)
+        }).finally(() => {
+                setIsNotificationLoading(true)
+            })
+    },[]);
+
+    useEffect(() => {
+        axios.post(`http://localhost:8080/user/updateEmailNotification/${emailNotifications}`, {}, {
+            headers: {
+                'Authorization': Cookies.get("authorization")
+            }
+        })
+            .catch(err => {
+                console.log(err.response)
+            })
+    },[emailNotifications]);
 
     async function handleSubmit(e){
         e.preventDefault();
@@ -64,6 +91,18 @@ function AccountSettings(){
     }
 
     return(
+
+        <>
+            <h3>Notifications</h3>
+            { isNotificationLoading ?
+                <>
+                    <Checkbox id={"ACCOUNT_SETTINGS-notifications-email"}
+                              checked={emailNotifications} onChange={() => {setEmailNotifications(!emailNotifications)}}/>
+                    <label id={"ACCOUNT_SETTINGS-notifications-email-text"}>Email notifications</label>
+                </>
+                :
+                <></>
+            }
 
             <Form onSubmit={handleSubmit}>
                 <h3>Change password</h3>
@@ -120,7 +159,7 @@ function AccountSettings(){
                         <Button className={"SETTINGS-save-button"} variant="danger" onClick={handleShow}>
                             Delete account
                         </Button>
-                        <Modal  show={show} onHide={handleClose}>
+                        <Modal show={show} onHide={handleClose}>
                             <Modal.Header closeButton>
                                 <Modal.Title>Account deletion</Modal.Title>
                             </Modal.Header>
@@ -143,6 +182,7 @@ function AccountSettings(){
                     <Col></Col>
                 </Row>
             </Form>
+        </>
     )
 }
 

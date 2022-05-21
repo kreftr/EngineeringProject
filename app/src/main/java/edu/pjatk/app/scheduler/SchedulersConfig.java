@@ -1,9 +1,13 @@
 package edu.pjatk.app.scheduler;
 
+import edu.pjatk.app.email.EmailService;
 import edu.pjatk.app.email.activation_token.ActivationToken;
 import edu.pjatk.app.email.activation_token.ActivationTokenService;
 import edu.pjatk.app.email.password_recovery.recovery_token.RecoveryToken;
 import edu.pjatk.app.email.password_recovery.recovery_token.RecoveryTokenService;
+import edu.pjatk.app.recomendations.RecomendationService;
+import edu.pjatk.app.user.User;
+import edu.pjatk.app.user.UserRepository;
 import edu.pjatk.app.user.UserService;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +29,21 @@ public class SchedulersConfig {
     private final ActivationTokenService activationTokenService;
     private final RecoveryTokenService recoveryTokenService;
     private final UserService userService;
+    private final UserRepository userRepository;
+    private final EmailService emailService;
+    private final RecomendationService recomendationService;
+
 
     @Autowired
     public SchedulersConfig(ActivationTokenService activationTokenService, RecoveryTokenService recoveryTokenService,
-                            UserService userService){
+                            UserService userService, UserRepository userRepository, EmailService emailService,
+                            RecomendationService recomendationService){
         this.activationTokenService = activationTokenService;
         this.recoveryTokenService = recoveryTokenService;
         this.userService = userService;
+        this.userRepository = userRepository;
+        this.emailService = emailService;
+        this.recomendationService = recomendationService;
     }
 
 
@@ -64,6 +76,26 @@ public class SchedulersConfig {
                 catch (Exception e){
                     System.out.println("Something went wrong");
                 }
+            }
+        }
+    }
+
+    @Scheduled(cron = "0 0 17 10 * * ")  // 17.00, 10th day every month */10 * * * * *
+    public void sendEmailNotifications() {
+        Optional<List<Long>> listOfIds = userRepository.getAllUsersIdWithNotificationOn();
+
+        if (listOfIds.isPresent() && !listOfIds.get().isEmpty()){
+            for (Long id: listOfIds.get())
+            {
+                Optional<User> user = userRepository.findById(id);
+                if (user.isEmpty()) { continue; }
+
+                String recommendedLink = recomendationService.monthlyRecomendations(user.get());
+
+                emailService.send(user.get().getEmail(), "We got something that may interest you",
+                        "Hi " + user.get().getUsername() + ". We found project suitable for your " +
+                                "interests. Click link below if you want to know more about it" + "\n" + recommendedLink
+                );
             }
         }
     }

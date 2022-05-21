@@ -1,0 +1,1 @@
+ALTER TABLE "user" RENAME emailNotification TO email_notification;

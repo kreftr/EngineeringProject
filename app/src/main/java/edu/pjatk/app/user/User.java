@@ -30,6 +30,7 @@ public class User {
     private UserRole userRole;
     private Boolean locked;
     private Boolean enabled;
+    private Boolean emailNotification;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JoinColumn(name = "profile_id")

@@ -263,3 +263,19 @@ databaseChangeLog:
         stripComments: true
         splitStatements: false
         path: db.changelog/20220119_changeTimestampsDatatype.sql
+  - changeSet:
+      id: 20220518_emailNotifications
+      author: Adrian Trapp
+      sqlFile:
+        relativeToChangelogFile: true
+        stripComments: true
+        splitStatements: false
+        path: db.changelog/20220518_emailNotifications.sql
+  - changeSet:
+      id: 20220518_emailNotificationsNameChange
+      author: Adrian Trapp
+      sqlFile:
+        relativeToChangelogFile: true
+        stripComments: true
+        splitStatements: false
+        path: db.changelog/20220518_emailNotificationsNameChange.sql

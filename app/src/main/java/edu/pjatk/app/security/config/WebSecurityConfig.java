@@ -54,8 +54,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/profile", "/photo", "/project/getAllProjects/*",
                         "/project/ranking", "/project/randomRecommended").permitAll()
                 .antMatchers(HttpMethod.POST,  "/profile", "/photo").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/user/changePassword", "/user/deleteAccount", "/friends/**", "/conversation/**",
-                        "/profile/my", "/project/**", "/file/**", "/team/**", "task/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/user/changePassword", "/user/deleteAccount", "user/updateEmailNotification",
+                        "/friends/**", "/conversation/**", "/profile/my", "/project/**", "/file/**", "/team/**",
+                        "task/**").hasAnyRole("USER", "ADMIN")
                 .antMatchers( "/task/**").permitAll()
                 .anyRequest().authenticated();
     }

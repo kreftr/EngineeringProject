@@ -35,6 +35,15 @@ public class UserController {
         return new ResponseEntity(new ResponseMessage("Password has been changed"), HttpStatus.OK);
     }
 
+    @PostMapping("/updateEmailNotification/{isNotificationEnabled}")
+    public void updateEmailNotification(@PathVariable Boolean isNotificationEnabled){
+        userService.updateEmailNotification(isNotificationEnabled);
+    }
+    @GetMapping("/getEmailNotification")
+    public Boolean getEmailNotification(){
+        return userService.getEmailNotification();
+    }
+
     @GetMapping(value = "/findUserById/{id}")
     public ResponseEntity<?> findUserById(@PathVariable Long id){
         Optional<User> user = userService.findUserById(id);
