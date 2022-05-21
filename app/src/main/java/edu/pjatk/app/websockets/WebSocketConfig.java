@@ -10,11 +10,9 @@ import org.springframework.web.socket.config.annotation.*;
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-    private final static String CHAT_ENDPOINT = "/conversation";
-
     @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {  // TODO podmienic * na adres serwera
-        registry.addEndpoint("/conversation").setAllowedOrigins("*").withSockJS();  //TODO CHAT_ENDPOINT
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
+        registry.addEndpoint("/conversation").setAllowedOriginPatterns("*").withSockJS();
     }
 
     @Override

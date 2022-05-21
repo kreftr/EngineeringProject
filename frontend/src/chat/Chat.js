@@ -13,7 +13,7 @@ function Chat() {
     const [conversations, setConversations] = useState([]);
     const [activeConversation, setActiveConversation] = useState(null);
 
-    const [socket] = useState(new SockJS('http:localhost:8080'))  // TODO + '/conversation'
+    const [socket] = useState(new SockJS('http:localhost:8080/conversation'))
     const [stompClient] = useState(Stomp.over(socket))
 
 
@@ -33,7 +33,7 @@ function Chat() {
         // console.log("Connecting to chat...")
         stompClient.connect({}, function (frame) {
             console.log("Connected to: " + frame);
-            stompClient.subscribe("/topic/messages/" + activeConversation.conversationId, function (response) {  // TODO + selectedUser
+            stompClient.subscribe("/topic/messages/" + activeConversation.conversationId, function (response) {
                 let data = JSON.parse(response.body);
                 console.log(data.content, data.author_id, data.conversation_id)
             });
@@ -41,7 +41,7 @@ function Chat() {
     }
 
     function sendMessage(message) {
-        stompClient.send("/conversation/" + activeConversation.conversationId, {}, JSON.stringify({  // todo app/conversation/
+        stompClient.send("/" + activeConversation.conversationId, {}, JSON.stringify({
             content: message,
             conversation_id: activeConversation.conversationId,
             author_id: activeConversation.userId
