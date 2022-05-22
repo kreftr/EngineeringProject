@@ -1,4 +1,4 @@
-import {Badge, Button, Col, Container, Image, ListGroup, Row} from "react-bootstrap";
+import {Badge, Button, Col, Container, Form, Image, ListGroup, Modal, Row} from "react-bootstrap";
 import {FaFacebookSquare, FaGithubSquare, FaKickstarter, FaYoutube} from "react-icons/all";
 import "./ProjectView.css"
 import default_project_picture from "../assets/images/default_project_picture.jpg"
@@ -16,6 +16,11 @@ function ProjectView(){
 
     const [project, setProject] = useState();
     const [statusCode, setStatusCode] = useState();
+
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+    const [reasoning, setReasoning] = useState("");
 
 
     useEffect(() => {
@@ -47,6 +52,19 @@ function ProjectView(){
         }).catch(err => {
             console.log(err.response)
         })
+    }
+
+    function report() {
+        axios.post(`http://localhost:8080/report`,
+            {"entityId" : id, "entityType" : "PROJECT", "reasoning" : `${reasoning}`},
+            {headers:{'Authorization': Cookies.get("authorization")}
+            })
+            .then(response => {
+                window.location.reload();
+            })
+            .catch(err =>  {
+                window.alert(err.response.data.message)
+            });
     }
 
 
@@ -172,13 +190,31 @@ function ProjectView(){
                                                         }
                                                     </>
                                                 }
+                                                <Button className={"mb-2 mt-2"} variant="danger" onClick={handleShow}>Report</Button>
                                                 <Rating/>
                                             </Row>
                                             :
                                             <></>
                                         }
                                     </Row>
-
+                                    <Modal show={show} onHide={handleClose}>
+                                        <Modal.Header closeButton>
+                                            <Modal.Title>Report {project.title}</Modal.Title>
+                                        </Modal.Header>
+                                        <Modal.Body>
+                                            <Form.Group className="mb-3">
+                                                <Form.Label>Reason for the report</Form.Label>
+                                                <Form.Control as="textarea" value={reasoning}
+                                                              onChange={(e) => {setReasoning(e.target.value)}}
+                                                              rows={3} required/>
+                                            </Form.Group>
+                                        </Modal.Body>
+                                        <Modal.Footer>
+                                            <Button variant="danger" onClick={report}>
+                                                Send
+                                            </Button>
+                                        </Modal.Footer>
+                                    </Modal>
                                 </Col>
                             </Row>
                             <hr className={"mb-4 mt-2"}/>
