@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
-import {Container, Tabs, Row, Col, Image, Button, Tab, Badge, Card} from "react-bootstrap";
+import {Container, Tabs, Row, Col, Image, Button, Tab, Badge, Card, Modal, Form} from "react-bootstrap";
 import default_profile_picture from "../assets/images/default_profile_picture.jpg"
 import default_project_picture from "../assets/images/default_project_picture.jpg"
-import {FaCog, FaUserPlus, FaUserMinus, FaUserClock, FaUserFriends} from "react-icons/fa"
+import {FaCog, FaUserPlus, FaUserMinus, FaUserClock, FaUserFriends, FaFlag} from "react-icons/fa"
 import axios from "axios";
 import Cookies from "js-cookie"
 import {useParams} from "react-router-dom";
@@ -22,6 +22,12 @@ function Profile(){
     const [profileCode,setProfileCode] = useState();
     const [loadingContent, setLoading] = useState(true);
     const [responseMessage, setMessage]  = useState("Loading content...");
+
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+    const [reasoning, setReasoning] = useState("");
+
 
     useEffect(() => {
         //Load profile
@@ -86,6 +92,18 @@ function Profile(){
         })
     }
 
+    function report() {
+        axios.post(`http://localhost:8080/report`,
+            {"entityId" : id, "entityType" : "USER", "reasoning" : `${reasoning}`},
+            {headers:{'Authorization': Cookies.get("authorization")}
+            })
+            .then(response => {
+                window.location.reload();
+            })
+            .catch(err =>  {
+                window.alert(err.response.data.message)
+            });
+    }
 
     return(
         <Container className={"PROFILE-profile-container"}>
@@ -154,12 +172,34 @@ function Profile(){
                                         :
                                             <></>
                                         }
+                                        <Button variant={"danger"} className={"PROFILE-button-small"} onClick={handleShow}>
+                                            <FaFlag className={"PROFILE-icon"}/>
+                                            <h5>Report</h5>
+                                        </Button>
                                     </li>
                                 </>
                                 :
                                 <></>
                             }
                         </ul>
+                        <Modal show={show} onHide={handleClose}>
+                            <Modal.Header closeButton>
+                                <Modal.Title>Report {profile.username}</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Reason for the report</Form.Label>
+                                    <Form.Control as="textarea" value={reasoning}
+                                                  onChange={(e) => {setReasoning(e.target.value)}}
+                                                  rows={3} required/>
+                                </Form.Group>
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <Button variant="danger" onClick={report}>
+                                    Send
+                                </Button>
+                            </Modal.Footer>
+                        </Modal>
                     </Col>
                     <Col className={"col-8"}>
                         <Tabs defaultActiveKey="Projects" className="mb-5" fill>
