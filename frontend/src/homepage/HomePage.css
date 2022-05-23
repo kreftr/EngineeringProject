@@ -1,5 +1,26 @@
-.HOMEPAGE-ranking-title {
+h1 {
+    padding-top: 30px;
     font-size: 55px;
+    text-align: center;
+}
+
+.HOMEPAGE-introduction-to-projects-logged {
+    padding-bottom: 120px;
+    padding-top: 120px;
+    font-size: 24px;
+    text-align: center;
+}
+
+.HOMEPAGE-introduction-to-site {
+    padding-bottom: 120px;
+    padding-top: 120px;
+    font-size: 24px;
+    text-align: center;
+}
+
+.HOMEPAGE-introduction-to-projects {
+    padding-bottom: 120px;
+    font-size: 24px;
     text-align: center;
 }
 
@@ -13,3 +34,16 @@
     cursor: pointer;
 }
 
+.HOMEPAGE-project-categories {
+    overflow: scroll;
+    word-wrap:break-word;
+    height: 200px;
+}
+
+.HOMEPAGE-projects-list li:before{
+    font-size: 32px;
+    font-weight: bold;
+    font-family: 'Abril Fatface', serif;
+    float: left;
+    padding-right: 10px;
+}

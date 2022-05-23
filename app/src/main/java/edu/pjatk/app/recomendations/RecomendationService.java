@@ -20,11 +20,12 @@ public class RecomendationService {
         this.projectRepository = projectRepository;
     }
 
-    public String monthlyRecomendations(User user) {
+    // returns best suited projects first
+    public List<Long> monthlyRecomendationIds(User user) {
         Optional<List<Project>> monthlyProjects = projectRepository.getAllFromLastMonth();
         Set<Category> userCategories = user.getProfile().getCategories();
 
-        TreeMap<Long, Integer> commonCategories = new TreeMap<>();
+        TreeMap<Long, Integer> commonCategories = new TreeMap<>();  // long represents user id, integer common category quantity
         for (Project project: monthlyProjects.get())
         {
             int commonCategoryCount = Collections.frequency(userCategories, project.getCategories());
@@ -37,8 +38,11 @@ public class RecomendationService {
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
                         (e1, e2) -> e1, LinkedHashMap::new));
 
-        // gets first key from map sorted by values in reverse
-        Long recommendedProjectId = commonCategoriesSorted.keySet().stream().findFirst().get();
+        return commonCategoriesSorted.keySet().stream().toList();
+    }
+
+    public String getRecomendedProjectLink(User user) {
+        Long recommendedProjectId = monthlyRecomendationIds(user).get(0);  // best projects first
         return "http://localhost:3000/project/" + recommendedProjectId;
     }
 

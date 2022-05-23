@@ -10,6 +10,7 @@ import edu.pjatk.app.project.invitation.ProjectInvitationService;
 import edu.pjatk.app.project.participant.Participant;
 import edu.pjatk.app.project.participant.ParticipantRole;
 import edu.pjatk.app.project.participant.ParticipantService;
+import edu.pjatk.app.recomendations.RecomendationService;
 import edu.pjatk.app.request.ProjectRequest;
 import edu.pjatk.app.response.project.*;
 import edu.pjatk.app.user.User;
@@ -34,18 +35,21 @@ public class ProjectService {
     private final PhotoService photoService;
     private final ProjectInvitationService projectInvitationService;
     private final ParticipantService participantService;
+    private final RecomendationService recomendationService;
 
     @Autowired
     public ProjectService(ProjectRepository projectRepository, CategoryService categoryService,
                           UserService userService, PhotoService photoService,
                           ProjectInvitationService projectInvitationService,
-                          ParticipantService participantService) {
+                          ParticipantService participantService,
+                          RecomendationService recomendationService) {
         this.projectRepository = projectRepository;
         this.categoryService = categoryService;
         this.userService = userService;
         this.photoService = photoService;
         this.projectInvitationService = projectInvitationService;
         this.participantService = participantService;
+        this.recomendationService = recomendationService;
     }
 
 
@@ -533,7 +537,7 @@ public class ProjectService {
 
             String projectPhoto = "";
             if (project.getPhoto() != null) {
-                projectPhoto = project.getPhoto().toString();
+                projectPhoto = project.getPhoto().getFileName();
             }
 
             String userPhoto = "";
@@ -554,6 +558,66 @@ public class ProjectService {
         }
         return random10Response;
     }
+    public List<FullProjectResponse> getRecommendedProjects(Long userId){
+        Optional<User> userOptional = userService.findUserById(userId);
+        if (userOptional.isEmpty()) { return Collections.emptyList(); }
+        User user = userOptional.get();
+
+        List<Long> allProjectsIds = recomendationService.monthlyRecomendationIds(user).subList(0,4);  // 5 first
+        List<Project> projects = new ArrayList<>(Collections.emptyList());
+        for (Long id: allProjectsIds) {
+            Optional<Project> optionalProject = projectRepository.getProjectById(id);
+            if (optionalProject.isPresent()) {
+                projects.add(optionalProject.get());
+            }
+        }
+
+        List<FullProjectResponse> fullProjectResponses= new ArrayList<>();
+
+        for (Project project: projects) {
+            //Return average rating if there is more than one vote
+            float averageRating = (project.getRatings().size() > 0 ?
+                    ((Integer) project.getRatings().stream().mapToInt(Rating::getValue).sum()).floatValue()/project.getRatings().size()
+                    : 0);
+            int numberOfVotes = project.getRatings().size();
+
+            //Return IDs of project members
+            Set<Long> participants = new HashSet<>();
+            for (Participant p : project.getParticipants()){
+                if (!p.isPending()) participants.add(p.getUser().getId());
+            }
+
+            Set<String> categories = new HashSet<>();
+            if (!project.getCategories().isEmpty()) {
+                for (Category c : project.getCategories()){
+                    categories.add(c.getTitle());
+                }
+            }
+
+            String projectPhoto = "";
+            if (project.getPhoto() != null) {
+                projectPhoto = project.getPhoto().getFileName();
+            }
+
+            String userPhoto = "";
+            if (project.getCreator().getProfile().getPhoto() != null) {
+                userPhoto = project.getCreator().getProfile().getPhoto().toString();
+            }
+
+            FullProjectResponse projectResponse = new FullProjectResponse(
+                    project.getId(), projectPhoto, project.getProject_name(), project.getProject_introduction(),
+                    project.getProject_description(), project.getCreation_date().toString(), project.getProject_status().toString(),
+                    project.getProject_access().toString(),categories, project.getYoutube_link(), project.getGithub_link(),
+                    project.getFacebook_link(), project.getKickstarter_link(), project.getCreator().getId(),
+                    project.getCreator().getUsername(), userPhoto,
+                    averageRating, numberOfVotes, participants
+            );
+            fullProjectResponses.add(projectResponse);
+        }
+        return fullProjectResponses;
+    }
+
+
 
 
     //Project files section

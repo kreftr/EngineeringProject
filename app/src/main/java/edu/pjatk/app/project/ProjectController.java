@@ -214,6 +214,17 @@ public class ProjectController {
         else return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 
+    @GetMapping(value = "/homepageRecommended/{userId}")
+    public ResponseEntity getHomepageRecommended(@PathVariable Long userId){
+        List<FullProjectResponse> best = projectService.getRecommendedProjects(userId);
+        if(!best.isEmpty()){
+            return new ResponseEntity(best, HttpStatus.OK);
+        }
+        else return new ResponseEntity(HttpStatus.NOT_FOUND);
+    }
+
+
+
     //-----------------------------------
 
 

@@ -90,7 +90,7 @@ public class SchedulersConfig {
                 Optional<User> user = userRepository.findById(id);
                 if (user.isEmpty()) { continue; }
 
-                String recommendedLink = recomendationService.monthlyRecomendations(user.get());
+                String recommendedLink = recomendationService.getRecomendedProjectLink(user.get());
 
                 emailService.send(user.get().getEmail(), "We got something that may interest you",
                         "Hi " + user.get().getUsername() + ". We found project suitable for your " +
