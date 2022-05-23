@@ -123,7 +123,8 @@ public class ConversationService {
 
         List<MessageResponse> messageResponses = new ArrayList<>();
         for (Message message: optionalMessages.get()) {
-            MessageResponse tempResponse = new MessageResponse(message.getContent(), message.getUser().getUsername(),
+            MessageResponse tempResponse;
+            tempResponse = new MessageResponse(message.getContent(), message.getUser().getUsername(),
                     message.getMessage_date().toString(), message.getUser().getProfile().getPhoto().getFileName());
             messageResponses.add(tempResponse);
         }

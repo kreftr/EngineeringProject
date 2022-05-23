@@ -1,5 +1,7 @@
 package edu.pjatk.app.socials.chat;
 
+import edu.pjatk.app.request.MessageRequest;
+import edu.pjatk.app.request.ProjectRequest;
 import edu.pjatk.app.response.*;
 import edu.pjatk.app.timestamp.Timestamp;
 import edu.pjatk.app.user.User;
@@ -14,6 +16,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -72,9 +75,9 @@ public class ConversationController {
     }
 
     @MessageMapping("/{to}")
-    public void sendMessage(@DestinationVariable String to, Message message) {  // to represents conversation id
-        System.out.println("message: " + message.getContent() + " from " + to);
-        simpMessagingTemplate.convertAndSend("/topic/messages" + to, message);
+    public void sendMessage(@DestinationVariable String to, @RequestPart MessageRequest message) {  // to represents conversation id
+        simpMessagingTemplate.convertAndSend("/conversation/" + to, message);
+        addMessage(message.getConversation_id(), message.getAuthor_id(), message.getMessage());  // post call to database
     }
 
     @PostMapping(value = "/addMessage/{conversation_id}/{author_id}/{text}")

@@ -1,17 +1,19 @@
 import React, {useEffect, useState} from 'react';
-import {Col, Container, Nav, Row, Tab} from "react-bootstrap";
+import {Col, Container, ListGroupItem, Nav, Row, Tab} from "react-bootstrap";
 import Cookies from "js-cookie"
 import axios from "axios"
 import Conversation from "./Conversation"
 import * as SockJS from "sockjs-client";
 import * as Stomp from "stompjs";
 import './Chat.css'
+import Message from "./Message";
 
 function Chat() {
 
     const [inputValue, setInputValue] = useState("");
     const [conversations, setConversations] = useState([]);
     const [activeConversation, setActiveConversation] = useState(null);
+    const [messages, setMessages] = useState([]);
 
     const [socket] = useState(new SockJS('http:localhost:8080/conversation'))
     const [stompClient] = useState(Stomp.over(socket))
@@ -29,24 +31,44 @@ function Chat() {
         });
     }, []);
 
-    function connectToChat() {
-        // console.log("Connecting to chat...")
+    useEffect(() => {
+        if (activeConversation === null) { return; }
+
+        if (stompClient != null) {
+            stompClient.disconnect();
+            console.log("disconnected");
+        }
+
+        // get initial messages from database
+        axios.get(`http://localhost:8080/conversation/getAllMessages/${activeConversation.conversationId}`, {
+            headers: {
+                'Authorization': Cookies.get("authorization")
+            }
+        }).then((response) => {
+            setMessages(response.data);
+        }).catch(err => {
+            console.log(err.response)
+        });
+
+        // connect to chat
         stompClient.connect({}, function (frame) {
             console.log("Connected to: " + frame);
-            stompClient.subscribe("/topic/messages/" + activeConversation.conversationId, function (response) {
+            stompClient.subscribe("/" + activeConversation.conversationId, function (response) {
                 let data = JSON.parse(response.body);
-                console.log(data.content, data.author_id, data.conversation_id)
+                setMessages([...messages, data])  // TODO test it
+                // console.log(data.message, data.author_id, data.conversation_id)
             });
         });
-    }
+    }, [activeConversation]);
 
     function sendMessage(message) {
         stompClient.send("/" + activeConversation.conversationId, {}, JSON.stringify({
-            content: message,
+            message: message,
             conversation_id: activeConversation.conversationId,
             author_id: activeConversation.userId
         }));
     }
+
 
     return (
             <Container className={"mt-5 container"}>
@@ -61,7 +83,6 @@ function Chat() {
                                                 <Nav.Link eventKey={conversation.conversationId}
                                                           onClick={() => {
                                                               setActiveConversation(conversation);
-                                                              connectToChat();
                                                           }}>
                                                     <Conversation conversation={conversation}/>
                                                 </Nav.Link>
@@ -72,22 +93,23 @@ function Chat() {
                             </Col>
                             <Col className={"col-8"}>
                                 { activeConversation !== null ?
-                                    <Tab.Content>
+                                    <>
                                         {
-                                            conversations.map((conversation, key) =>
-                                                <Tab.Pane eventKey={conversation.conversationId} key={key}>
-                                                    <input className={"CHAT-input mt-4"} id={"message_sender_input"} type="text"
-                                                           onChange={event => setInputValue(event.target.value)}
-                                                           placeholder={"Write message"}
-                                                           onKeyDown={ event => {
-                                                               if (event.key === 'Enter') { sendMessage(inputValue) }
-                                                            }}
-                                                    />
-                                                </Tab.Pane>
+                                            messages.map((message, key) =>
+                                                <ListGroupItem key={key}>
+                                                    <Message message={message}/>
+                                                </ListGroupItem>
                                             )
                                         }
-                                    </Tab.Content>
-                                   :
+                                        <input className={"CHAT-input mt-4"} id={"message_sender_input"} type="text"
+                                               onChange={event => setInputValue(event.target.value)}
+                                               placeholder={"Write message"}
+                                               onKeyDown={ event => {
+                                                   if (event.key === 'Enter') { sendMessage(inputValue) }
+                                               }}
+                                        />
+                                    </>
+                                    :
                                     <></>
                                 }
                             </Col>
