@@ -2,9 +2,8 @@ import {Badge, Col, Image, ListGroup, Row} from "react-bootstrap";
 import default_project_picture from "../assets/images/default_project_picture.jpg";
 import default_profile_picture from "../assets/images/default_profile_picture.jpg";
 import "./HomePage.css";
-import React, {useEffect} from "react";
+import React from "react";
 import {FaStar} from "react-icons/all";
-import axios from "axios";
 
 
 function ShownProjets(props){

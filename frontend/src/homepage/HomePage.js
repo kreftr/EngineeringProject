@@ -1,8 +1,6 @@
-import {Button, Container, Col, Form, ListGroup, ListGroupItem, Modal, Row, Image, Badge} from "react-bootstrap";
+import { Container, Col, ListGroup, ListGroupItem, Row} from "react-bootstrap";
 import "./HomePage.css";
 import React, {useEffect, useState} from "react";
-import default_project_picture from "../assets/images/default_project_picture.jpg";
-import {FaStar} from "react-icons/all";
 import axios from "axios";
 import ShownProjets from "./ShownProjets";
 import Cookies from "js-cookie"
