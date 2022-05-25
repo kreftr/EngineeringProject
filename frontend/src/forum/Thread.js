@@ -12,7 +12,7 @@ function Thread(props) {
 
     const {id} = useParams();
     const [comments, setComments] = useState([]);
-    const [postt, setPostt] = useState([]);
+    const [post, setPost] = useState([]);
     
     const [text, setText] = useState(null);
     
@@ -20,12 +20,12 @@ function Thread(props) {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     
-    const [responseMessage, setMessage] = useState("Loading content...");
-    const [responeMessage, setResponseMessage] = useState();
+    const [responseMessage, setResponseMessage] = useState();
     const [responseCode, setResponseCode] = useState();
+    
     function commentSubmit(e) {
         e.preventDefault();
-        axios.post("http://localhost:8080/comment/createCommentPost/${id}", {
+        axios.post(`http://localhost:8080/comment/createCommentPost/${id}`, {
             "text": text
         }, {headers:{
             'Authorization':Cookies.get("authorization")
@@ -38,11 +38,11 @@ function Thread(props) {
                         'Authorization': Cookies.get("authorization")
                     }
                 }).then(response => {
-                    setPostt(response.data);
+                    setPost(response.data);
                     handleClose()
                 }).catch(err => {
-                        if (err.response.status === 404)  setMessage("Post not found");
-                        else setMessage("Server error!");
+                        if (err.response.status === 404)  setResponseMessage("Post not found");
+                        else setResponseMessage("Server error!");
                     })
                 axios.get(`http://localhost:8080/comment/getPostComments/${id}`, {
                     headers: {
@@ -57,7 +57,6 @@ function Thread(props) {
             }).catch(err => {
                 console.log(err.response)
                 setResponseCode(err.response.status)
-                setResponseMessage("*" + err.response.data.error)
         })
     }
     
@@ -68,10 +67,9 @@ function Thread(props) {
                 'Authorization': Cookies.get("authorization")
             }
         }).then(response => {
-                setPostt(response.data);
+                setPost(response.data);
             }).catch(err => {
-               if (err.response.status === 404)  setMessage("Post not found");
-               else setMessage("Server error!");
+                console.log(err.response)
             })
         axios.get(`http://localhost:8080/comment/getPostComments/${id}`, {
             headers: {
@@ -88,9 +86,9 @@ function Thread(props) {
         <Container className={"THREAD-container"}>
             <Row>
                 <Col className={"col-4"}>
-                    <a href={`/profile/${postt.userId}`} className={"mr-3"}>
-                        {postt.userPhoto ?
-                            <Image src={`http://localhost:8080/photo?filename=${postt.userPhoto}`}
+                    <a href={`/profile/${post.userId}`} className={"mr-3"}>
+                        {post.userPhoto ?
+                            <Image src={`http://localhost:8080/photo?filename=${post.userPhoto}`}
                                    roundedCircle={true}
                                    width="100px"
                                    height="100px"/>
@@ -104,20 +102,20 @@ function Thread(props) {
                     </a>
                 </Col>
                 <Col>
-                    <h1>{postt.title}</h1>
+                    <h1>{post.title}</h1>
                 </Col>
             </Row>
             <Row>
                 <Col className={"col-4"}>
-                    {postt.userName}
+                    {post.userName}
                 </Col>
                 <Col>
-                    {postt.text}
+                    {post.text}
                 </Col>
             </Row>
             <Row>
                 <Col className={"col-4"}>
-                    {postt.datee}
+                    {post.datee}
                 </Col>
             </Row>
             <Row>
@@ -154,7 +152,8 @@ function Thread(props) {
                                 as="textarea"
                                 style={{ resize: 'none', height:'200px'}}
                                 onChange={(e)=>{setText(e.target.value)}}
-                                required/>
+                                required>
+                            </Form.Control>
                         </Form.Group>
                         <Row>
                             <Col className={"col-3"}/>
@@ -168,7 +167,7 @@ function Thread(props) {
                     </Form>
                     {responseMessage && responseCode === 200 ?
                         <Alert variant={"success"}>
-                            <center>Nice post!</center>
+                            <center>Nice comment!</center>
                         </Alert>
                         : responseMessage ?
                             <Alert variant={"danger"}>
