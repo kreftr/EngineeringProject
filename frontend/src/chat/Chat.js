@@ -14,19 +14,12 @@ function Chat() {
     const [conversations, setConversations] = useState([]);
     const [activeConversation, setActiveConversation] = useState(null);
     const [messages, setMessages] = useState([]);
+    const [fetchedData, setFetchedData] = useState([])
 
     const [socket] = useState(new SockJS('http:localhost:8080/conversation/messages'))
     const [stompClient] = useState(Stomp.over(socket))
     const [isStompConnected, setIsStompConnected] = useState(false)
     const [isStompSubscribed, setIsStompSubscribed] = useState(false)
-
-    useEffect(() => {
-        if (activeConversation === null) { return; }
-
-        console.log(activeConversation)
-        console.log(activeConversation.conversationId)
-        console.log(activeConversation)
-    }, [activeConversation]);
 
     useEffect(() => {
         axios.get(`http://localhost:8080/conversation/getAllUserConversations`, {
@@ -47,21 +40,19 @@ function Chat() {
         })
     }, [stompClient]);
 
-    function filterMessagesData(msgData) {
-        if (msgData.conversation_id === activeConversation.conversationId) {
-            setMessages(messages => [...messages, msgData] );
-            console.log(activeConversation.conversationId)
+    useEffect(() => {
+        if (fetchedData !== null && activeConversation !== null) {
+            if (fetchedData.conversation_id === activeConversation.conversationId) {
+                setMessages(messages => [...messages, fetchedData]);
+            }
         }
-        else {
-            console.log(activeConversation.conversationId)
-        }
-    }
+    }, [fetchedData, activeConversation]);
 
     function subscribeToStomp() {
         return new Promise( () => {
             stompClient.subscribe("/conversation/messages", function (response) {
-                let data = JSON.parse(response.body);
-                filterMessagesData(data)
+                let msgData = JSON.parse(response.body);
+                setFetchedData(msgData)
             })
         })
     }
