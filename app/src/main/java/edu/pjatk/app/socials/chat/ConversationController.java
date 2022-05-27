@@ -76,6 +76,7 @@ public class ConversationController {
 
     @MessageMapping("/messages")
     public void sendMessage(@RequestPart MessageRequest message) {
+        message = conversationService.appendDateUsernameAndPhoto(message);
         simpMessagingTemplate.convertAndSend("/conversation/messages", message);
         addMessage(message.getConversation_id(), message.getAuthor_id(), message.getMessage());  // post call to database
     }

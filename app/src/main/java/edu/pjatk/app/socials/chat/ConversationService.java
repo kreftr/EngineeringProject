@@ -1,5 +1,6 @@
 package edu.pjatk.app.socials.chat;
 
+import edu.pjatk.app.request.MessageRequest;
 import edu.pjatk.app.response.ConversationResponse;
 import edu.pjatk.app.response.MessageResponse;
 import edu.pjatk.app.response.RecentMessageResponse;
@@ -14,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -111,6 +113,16 @@ public class ConversationService {
         }
     }
 
+    public MessageRequest appendDateUsernameAndPhoto(MessageRequest message) {
+        Optional<User> author = userService.findUserById(message.getAuthor_id());
+        if (author.isPresent()) {
+            message.setPhotoPath(author.get().getProfile().getPhoto().getFileName());
+            message.setAuthor_nickname(author.get().getUsername());
+            message.setMessageDate(LocalDateTime.now());
+        }
+        return message;
+    }
+
     public void deleteById(Long id){ conversationRepository.deleteById(id); }
 
     public void removeConversation(Conversation conversation){
@@ -124,8 +136,9 @@ public class ConversationService {
         List<MessageResponse> messageResponses = new ArrayList<>();
         for (Message message: optionalMessages.get()) {
             MessageResponse tempResponse;
-            tempResponse = new MessageResponse(message.getContent(), message.getUser().getUsername(),
-                    message.getMessage_date().toString(), message.getUser().getProfile().getPhoto().getFileName());
+            tempResponse = new MessageResponse(message.getContent(), message.getConversation().getId(),
+                    message.getUser().getUsername(), message.getUser().getId(),
+                    message.getUser().getProfile().getPhoto().getFileName(), message.getMessage_date());
             messageResponses.add(tempResponse);
         }
 

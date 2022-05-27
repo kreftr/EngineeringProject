@@ -14,7 +14,6 @@ function Chat() {
     const [conversations, setConversations] = useState([]);
     const [activeConversation, setActiveConversation] = useState(null);
     const [messages, setMessages] = useState([]);
-    // const [stompClientLoading, setStompClientLoading] = useState(true)
 
     const [socket] = useState(new SockJS('http:localhost:8080/conversation/messages'))
     const [stompClient] = useState(Stomp.over(socket))
@@ -38,11 +37,8 @@ function Chat() {
                 console.log("Connected to: " + frame);
                 stompClient.subscribe("/conversation/messages", function (response) {
                     let data = JSON.parse(response.body);
-                    // TODO przestawic na jednego websocketa i filtrowanie wiadomosci dla okreslonego usera
-                    setMessages([...messages, data])
-                    console.log("message: " + data.message)
-                    console.log("author_id: " + data.author_id)
-                    console.log("conversation_id: " + data.conversation_id)
+                    // TODO wyfiltrowac wiadomosci w okreslonej konwersacji
+                    setMessages(messages => [...messages, data] );
                 });
             });
         }
@@ -51,19 +47,12 @@ function Chat() {
     useEffect(() => {
         if (activeConversation === null) { return; }
 
-        // if (stompClient != null) {
-        //     stompClient.disconnect();
-        //     console.log("disconnected");
-        // }
-
         // get initial messages from database
         axios.get(`http://localhost:8080/conversation/getAllMessages/${activeConversation.conversationId}`, {
             headers: {
                 'Authorization': Cookies.get("authorization")
             }
         }).then((response) => {
-            // TODO tutaj wywolac connecta -> upewnic sie ze obiekt stomp client jest skonfigurowany (dziala)
-            // TODO mozna zrobic na jednym endpoincie cala komunikacje
             setMessages(response.data);
         }).catch(err => {
             console.log(err.response)
@@ -75,10 +64,17 @@ function Chat() {
         stompClient.send("/messages", {}, JSON.stringify({
             message: message,
             conversation_id: activeConversation.conversationId,
-            author_id: activeConversation.userId
+            author_id: Cookies.get("userId")
         }));
+        document.getElementById('message_sender_input').value = "";  // clear input
     }
 
+    // disconnect stomp client before page unloads
+    window.addEventListener('onbeforeunload', function(e) {
+        if (stompClient != null) {
+            stompClient.disconnect();
+        }
+    }, false);
 
     return (
         <Container className={"mt-5 container"}>
