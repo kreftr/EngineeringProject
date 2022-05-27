@@ -74,9 +74,9 @@ public class ConversationController {
         }
     }
 
-    @MessageMapping("/{to}")
-    public void sendMessage(@DestinationVariable String to, @RequestPart MessageRequest message) {  // to represents conversation id
-        simpMessagingTemplate.convertAndSend("/conversation/" + to, message);
+    @MessageMapping("/messages")
+    public void sendMessage(@RequestPart MessageRequest message) {
+        simpMessagingTemplate.convertAndSend("/conversation/messages", message);
         addMessage(message.getConversation_id(), message.getAuthor_id(), message.getMessage());  // post call to database
     }
 

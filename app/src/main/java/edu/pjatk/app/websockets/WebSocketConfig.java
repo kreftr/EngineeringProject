@@ -10,11 +10,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/conversation").setAllowedOriginPatterns("*").withSockJS();
+        registry.addEndpoint("/conversation/messages").setAllowedOriginPatterns("*").withSockJS();
     }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/conversation");
+        registry.enableSimpleBroker("/conversation/messages");
     }
 }
