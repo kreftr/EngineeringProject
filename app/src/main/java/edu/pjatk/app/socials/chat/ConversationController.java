@@ -1,5 +1,7 @@
 package edu.pjatk.app.socials.chat;
 
+import edu.pjatk.app.request.MessageRequest;
+import edu.pjatk.app.request.ProjectRequest;
 import edu.pjatk.app.response.*;
 import edu.pjatk.app.timestamp.Timestamp;
 import edu.pjatk.app.user.User;
@@ -7,9 +9,14 @@ import edu.pjatk.app.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +30,9 @@ public class ConversationController {
     public ConversationController(ConversationService conversationService) {
         this.conversationService = conversationService;
     }
+
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
 
     @PostMapping(value = "/createConversation/{user_id}")
     public ResponseEntity<?> createConversation(@PathVariable Long user_id) {
@@ -64,6 +74,12 @@ public class ConversationController {
         }
     }
 
+    @MessageMapping("/messages")
+    public void sendMessage(@RequestPart MessageRequest message) {
+        message = conversationService.appendDateUsernameAndPhoto(message);
+        simpMessagingTemplate.convertAndSend("/conversation/messages", message);
+        addMessage(message.getConversation_id(), message.getAuthor_id(), message.getMessage());  // post call to database
+    }
 
     @PostMapping(value = "/addMessage/{conversation_id}/{author_id}/{text}")
     public ResponseEntity<?> addMessage(@PathVariable Long conversation_id, 

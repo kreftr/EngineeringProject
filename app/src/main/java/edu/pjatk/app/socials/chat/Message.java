@@ -20,7 +20,7 @@ public class Message {
     private String content;
     private LocalDateTime message_date;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "conversation_id")
     private Conversation conversation;
 

@@ -4,10 +4,10 @@ import "./Message.css"
 
 
 export default function Message(props) {
-    const message_date = new Date(props.message.date)
-    const message_content = props.message.messageContent
-    const message_author_nickname = props.message.authorNickname
-    const message_avatar_path = props.message.avatar
+    const message_date = new Date(props.message.messageDate)
+    const message_content = props.message.message
+    const message_author_nickname = props.message.author_nickname
+    const message_avatar_path = props.message.photoPath
     const message_date_short = message_date.toLocaleDateString(navigator.language, {hour: '2-digit', minute:'2-digit'});
 
     return (

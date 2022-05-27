@@ -57,7 +57,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/changePassword", "/user/deleteAccount", "user/updateEmailNotification",
                         "/friends/**", "/conversation/**", "/profile/my", "/project/**", "/file/**", "/team/**",
                         "task/**").hasAnyRole("USER", "ADMIN")
-                .antMatchers( "/task/**").permitAll()
+                .antMatchers( "/task/**","/conversation/**").permitAll()
                 .anyRequest().authenticated();
     }
 

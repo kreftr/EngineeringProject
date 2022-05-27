@@ -11,9 +11,9 @@ import Verification from "./registration/Verification";
 import Login from "./login/Login";
 import Recovery from "./recovery/Recovery";
 import ProjectView from "./project/ProjectView";
-import ConversationList from "./chat/ConversationList";
-import FriendsList from "./friends/FriendsList";
-import Settings from "./profile/settings/Settings";
+import Chat from "./chat/Chat"
+import FriendsList from "./friends/FriendsList"
+import Settings from "./profile/settings/Settings"
 import ProjectList from "./project/ProjectList";
 import Workspace from "./workspace/Workspace";
 import Ranking from "./ranking/Ranking";
@@ -77,8 +77,8 @@ class App extends Component{
                     <Route path={"project/:id"} element={<ProjectView/>}/>
                     <Route path={"project/:id/workspace"} element={<Workspace/>}/>
                     <Route path={"ranking"} element={<Ranking/>}/>
-                    <Route path={"conversations/:id"} element={<ConversationList/>}/>
-                    <Route path={"conversations"} element={<ConversationList/>}/>
+                    <Route path={"conversations/:id"} element={<Chat/>}/>
+                    <Route path={"conversations"} element={<Chat/>}/>
                     <Route path={"search"} element={<Search/>}/>
                     <Route path={"registration"} element={<Registration/>}/>
                     <Route path={"verification/:token"} element={<Verification/>}/>
