@@ -17,6 +17,16 @@ function Chat() {
 
     const [socket] = useState(new SockJS('http:localhost:8080/conversation/messages'))
     const [stompClient] = useState(Stomp.over(socket))
+    const [isStompConnected, setIsStompConnected] = useState(false)
+    const [isStompSubscribed, setIsStompSubscribed] = useState(false)
+
+    useEffect(() => {
+        if (activeConversation === null) { return; }
+
+        console.log(activeConversation)
+        console.log(activeConversation.conversationId)
+        console.log(activeConversation)
+    }, [activeConversation]);
 
     useEffect(() => {
         axios.get(`http://localhost:8080/conversation/getAllUserConversations`, {
@@ -31,21 +41,37 @@ function Chat() {
     }, []);
 
     useEffect(() => {
-        if (stompClient !== null) {
-            // connect to chat
-            stompClient.connect({}, function (frame) {
-                console.log("Connected to: " + frame);
-                stompClient.subscribe("/conversation/messages", function (response) {
-                    let data = JSON.parse(response.body);
-                    // TODO wyfiltrowac wiadomosci w okreslonej konwersacji
-                    setMessages(messages => [...messages, data] );
-                });
-            });
-        }
+        stompClient.connect({}, function (frame) {
+            console.log("Connected to: " + frame);
+            setIsStompConnected(true)
+        })
     }, [stompClient]);
+
+    function filterMessagesData(msgData) {
+        if (msgData.conversation_id === activeConversation.conversationId) {
+            setMessages(messages => [...messages, msgData] );
+            console.log(activeConversation.conversationId)
+        }
+        else {
+            console.log(activeConversation.conversationId)
+        }
+    }
+
+    function subscribeToStomp() {
+        return new Promise( () => {
+            stompClient.subscribe("/conversation/messages", function (response) {
+                let data = JSON.parse(response.body);
+                filterMessagesData(data)
+            })
+        })
+    }
 
     useEffect(() => {
         if (activeConversation === null) { return; }
+
+        if (isStompConnected === true && isStompSubscribed === false) {
+            subscribeToStomp().finally(setIsStompSubscribed(true))
+        }
 
         // get initial messages from database
         axios.get(`http://localhost:8080/conversation/getAllMessages/${activeConversation.conversationId}`, {
@@ -85,11 +111,11 @@ function Chat() {
                             <Nav variant="pills" className="flex-column">
                                 {
                                     conversations.map((conversation, key) =>
-                                        <Nav.Item key={key}>
-                                            <Nav.Link eventKey={conversation.conversationId}
-                                                      onClick={() => {
-                                                          setActiveConversation(conversation);
-                                                      }}>
+                                        <Nav.Item key={key} onClick={() => {
+                                            setActiveConversation(conversation);
+                                        }}
+                                        >
+                                            <Nav.Link eventKey={conversation.conversationId}>
                                                 <Conversation conversation={conversation}/>
                                             </Nav.Link>
                                         </Nav.Item>
