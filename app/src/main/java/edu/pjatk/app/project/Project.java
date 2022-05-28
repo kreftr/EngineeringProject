@@ -6,6 +6,7 @@ import edu.pjatk.app.project.category.Category;
 import edu.pjatk.app.project.invitation.ProjectInvitation;
 import edu.pjatk.app.project.participant.Participant;
 import edu.pjatk.app.project.task.Task;
+import edu.pjatk.app.project.team.Team;
 import edu.pjatk.app.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -77,6 +78,10 @@ public class Project {
     @OneToMany(mappedBy = "project", cascade = {CascadeType.ALL},
             orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ProjectInvitation> invitations = new ArrayList<>();
+
+    @OneToMany(mappedBy = "project", cascade = {CascadeType.ALL},
+            orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Team> teams = new ArrayList<>();
 
     public Project(String project_name, String project_introduction, String project_description,
                    LocalDateTime creation_date, Set<Category> categories, ProjectStatus project_status,
