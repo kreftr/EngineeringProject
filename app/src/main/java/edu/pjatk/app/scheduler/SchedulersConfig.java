@@ -102,11 +102,10 @@ public class SchedulersConfig {
 
     @Scheduled(cron = "0 0 0 * * *")  // backup every day, at 12pm UTC
     public void databaseBackup() throws IOException, InterruptedException {
-        String docker_container = "af221c801274";
 
-        String base_project_path = System.getProperty("user.dir") + "/EngineeringProject/";  // project root path
-        String backup_script_path = base_project_path + "app/db_backup.sh";  // path to db backup script
-        String backups_folder_path = base_project_path + "backups";  // backups root folder
+        String base_project_path = System.getProperty("user.dir");  // project root path
+        String backup_script_path = base_project_path + "/app/db_backup.sh";  // path to db backup script
+        String backups_folder_path = base_project_path + "/backups";  // backups root folder
 
         // create backup file structure if not exist yet
         Files.createDirectories(Paths.get(backups_folder_path));
@@ -119,7 +118,7 @@ public class SchedulersConfig {
         permission_process.destroy();
 
         // backup database
-        Process backup_process = new ProcessBuilder(backup_script_path, docker_container,
+        Process backup_process = new ProcessBuilder(backup_script_path,
                 backups_folder_path + "/database").start();
         backup_process.waitFor();
         backup_process.destroy();

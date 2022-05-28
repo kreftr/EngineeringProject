@@ -202,6 +202,8 @@ public class ProjectRepository {
     public void deleteProject(Long id){
         Project project = entityManager.find(Project.class, id);
         entityManager.remove(project);
+        Project testProject = entityManager.find(Project.class, id);
+        System.out.println(testProject);
     }
 
     @Transactional

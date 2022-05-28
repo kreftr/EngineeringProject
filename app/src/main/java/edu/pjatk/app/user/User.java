@@ -46,6 +46,7 @@ public class User {
         this.profile =  profile;
         this.locked = false;
         this.enabled = false;
+        this.emailNotification = true;
     }
 
     //Participant = what projects the user participates in and what permissions he has
