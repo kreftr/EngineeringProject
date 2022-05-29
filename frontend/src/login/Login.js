@@ -31,6 +31,7 @@ function Login(){
                 setResponseCode(response.status)
                 Cookies.set("authorization", response.headers["authorization"])
                 Cookies.set("userId", response.data["id"])
+                Cookies.set("role", response.data["role"])
             })
             .catch(err => {
                 console.log(err.response)

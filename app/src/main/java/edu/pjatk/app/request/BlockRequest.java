@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 public class BlockRequest {
 
-    private Long userId;
+    private Long reportId;
     private EntityTypeEnum entityType;
     private Long entityId;
     private Long daysOfBlockade;

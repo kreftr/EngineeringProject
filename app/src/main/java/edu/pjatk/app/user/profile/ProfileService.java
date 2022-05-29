@@ -8,8 +8,10 @@ import edu.pjatk.app.request.ProfileEditRequest;
 import edu.pjatk.app.response.profile.FullProfileResponse;
 import edu.pjatk.app.response.profile.MiniProfileResponse;
 import edu.pjatk.app.user.User;
+import edu.pjatk.app.user.UserRole;
 import edu.pjatk.app.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,6 +38,32 @@ public class ProfileService {
 
     public void saveProfile(Profile profile) {
         profileRepository.save(profile);
+    }
+
+    @Transactional
+    public void updateProfileByAdmin(ProfileEditRequest editRequest, MultipartFile profilePhoto, Long userId) {
+        if (UserRole.ADMIN.equals(userService.findUserByUsername(
+                SecurityContextHolder.getContext().getAuthentication().getName()).get().getUserRole())) {
+            Profile userProfile = userService.findUserById(userId).get().getProfile();
+            userProfile.setName(editRequest.getName());
+            userProfile.setSurname(editRequest.getSurname());
+            userProfile.setBio(editRequest.getBio());
+            Set<Category> categories = new HashSet<>();
+            for (String category : editRequest.getCategories()){
+                categories.add(categoryService.getCategoryByTitle(category).get());
+            }
+            userProfile.setCategories(categories);
+
+            if (profilePhoto != null){
+                Photo newProfilePhoto = photoService.uploadPhoto(profilePhoto);
+                if (newProfilePhoto != null) {
+                    if (userProfile.getPhoto() != null) photoService.removePhoto(userProfile.getPhoto());
+                    userProfile.setPhoto(newProfilePhoto);
+                }
+            }
+
+            profileRepository.update(userProfile);
+        }
     }
 
     @Transactional

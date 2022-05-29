@@ -27,14 +27,14 @@ public class BlockadeRepository {
         entityManager.remove(blockade);
     }
 
-    public Optional<Blockade> findByEntityTypeAndEntityIdAndUserId(EntityTypeEnum entityType, Long entityId, Long userId) {
+    public Optional<Blockade> findByEntityTypeAndEntityId(EntityTypeEnum entityType, Long entityId) {
         Optional<Blockade> blockade;
         try {
             blockade = Optional.of(
                     entityManager.createQuery("SELECT blockade FROM Blockade blockade WHERE " +
-                            "blockade.entityType=:entityType AND blockade.entityId=:entityId AND blockade.userId=:userId", Blockade.class).
+                            "blockade.entityType=:entityType AND blockade.entityId=:entityId", Blockade.class).
                             setParameter("entityType", entityType).setParameter("entityId", entityId).
-                            setParameter("userId", userId).getSingleResult()
+                            getSingleResult()
             );
         } catch (NoResultException e)  {
             blockade = Optional.empty();
