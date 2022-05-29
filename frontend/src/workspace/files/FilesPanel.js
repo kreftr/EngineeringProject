@@ -16,7 +16,6 @@ function FilesPanel(props){
     const [fileTermSearch, setFileTermSearch] = useState("");
     const [files, setFiles] = useState([]);
 
-
     const onDrop = useCallback(acceptedFiles => {
 
         acceptedFiles.map((file) =>
@@ -50,7 +49,7 @@ function FilesPanel(props){
     const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
 
     const [renderedObjects, setRenderedObjects] = useState([])
-
+    const [renderPath, setRenderPath] = useState([]);  // where we are actually
 
     useEffect(() => {
 
@@ -72,17 +71,31 @@ function FilesPanel(props){
 
         files.map((file) => {
             const url = file.fileName
-            const urlArray = url.split("/")
+            let urlArray = url.split("/")
 
-            // const fileTitle = urlArray[urlArray.length - 1]  // last element of array is our file
-            // urlArray.pop()
-
-            // array of mixed type objects: objects -> files, strings -> folders
-            if (urlArray[0].split('.').length > 1) {
-                allFiles.push(file)
-            } else {
-                allFolders.push(urlArray[0])
+            // filter by opened folder
+            let areArraysEqual = true
+            for (let i=0; i<renderPath.length; i++) {
+                if (urlArray[i] !== renderPath[i]) {
+                    areArraysEqual = false
+                    break
+                }
             }
+
+            if (areArraysEqual) {
+
+                // delete renderPath from urlArray because we are further in directory
+                urlArray.splice(0, renderPath.length)
+
+                // array of mixed type objects: objects -> files, strings -> folders
+                if (urlArray[0].split('.').length > 1) {
+                    allFiles.push(file)
+                } else {
+                    allFolders.push(urlArray[0])
+                }
+
+            }
+
         })
 
         // delete all the same folders in memory
@@ -90,7 +103,7 @@ function FilesPanel(props){
 
         setRenderedObjects(allFiles.concat(allFolders))
 
-    },[files])
+    },[files, renderPath])
 
 
     // useEffect(() => {
@@ -131,6 +144,11 @@ function FilesPanel(props){
     return (
         <>
             <Row>
+                <Col>
+                    <Button onClick={() => { setRenderPath(renderPath.slice(0, renderPath.length - 1))} }>
+                        Back
+                    </Button>
+                </Col>
                 <Col className={"WORKSPACE-center-searchbar"}>
                     <center>
                         <Form>
@@ -150,7 +168,9 @@ function FilesPanel(props){
                             typeof file === 'string' ?
                                 <div>
                                     <button className={"FILE-folder"}>
-                                        <FaFolderOpen color={"gray"} size={150} onClick={() => {}}/>
+                                        <FaFolderOpen color={"gray"} size={150} onClick={() => {
+                                            setRenderPath(renderPath => [...renderPath, file]);
+                                        }}/>
                                         <h4>{file}</h4>
                                     </button>
                                 </div>

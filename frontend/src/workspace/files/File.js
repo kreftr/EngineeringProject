@@ -82,7 +82,7 @@ function File(props){
             }
             <FaFileAlt color={"gray"} className={"mb-2 FILE-hover"} size={150} onClick={() => {setShow(true);
                 setHide(true);}} hidden={hide}/>
-            <h4 hidden={hide}>{props.file.fileName}</h4>
+            <h4 hidden={hide}>{props.file.fileName.split("/").at(- 1)}</h4>
         </div>
     );
 
