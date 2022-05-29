@@ -63,6 +63,14 @@ public class ProfileController {
         }
     }
 
+    @RequestMapping(params = "userId", method = RequestMethod.POST)
+    public ResponseEntity editProfileByAdmin(@Valid @RequestPart ProfileEditRequest editRequest,
+                                             @RequestPart(required = false) MultipartFile profilePhoto,
+                                             @RequestParam Long userId) {
+        profileService.updateProfileByAdmin(editRequest, profilePhoto, userId);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
     @PostMapping(consumes = {"multipart/form-data"})
     public ResponseEntity editProfile(@Valid @RequestPart ProfileEditRequest editRequest,
                                       @RequestPart(required = false) MultipartFile profilePhoto){

@@ -57,6 +57,21 @@ public class EmailService implements EmailSender {
         }
     }
 
+    public String emailBanBuilder(String username, String reasoning, String date, String htmlName){
+        try{
+            URL res = getClass().getClassLoader().getResource("templates/emails/"+htmlName);
+            File htmlFile = Paths.get(res.toURI()).toFile();
+            String htmlToString = Files.readString(Paths.get(htmlFile.getAbsolutePath()),
+                    StandardCharsets.UTF_8);
+            htmlToString = htmlToString.replace("%USERNAME%", username);
+            htmlToString = htmlToString.replace("%REASONING%", reasoning);
+            htmlToString = htmlToString.replace("%DATE%", date);
+            return htmlToString;
+        } catch (Exception e){
+            return "Error: " + e.getMessage();
+        }
+    }
+
     public String emailBuilder(String username, String activationLink, String htmlName){
         try{
             URL res = getClass().getClassLoader().getResource("templates/emails/"+htmlName);

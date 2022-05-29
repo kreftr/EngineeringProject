@@ -30,7 +30,6 @@ public class UserService {
     private final FriendService friendService;
 
 
-    // conversationService https://www.baeldung.com/circular-dependencies-in-spring
     @Autowired
     public UserService(UserRepository userRepository, ActivationTokenService activationTokenService,
                        PhotoService photoService, BCryptPasswordEncoder passwordEncoder,
@@ -78,6 +77,10 @@ public class UserService {
         userRepository.update(user);
 
         userRepository.remove(user);
+    }
+
+    public void updateUser(User user) {
+        userRepository.update(user);
     }
 
     @Transactional

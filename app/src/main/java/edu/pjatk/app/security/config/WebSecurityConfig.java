@@ -58,6 +58,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/friends/**", "/conversation/**", "/profile/my", "/project/**", "/file/**", "/team/**",
                         "task/**").hasAnyRole("USER", "ADMIN")
                 .antMatchers( "/task/**","/conversation/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/report").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.GET, "/report").hasRole("ADMIN")
+                .antMatchers( "/blockade").hasRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/report").hasRole("ADMIN")
                 .anyRequest().authenticated();
     }
 

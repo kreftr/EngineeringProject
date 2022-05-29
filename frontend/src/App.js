@@ -20,6 +20,7 @@ import Ranking from "./ranking/Ranking";
 import Forum from "./forum/Forum";
 import HomePage from "./homepage/HomePage";
 import ProjectSettings from "./settings/ProjectSettings";
+import AdminPanel from "./admin/AdminPanel";
 import Thread from "./forum/Thread";
 
 
@@ -28,6 +29,7 @@ class App extends Component{
     logOut = () =>{
         Cookies.remove("authorization")
         Cookies.remove("userId")
+        Cookies.remove("role")
     }
 
     render() {
@@ -53,6 +55,11 @@ class App extends Component{
                                 <Nav.Link href="/search">Search</Nav.Link>
                                 <Nav.Link href="/ranking">Ranking</Nav.Link>
                                 <Nav.Link href="/forum">Forum</Nav.Link>
+                                { Cookies.get("role") == "ADMIN" ?
+                                    <Nav.Link href="/admin">Admin Panel</Nav.Link>
+                                    :
+                                    <></>
+                                }
                             </Nav>
                         </Navbar.Collapse>
                         <Nav className="me-auto">
@@ -85,6 +92,7 @@ class App extends Component{
                     <Route path={"recovery/:token"} element={<Recovery/>}/>
                     <Route path={"login"} element={<Login/>}/>
                     <Route path={"forum"} element={<Forum/>}/>
+                    <Route path={"admin"} element={<AdminPanel/>}/>
                     <Route path={"post/:id"} element={<Thread/>}/>
                 </Routes>
             </Router>

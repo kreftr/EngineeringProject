@@ -14,6 +14,7 @@ import edu.pjatk.app.recomendations.RecomendationService;
 import edu.pjatk.app.request.ProjectRequest;
 import edu.pjatk.app.response.project.*;
 import edu.pjatk.app.user.User;
+import edu.pjatk.app.user.UserRole;
 import edu.pjatk.app.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -415,7 +416,6 @@ public class ProjectService {
         }
     }
 
-    //If loggedUser is project owner or loggedUser is project's participant with MODERATOR ROLE
     @Transactional
     public void editProject(ProjectRequest projectRequest, MultipartFile photo, Long id){
 
@@ -423,8 +423,9 @@ public class ProjectService {
                 SecurityContextHolder.getContext().getAuthentication().getName()
         );
         Photo projectPhoto = (photo != null ? photoService.uploadPhoto(photo) : null);
-
-        if (loggedUser.isPresent())
+        Optional<Project> projectToEdit = projectRepository.getProjectById(id);
+        if (loggedUser.isPresent() && projectToEdit.isPresent() && (projectToEdit.get().getCreator().equals(
+                loggedUser.get().getUsername()) || loggedUser.get().getUserRole().equals(UserRole.ADMIN)))
         {
             Set<Category> categories = new HashSet<>();
             for (String category : projectRequest.getCategory()){

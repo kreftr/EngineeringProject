@@ -56,6 +56,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             Authentication authResult) throws IOException {
 
         UserPrincipal userPrincipal = (UserPrincipal) authResult.getPrincipal();
+        String role = userPrincipal.getAuthorities().toString()
+                .replace("ROLE_", "")
+                .replace("[", "")
+                .replace("]","");
 
         String token = JWT.create()
                 .withSubject(userPrincipal.getUsername())
@@ -64,7 +68,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + token);
         response.setContentType("application/json");
-        response.getWriter().write("{ \"id\":"+userPrincipal.getId()+"\n}");
+        response.getWriter().write("{ \"id\":"+userPrincipal.getId()+",\n");
+        response.getWriter().write("\"role\":\""+role+"\"\n}");
         response.getWriter().flush();
         response.getWriter().close();
     }

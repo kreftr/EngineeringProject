@@ -264,6 +264,22 @@ databaseChangeLog:
         splitStatements: false
         path: db.changelog/20220119_changeTimestampsDatatype.sql
   - changeSet:
+      id: 20220510_report
+      author: Rafał Kreft
+      sqlFile:
+        relativeToChangelogFile: true
+        stripComments: true
+        splitStatements: false
+        path: db.changelog/20220510_report.sql
+  - changeSet:
+      id: 20220516_blockade
+      author: Rafał Kreft
+      sqlFile:
+        relativeToChangelogFile: true
+        stripComments: true
+        splitStatements: false
+        path: db.changelog/20220516_blockade.sql
+  - changeSet:
       id: 20220518_emailNotifications
       author: Adrian Trapp
       sqlFile:

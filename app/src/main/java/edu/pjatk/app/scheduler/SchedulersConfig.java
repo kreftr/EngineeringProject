@@ -8,6 +8,9 @@ import edu.pjatk.app.email.password_recovery.recovery_token.RecoveryTokenService
 import edu.pjatk.app.recomendations.RecomendationService;
 import edu.pjatk.app.user.User;
 import edu.pjatk.app.user.UserRepository;
+import edu.pjatk.app.report.blockade.Blockade;
+import edu.pjatk.app.report.blockade.BlockadeService;
+import edu.pjatk.app.user.User;
 import edu.pjatk.app.user.UserService;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,15 +36,17 @@ public class SchedulersConfig {
     private final UserRepository userRepository;
     private final EmailService emailService;
     private final RecomendationService recomendationService;
-
+    private final BlockadeService blockadeService;
 
     @Autowired
     public SchedulersConfig(ActivationTokenService activationTokenService, RecoveryTokenService recoveryTokenService,
                             UserService userService, UserRepository userRepository, EmailService emailService,
                             RecomendationService recomendationService){
+                            UserService userService, BlockadeService blockadeService){
         this.activationTokenService = activationTokenService;
         this.recoveryTokenService = recoveryTokenService;
         this.userService = userService;
+        this.blockadeService = blockadeService;
         this.userRepository = userRepository;
         this.emailService = emailService;
         this.recomendationService = recomendationService;
@@ -132,4 +138,17 @@ public class SchedulersConfig {
             e.printStackTrace();
         }
     }
+
+    @Scheduled(fixedDelayString = "${scheduler.recovery-token.removal}")
+    public void unblockLockedUsers(){
+        List<Blockade> blockades = blockadeService.getAllUsers();
+        for (Blockade b : blockades) {
+            if (LocalDateTime.now().isAfter(b.getEndTime())) {
+                User user = userService.findUserById(b.getUserId()).get();
+                user.setLocked(false);
+                userService.updateUser(user);
+            }
+        }
+    }
+
 }
