@@ -4,7 +4,7 @@ import "./File.css"
 import axios from "axios";
 import Cookies from "js-cookie";
 import {useState} from "react";
-import default_profile_picture from "../assets/images/default_profile_picture.jpg"
+import default_profile_picture from "../../assets/images/default_profile_picture.jpg"
 
 function File(props){
 
@@ -29,7 +29,7 @@ function File(props){
     function remove(){
         axios.delete(`http://localhost:8080/file/remove?fileId=${props.file.fileId}`,
             {headers: {'Authorization': Cookies.get("authorization")}}
-        ).then(response =>{
+        ).then(response => {
             window.location.reload()
         }).catch(err => {
             console.log(err.response)
@@ -37,7 +37,7 @@ function File(props){
     }
 
 
-    return(
+    return (
         <div className={"FILE-center mb-2 mt-4"}>
             { show ?
                 <Modal.Dialog>

@@ -9,3 +9,10 @@
 .FILE-hover {
     cursor: pointer;
 }
+
+.FILE-folder {
+    cursor: pointer;
+    background-color: white;
+    color: black;
+    border: none;
+}
