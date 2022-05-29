@@ -41,8 +41,7 @@ public class SchedulersConfig {
     @Autowired
     public SchedulersConfig(ActivationTokenService activationTokenService, RecoveryTokenService recoveryTokenService,
                             UserService userService, UserRepository userRepository, EmailService emailService,
-                            RecomendationService recomendationService){
-                            UserService userService, BlockadeService blockadeService){
+                            RecomendationService recomendationService, BlockadeService blockadeService){
         this.activationTokenService = activationTokenService;
         this.recoveryTokenService = recoveryTokenService;
         this.userService = userService;
@@ -138,17 +137,4 @@ public class SchedulersConfig {
             e.printStackTrace();
         }
     }
-
-    @Scheduled(fixedDelayString = "${scheduler.recovery-token.removal}")
-    public void unblockLockedUsers(){
-        List<Blockade> blockades = blockadeService.getAllUsers();
-        for (Blockade b : blockades) {
-            if (LocalDateTime.now().isAfter(b.getEndTime())) {
-                User user = userService.findUserById(b.getUserId()).get();
-                user.setLocked(false);
-                userService.updateUser(user);
-            }
-        }
-    }
-
 }
