@@ -36,13 +36,13 @@ public class FileService {
     }
 
     @Transactional
-    public File uploadFile(MultipartFile file, Project project, User user){
+    public File uploadFile(MultipartFile file, String fullPath, Project project, User user){
         try {
             byte[] data = file.getBytes();
             String randomName = UUID.randomUUID()+"."+ FilenameUtils.getExtension(file.getOriginalFilename());
             Path path = Paths.get(pathToFiles + randomName);
             Files.write(path, data);
-            File fileToUpload = new File(file.getOriginalFilename(), randomName,
+            File fileToUpload = new File(fullPath, randomName,
                     Files.size(path), LocalDateTime.now(), project, user);
             fileRepository.save(fileToUpload);
             return fileToUpload;

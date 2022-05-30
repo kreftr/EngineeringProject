@@ -52,7 +52,7 @@ public class FileController {
 
 
     @PostMapping(value = "/upload", params = "projectId")
-    public ResponseEntity uploadFile(@RequestPart MultipartFile file, @RequestParam Long projectId) {
+    public ResponseEntity uploadFile(@RequestPart MultipartFile file, @RequestPart String fullPath, @RequestParam Long projectId) {
 
         Optional<Project> project = projectRepository.getProjectById(projectId);
 
@@ -74,7 +74,7 @@ public class FileController {
                     );
                 }
                 else {
-                    if (fileService.uploadFile(file,project.get(),loggedUser.get())!=null){
+                    if (fileService.uploadFile(file, fullPath, project.get(), loggedUser.get())!=null){
                         return new ResponseEntity(
                                 new ResponseMessage("File uploaded!"), HttpStatus.OK
                         );

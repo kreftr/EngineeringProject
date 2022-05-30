@@ -4,7 +4,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import File from "./File";
 import {useDropzone} from 'react-dropzone'
-import {FaFileAlt, FaFolderOpen} from "react-icons/fa";
+import {FaFolderOpen} from "react-icons/fa";
 import './File.css'
 
 
@@ -16,14 +16,31 @@ function FilesPanel(props){
     const [fileTermSearch, setFileTermSearch] = useState("");
     const [files, setFiles] = useState([]);
 
+    const [renderedObjects, setRenderedObjects] = useState([])
+    const [renderPath, setRenderPath] = useState([]);  // where we are actually
+
     const onDrop = useCallback(acceptedFiles => {
+
 
         acceptedFiles.map((file) =>
             {
+                // append to path if we are further in directory
+                let folderPath = ""
+                renderPath.map((el) => {
+                    folderPath += el + "/"
+                })
+
+                // delete first slash if it's folder
+                let fullPath = folderPath;
+                if (file.path.startsWith("/")) {
+                    fullPath += file.path.substring(1);
+                } else {
+                    fullPath += file.path
+                }
+
                 let bodyFormData = new FormData();
                 bodyFormData.append("file", file);
-
-                // TODO przerobic backend zeby potrafil przyjac cala tablice plikow na raz
+                bodyFormData.append("fullPath", fullPath)
 
                 axios.post(`http://localhost:8080/file/upload?projectId=${id}`, bodyFormData,
                     {
@@ -45,11 +62,8 @@ function FilesPanel(props){
             }
         )
 
-    }, [])
-    const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
-
-    const [renderedObjects, setRenderedObjects] = useState([])
-    const [renderPath, setRenderPath] = useState([]);  // where we are actually
+    }, [renderPath])
+    const {getRootProps, getInputProps} = useDropzone({onDrop, noClick:true})
 
     useEffect(() => {
 
@@ -106,41 +120,6 @@ function FilesPanel(props){
     },[files, renderPath])
 
 
-    // useEffect(() => {
-    //
-    //     files.map((file) => {
-    //         const url = file.fileName
-    //         const urlArray = url.split("/")
-    //         console.log(urlArray)
-    //
-    //         const fileTitle = urlArray[urlArray.length - 1]  // last element of array is our file
-    //         urlArray.pop()
-    //
-    //         urlArray.map((element) => {  // create folder structure
-    //             if (files.some(e => e.fileName !== element)) {  // folder does not exist
-    //                 return (
-    //                     <>
-    //                         <div>
-    //                             <Button>
-    //                                 <FaFolderOpen color={"gray"} className={"mb-2 FILE-hover"} size={150} onClick={() => {}}/>
-    //                                 <h4>Folder</h4>
-    //                             </Button>
-    //                         </div>
-    //                     </>
-    //                 )
-    //
-    //             }
-    //
-    //         })
-    //
-    //
-    //
-    //         }
-    //     )
-    //
-    // },[files])
-
-
     return (
         <>
             <Row>
@@ -159,36 +138,34 @@ function FilesPanel(props){
                 </Col>
             </Row>
             <hr/>
-            <div {...getRootProps()}>
-                <input {...getInputProps()} />
-            </div>  {/* TODO przesun koniec diva nizej zeby odblokowac dzialanie on dropa */}
-                { renderedObjects.length > 0 ?
-                    <div className={"ml-5 WORKSPACE-file-section"}>
-                        { renderedObjects.map((file, key) =>
-                            typeof file === 'string' ?
-                                <div>
-                                    <button className={"FILE-folder"}>
-                                        <FaFolderOpen color={"gray"} size={150} onClick={() => {
-                                            setRenderPath(renderPath => [...renderPath, file]);
-                                        }}/>
-                                        <h4>{file}</h4>
-                                    </button>
-                                </div>
-                                :
-                                <div>
-                                    <File file={file} role={memberRole}/>
-                                </div>
-                        )}
-                    </div>
-                    :
-                    <center>
-                        <h1>Currently there are no files</h1>
-                    </center>
-                }
-
-            {/*TODO guziki nie moga odpalac drag and dropa*/}
-
-
+            <Row>
+                <div {...getRootProps()}>
+                    <input {...getInputProps()} />
+                    { renderedObjects.length > 0 ?
+                        <div className={"ml-5 WORKSPACE-file-section"}>
+                            { renderedObjects.map((file, key) =>
+                                typeof file === 'string' ?
+                                    <div>
+                                        <button className={"FILE-folder"}>
+                                            <FaFolderOpen color={"gray"} size={150} onClick={() => {
+                                                setRenderPath(renderPath => [...renderPath, file]);
+                                            }}/>
+                                            <h4>{file}</h4>
+                                        </button>
+                                    </div>
+                                    :
+                                    <div>
+                                        <File file={file} role={memberRole}/>
+                                    </div>
+                            )}
+                        </div>
+                        :
+                        <center>
+                            <h1>Empty directory, drag and drop files here</h1>
+                        </center>
+                    }
+                </div>
+            </Row>
         </>
     );
 
