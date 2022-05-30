@@ -1,4 +1,4 @@
-import {Badge, Button, Col, Container, Form, Image, ListGroup, Modal, Row} from "react-bootstrap";
+import {Badge, Button, Col, Container, Form, Image, ListGroup, ListGroupItem, Modal, Row} from "react-bootstrap";
 import {FaFacebookSquare, FaGithubSquare, FaKickstarter, FaYoutube} from "react-icons/all";
 import "./ProjectView.css"
 import default_project_picture from "../assets/images/default_project_picture.jpg"
@@ -8,7 +8,7 @@ import Rating from "./Rating";
 import axios from "axios";
 import Cookies from "js-cookie";
 import {useParams} from "react-router-dom";
-
+import ProjectComment from "./ProjectComment";
 
 function ProjectView(){
 
@@ -22,15 +22,22 @@ function ProjectView(){
     const handleShow = () => setShow(true);
     const [reasoning, setReasoning] = useState("");
 
+    const [comments, setComments] = useState([]);
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/project/getProjectById/${id}`
-        ).then(response => {
+        axios.get(`http://localhost:8080/project/getProjectById/${id}`, {
+        }).then(response => {
             setProject(response.data)
             setStatusCode(response.status)
         }).catch(err => {
             console.log(err.response)
             setStatusCode(err.response.status)
+        })
+        axios.get(`http://localhost:8080/comment/getProjectComments/${id}`, {
+        }).then(response => {
+            setComments(response.data)
+        }).catch(err => {
+            console.log(err.response)
         })
     }, [id])
 
@@ -172,14 +179,14 @@ function ProjectView(){
                                             <Row>
                                                 {project.participants.includes(parseInt(Cookies.get("userId"))) ?
                                                     <>
-                                                    { project.authorId !== parseInt(Cookies.get("userId")) ?
-                                                        <>
-                                                            <Button className={"mb-3 mt-4"} variant="success" size={"lg"} href={`/project/${project.projectId}/workspace`}>Workspace</Button>
-                                                            <Button className={"mb-3"} variant="danger" onClick={() => leave()}>Leave</Button>
-                                                        </>
-                                                        :
-                                                        <Button className={"mt-4 mb-3"} variant="success" href={`/project/${project.projectId}/workspace`}>Workspace</Button>
-                                                    }
+                                                        { project.authorId !== parseInt(Cookies.get("userId")) ?
+                                                            <>
+                                                                <Button className={"mb-3 mt-4"} variant="success" size={"lg"} href={`/project/${project.projectId}/workspace`}>Workspace</Button>
+                                                                <Button className={"mb-3"} variant="danger" onClick={() => leave()}>Leave</Button>
+                                                            </>
+                                                            :
+                                                            <Button className={"mt-4 mb-3"} variant="success" href={`/project/${project.projectId}/workspace`}>Workspace</Button>
+                                                        }
                                                     </>
                                                     :
                                                     <>
@@ -265,6 +272,22 @@ function ProjectView(){
                                         <Col></Col>
                                     }
                                 </div>
+                            </Row>
+                            <Row>
+                                <h1>Comments</h1>
+                                {comments.length > 0 ?
+                                    <ListGroup className={"list-group"}>
+                                        {
+                                            comments.map((comment, key) =>
+                                                <ListGroupItem key={key}>
+                                                    <ProjectComment comment={comment}/>
+                                                </ListGroupItem>
+                                            )
+                                        }
+                                    </ListGroup>
+                                    :
+                                    <h5 className={"mt-3"}>No comments found</h5>
+                                }
                             </Row>
                         </div>
                         :
