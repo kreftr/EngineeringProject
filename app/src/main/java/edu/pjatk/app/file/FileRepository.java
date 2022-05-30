@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Repository
@@ -32,12 +33,15 @@ public class FileRepository {
         return file;
     }
 
+    @Transactional
     public void save(File file){
         entityManager.persist(file);
     }
 
+    @Transactional
     public void remove(File file) { entityManager.remove(file); }
 
+    @Transactional
     public void update(File file) {
         entityManager.merge(file);
     }

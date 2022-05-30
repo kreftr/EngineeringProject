@@ -1,6 +1,7 @@
 package edu.pjatk.app.file;
 
 import edu.pjatk.app.project.Project;
+import edu.pjatk.app.scheduler.SchedulersConfig;
 import edu.pjatk.app.user.User;
 import liquibase.util.file.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +22,15 @@ import java.util.UUID;
 public class FileService {
 
     private final FileRepository fileRepository;
+    private final SchedulersConfig schedulersConfig;
 
     @Value("${uploads.files.path}")
     private String pathToFiles;
 
     @Autowired
-    public FileService(FileRepository fileRepository) {
+    public FileService(FileRepository fileRepository, SchedulersConfig schedulersConfig) {
         this.fileRepository = fileRepository;
+        this.schedulersConfig = schedulersConfig;
     }
 
 
@@ -57,6 +60,21 @@ public class FileService {
             fileRepository.remove(file);
             java.io.File f = new java.io.File(pathToFiles+file.getUrl());
             f.delete();
+        }
+        catch (Exception e){
+            System.out.println(e);
+        }
+    }
+
+
+    public void toggleFileLock(File file, Boolean isLocked){
+        try {
+            file.setIsLocked(isLocked);
+            fileRepository.update(file);
+
+            if (isLocked) {
+                schedulersConfig.scheduleFileUnlock(file);
+            }
         }
         catch (Exception e){
             System.out.println(e);

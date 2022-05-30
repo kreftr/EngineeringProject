@@ -5,6 +5,7 @@ import edu.pjatk.app.email.activation_token.ActivationToken;
 import edu.pjatk.app.email.activation_token.ActivationTokenService;
 import edu.pjatk.app.email.password_recovery.recovery_token.RecoveryToken;
 import edu.pjatk.app.email.password_recovery.recovery_token.RecoveryTokenService;
+import edu.pjatk.app.file.FileRepository;
 import edu.pjatk.app.recomendations.RecomendationService;
 import edu.pjatk.app.user.User;
 import edu.pjatk.app.user.UserRepository;
@@ -15,12 +16,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
+import java.util.Timer;
 
 @Configuration
 @EnableScheduling
@@ -32,18 +35,20 @@ public class SchedulersConfig {
     private final UserRepository userRepository;
     private final EmailService emailService;
     private final RecomendationService recomendationService;
+    private final FileRepository fileRepository;
 
 
     @Autowired
     public SchedulersConfig(ActivationTokenService activationTokenService, RecoveryTokenService recoveryTokenService,
                             UserService userService, UserRepository userRepository, EmailService emailService,
-                            RecomendationService recomendationService){
+                            RecomendationService recomendationService, FileRepository fileRepository){
         this.activationTokenService = activationTokenService;
         this.recoveryTokenService = recoveryTokenService;
         this.userService = userService;
         this.userRepository = userRepository;
         this.emailService = emailService;
         this.recomendationService = recomendationService;
+        this.fileRepository = fileRepository;
     }
 
 
@@ -98,6 +103,19 @@ public class SchedulersConfig {
                 );
             }
         }
+    }
+
+    // unlock previously opened file after certain time
+    public void scheduleFileUnlock(edu.pjatk.app.file.File file) {
+        new java.util.Timer().schedule(
+                new java.util.TimerTask() {
+                    @Override
+                    public void run() {
+                        file.setIsLocked(false);
+                        fileRepository.update(file);
+                    }
+                }, 3600000  // after hour
+        );
     }
 
     @Scheduled(cron = "0 0 0 * * *")  // backup every day, at 12pm UTC

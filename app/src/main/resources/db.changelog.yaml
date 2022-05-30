@@ -279,3 +279,19 @@ databaseChangeLog:
         stripComments: true
         splitStatements: false
         path: db.changelog/20220518_emailNotificationsNameChange.sql
+  - changeSet:
+      id: 20220530_fileLock
+      author: Adam Nawrot
+      sqlFile:
+        relativeToChangelogFile: true
+        stripComments: true
+        splitStatements: false
+        path: db.changelog/20220530_fileLock.sql
+  - changeSet:
+      id: 20220530_fileLockNameChange
+      author: Adam Nawrot
+      sqlFile:
+        relativeToChangelogFile: true
+        stripComments: true
+        splitStatements: false
+        path: db.changelog/20220530_fileLockNameChange.sql

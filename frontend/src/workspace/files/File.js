@@ -1,4 +1,4 @@
-import {FaFileAlt, FaFileDownload, FaTrashAlt} from "react-icons/fa";
+import {FaFileAlt, FaFileDownload, FaFileImage, FaFileInvoice, FaRegFilePdf, FaTrashAlt} from "react-icons/fa";
 import {Button, Col, Image, Modal, Row} from "react-bootstrap";
 import "./File.css"
 import axios from "axios";
@@ -11,7 +11,7 @@ function File(props){
     const [show, setShow] = useState(false);
     const [hide, setHide] = useState(false);
 
-    function download(){
+    function download() {
         axios.get(`http://localhost:8080/file/download?fileId=${props.file.fileId}`,
             {headers: {'Authorization': Cookies.get("authorization")}, responseType: 'blob'
             }).then(response =>{
@@ -26,7 +26,7 @@ function File(props){
         })
     }
 
-    function remove(){
+    function remove() {
         axios.delete(`http://localhost:8080/file/remove?fileId=${props.file.fileId}`,
             {headers: {'Authorization': Cookies.get("authorization")}}
         ).then(response => {
@@ -36,6 +36,15 @@ function File(props){
         })
     }
 
+    function open() {
+        axios.post(`http://localhost:8080/file/toggleLock/${props.file.fileId}/${true}`,
+            {
+                headers:{'Authorization': Cookies.get("authorization")}
+            }).then(() => {
+        }).catch(err => {
+            console.log(err.response)
+        })
+    }
 
     return (
         <div className={"FILE-center mb-2 mt-4"}>
@@ -61,9 +70,14 @@ function File(props){
                     <Modal.Footer>
                         <Row>
                             <Col>
+                                <Button variant="primary" onClick={() => {open();}}>
+                                    <FaFileInvoice size={20}/>
+                                </Button>
+                            </Col>
+                            <Col>
                                 { props.role === "OWNER" || props.role === "MODERATOR" || props.file.userId === Cookies.get("userId") ?
                                     <Button variant="danger" onClick={() => {remove();}}>
-                                        <FaTrashAlt size={25}/>
+                                        <FaTrashAlt size={20}/>
                                     </Button>
                                     :
                                     <></>
@@ -71,7 +85,7 @@ function File(props){
                             </Col>
                             <Col>
                                 <Button variant="primary" onClick={() => {download();}}>
-                                    <FaFileDownload size={25}/>
+                                    <FaFileDownload size={20}/>
                                 </Button>
                             </Col>
                         </Row>

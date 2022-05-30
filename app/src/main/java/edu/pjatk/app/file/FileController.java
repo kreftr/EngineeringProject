@@ -176,4 +176,21 @@ public class FileController {
         }
     }
 
+    @PostMapping(value = "/toggleLock/{fileId}/{isLocked}")
+    public ResponseEntity toggleFileLock(@PathVariable Long fileId, @PathVariable Boolean isLocked){
+        Optional<File> fileOptional = fileService.findFileById(fileId);
+        if (fileOptional.isPresent()) {
+            File file = fileOptional.get();
+            fileService.toggleFileLock(file, isLocked);
+            return new ResponseEntity(
+                    new ResponseMessage("File status changed"), HttpStatus.OK
+            );
+        } else {
+            return new ResponseEntity(
+                    new ResponseMessage("File does not exist"), HttpStatus.NOT_FOUND
+            );
+        }
+
+    }
+
 }
