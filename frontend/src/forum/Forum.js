@@ -75,12 +75,18 @@ function Forum(props){
     return(
         <Container className={"FORUM-container"}>
             <Row>
-                <Button variant="primary FORUM-button" onClick={handleShow}>
-                    Add Post
-                </Button>
-                <Button variant="danger FORUM-button" hidden={true}>
-                    Delete Post
-                </Button>
+                {Cookies.get("authorization") ?
+                    <>
+                        <Button variant="primary FORUM-button" onClick={handleShow}>
+                            Add Post
+                        </Button>
+                        <Button variant="danger FORUM-button" hidden={true}>
+                            Delete Post
+                        </Button>
+                    </>
+                    :
+                    <></>
+                }
             </Row>
             <Row className={"mt-4"}>
                 <Col className={"col-4"}>

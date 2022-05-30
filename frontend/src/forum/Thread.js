@@ -34,9 +34,6 @@ function Thread(props) {
                 setResponseCode(response.status)
                 setResponseMessage(response.data.message)
                 axios.get(`http://localhost:8080/post?id=${id}`, {
-                    headers: {
-                        'Authorization': Cookies.get("authorization")
-                    }
                 }).then(response => {
                     setPost(response.data);
                     handleClose()
@@ -45,9 +42,6 @@ function Thread(props) {
                         else setResponseMessage("Server error!");
                     })
                 axios.get(`http://localhost:8080/comment/getPostComments/${id}`, {
-                    headers: {
-                        'Authorization': Cookies.get("authorization")
-                    }
                 }).then(response => {
                     setComments(response.data)
                     handleClose()
@@ -63,18 +57,12 @@ function Thread(props) {
     useEffect( () => {
         //Load post informations (PostResponse)
         axios.get(`http://localhost:8080/post?id=${id}`, {
-            headers: {
-                'Authorization': Cookies.get("authorization")
-            }
         }).then(response => {
                 setPost(response.data);
             }).catch(err => {
                 console.log(err.response)
             })
         axios.get(`http://localhost:8080/comment/getPostComments/${id}`, {
-            headers: {
-                'Authorization': Cookies.get("authorization")
-            }
         }).then(response => {
             setComments(response.data)
         }).catch(err => {
@@ -133,9 +121,15 @@ function Thread(props) {
                     <h5 className={"mt-3"}>No comments found</h5>    
                 }
             </Row>
-            <Button variant="primary" onClick={handleShow}>
-                Add Comment
-            </Button>
+            {Cookies.get("authorization") ?
+                <>
+                    <Button variant="primary" onClick={handleShow}>
+                        Add Comment
+                    </Button>
+                </>
+                :
+                <></>
+            }
             <Modal
                 show={show}
                 onHide={handleClose}
