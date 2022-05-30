@@ -53,16 +53,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
                 .antMatchers(HttpMethod.GET, "/profile", "/photo", "/project/getAllProjects/*",
                         "/project/ranking", "/project/randomRecommended", "/profile/*", "/profile/**").permitAll()
-                .antMatchers(HttpMethod.POST,  "/profile", "/photo").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.POST,  "/profile", "/photo", "/report").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/user/changePassword", "/user/deleteAccount", "user/updateEmailNotification",
-                        "/friends/**", "/conversation/**", "/profile/my", "/project/**", "/file/**", "/team/**",
-                        "task/**").hasAnyRole("USER", "ADMIN")
-                .antMatchers( "/task/**","/conversation/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/report").hasAnyRole("USER", "ADMIN")
+                        "/friends/**", "/conversation/**", "/profile/my", "/project/**", "/file/**",
+                        "/team/**", "task/**").hasAnyRole("USER", "ADMIN")
                 .antMatchers(HttpMethod.GET, "/report").hasRole("ADMIN")
                 .antMatchers( "/blockade").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/report").hasRole("ADMIN")
-                .antMatchers("/post/**", "/post/getRecentPosts", "/comment/getPostComments/*", "/comment/getProjectComments/*").permitAll()
+                .antMatchers("/post/**", "/post/getRecentPosts", "/comment/getPostComments/*", "/comment/getProjectComments/*",
+                        "/task/**","/conversation/**", "/file/**").permitAll()
                 .anyRequest().authenticated();
     }
 

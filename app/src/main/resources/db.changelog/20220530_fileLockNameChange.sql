@@ -1,0 +1,1 @@
+ALTER TABLE "file" RENAME isLocked TO is_locked;

@@ -1,0 +1,11 @@
+.TERMS_list {
+    padding-top: 20px;
+}
+
+.TERMS_list_element {
+    font-size: 28px;
+}
+
+.TERMS_list_element p{
+    font-size: 16px;
+}

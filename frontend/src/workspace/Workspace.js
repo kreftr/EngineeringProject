@@ -1,12 +1,11 @@
 import "./Workspace.css"
 import {Button, Badge, Col, Container, Form, ListGroup, Modal, Nav, Row, Tab, Tabs} from "react-bootstrap";
 import {useParams} from "react-router-dom";
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import Member from "./Member";
-import File from "./File";
-import {FaCalendarPlus, FaFileUpload} from "react-icons/all";
+import {FaCalendarPlus} from "react-icons/all";
 import {FaUserFriends, FaUserPlus} from "react-icons/fa";
 import InvitePanel from "./InvitePanel";
 import TeamPanel from "./team/TeamPanel";
@@ -15,6 +14,7 @@ import TaskPanel from "./task/TaskPanel";
 import Task from "./task/Task";
 import Clock from "./timestamps/Clock"
 import Timestamp from "./timestamps/Timestamp";
+import FilesPanel from "./files/FilesPanel"
 
 
 function Workspace(){
@@ -22,28 +22,6 @@ function Workspace(){
     const {id} = useParams();
     const [memberRole, setMemberRole] = useState(null)
     const [projectName, setProjectName] = useState("")
-
-    // Files section
-    const [fileTermSearch, setFileTermSearch] = useState("");
-    const [files, setFiles] = useState([]);
-    const inputFile = useRef(null);
-    const onButtonClick = () => {
-        // `current` points to the mounted file input element
-        inputFile.current.click();
-    };
-    function onUpload(){
-        let file = document.getElementById("fileChooser").files[0]
-        let bodyFormData = new FormData();
-        bodyFormData.append("file", file);
-        axios.post(`http://localhost:8080/file/upload?projectId=${id}`, bodyFormData,
-            {headers:{'Authorization': Cookies.get("authorization")}}
-        ).then(response => {
-            window.location.reload();
-        }).catch(err => {
-            console.log(err.response)
-        })
-    }
-
 
     // Members section
     const [showInvitations, setShowInvitations] = useState(false);
@@ -137,15 +115,6 @@ function Workspace(){
         .catch(err => {
             console.log(err.response)
             setMemberRole(null)
-        })
-
-        axios.get(`http://localhost:8080/project/getProjectFiles/${id}`,
-            {headers: {'Authorization': Cookies.get("authorization")}
-        }).then(response =>{
-            setFiles(response.data)
-        })
-        .catch(err => {
-            console.log(err.response)
         })
 
         axios.get(`http://localhost:8080/team/getProjectTeams/${id}`,
@@ -301,45 +270,7 @@ function Workspace(){
                                         </Row>
                                     </Tab.Pane>
                                     <Tab.Pane eventKey={"files"}>
-                                        <Row>
-                                            <Col className={"WORKSPACE-center-upload-div"}>
-                                                <center>
-                                                    <Button onClick={() => {onButtonClick();}} >
-                                                        <h4 className={"WORKSPACE-center-upload-button"}>
-                                                            <Form.Control type="file" ref={inputFile} style={{display: 'none'}}
-                                                                          id="fileChooser"
-                                                                          onChange={(e) => {onUpload();}}/>
-                                                            <FaFileUpload className={"mr-2"} size={35}/>
-                                                            Upload file
-                                                        </h4>
-                                                    </Button>
-                                                </center>
-                                            </Col>
-                                            <Col className={"WORKSPACE-center-searchbar"}>
-                                                <center>
-                                                    <Form>
-                                                        <Form.Control type="text" placeholder="Search file"
-                                                                      onChange={(e) => setFileTermSearch(e.target.value)}/>
-                                                    </Form>
-                                                </center>
-                                            </Col>
-                                        </Row>
-                                        <hr/>
-                                        { files.length > 0 ?
-                                            <div className={"ml-5 WORKSPACE-file-section"}>
-                                                { files.filter(f => fileTermSearch === "" ||
-                                                    f.fileName.toLowerCase().includes(fileTermSearch.toLowerCase())
-                                                ).map((file, key) =>
-                                                    <div key={key}>
-                                                        <File file={file} role={memberRole}/>
-                                                    </div>
-                                                )}
-                                            </div>
-                                            :
-                                            <center>
-                                                <h1>Currently there are no files</h1>
-                                            </center>
-                                        }
+                                        <FilesPanel projectId={id} memberRole={memberRole}/>
                                     </Tab.Pane>
                                     <Tab.Pane eventKey={"teams"}>
                                         <Row>

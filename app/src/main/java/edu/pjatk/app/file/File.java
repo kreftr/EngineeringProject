@@ -27,7 +27,8 @@ public class File {
     private Long size;
     @Column(name="upload_date")
     private LocalDateTime uploadDate;
-
+    @Column(name="is_locked")
+    private Boolean isLocked;
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
@@ -47,6 +48,7 @@ public class File {
         this.uploadDate = uploadDate;
         this.project = project;
         this.user = user;
+        this.isLocked = false;
     }
 
     public File(String name, String url, Long size, LocalDateTime uploadDate, Project project, User user, Task task){
@@ -57,6 +59,7 @@ public class File {
         this.project = project;
         this.user = user;
         this.task = task;
+        this.isLocked = false;
     }
 
 }
