@@ -22,6 +22,7 @@ import HomePage from "./homepage/HomePage";
 import ProjectSettings from "./settings/ProjectSettings";
 import AdminPanel from "./admin/AdminPanel";
 import Thread from "./forum/Thread";
+import Terms from "./terms/Terms";
 
 
 class App extends Component{
@@ -60,6 +61,7 @@ class App extends Component{
                                     :
                                     <></>
                                 }
+                                <Nav.Link href="/terms">Terms</Nav.Link>
                             </Nav>
                         </Navbar.Collapse>
                         <Nav className="me-auto">
@@ -94,6 +96,7 @@ class App extends Component{
                     <Route path={"forum"} element={<Forum/>}/>
                     <Route path={"admin"} element={<AdminPanel/>}/>
                     <Route path={"post/:id"} element={<Thread/>}/>
+                    <Route path={"terms"} element={<Terms/>}/>
                 </Routes>
             </Router>
         </>

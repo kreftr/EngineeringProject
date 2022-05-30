@@ -52,7 +52,7 @@ public class FileController {
 
 
     @PostMapping(value = "/upload", params = "projectId")
-    public ResponseEntity uploadFile(@RequestPart MultipartFile file, @RequestParam Long projectId) {
+    public ResponseEntity uploadFile(@RequestPart MultipartFile file, @RequestPart String fullPath, @RequestParam Long projectId) {
 
         Optional<Project> project = projectRepository.getProjectById(projectId);
 
@@ -74,7 +74,7 @@ public class FileController {
                     );
                 }
                 else {
-                    if (fileService.uploadFile(file,project.get(),loggedUser.get())!=null){
+                    if (fileService.uploadFile(file, fullPath, project.get(), loggedUser.get())!=null){
                         return new ResponseEntity(
                                 new ResponseMessage("File uploaded!"), HttpStatus.OK
                         );
@@ -174,6 +174,23 @@ public class FileController {
                     new ResponseMessage("This file does not exist"), HttpStatus.NOT_FOUND
             );
         }
+    }
+
+    @PostMapping(value = "/toggleLock/{fileId}/{isLocked}")
+    public ResponseEntity toggleFileLock(@PathVariable Long fileId, @PathVariable Boolean isLocked){
+        Optional<File> fileOptional = fileService.findFileById(fileId);
+        if (fileOptional.isPresent()) {
+            File file = fileOptional.get();
+            fileService.toggleFileLock(file, isLocked);
+            return new ResponseEntity(
+                    new ResponseMessage("File status changed"), HttpStatus.OK
+            );
+        } else {
+            return new ResponseEntity(
+                    new ResponseMessage("File does not exist"), HttpStatus.NOT_FOUND
+            );
+        }
+
     }
 
 }

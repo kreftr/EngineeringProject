@@ -1,0 +1,1 @@
+ALTER TABLE "file" ADD COLUMN isLocked BOOLEAN NOT NULL default FALSE;
