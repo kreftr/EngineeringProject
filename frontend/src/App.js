@@ -23,6 +23,7 @@ import ProjectSettings from "./settings/ProjectSettings";
 import AdminPanel from "./admin/AdminPanel";
 import Thread from "./forum/Thread";
 import Terms from "./terms/Terms";
+import Editor from "./editor/Editor";
 
 
 class App extends Component{
@@ -97,6 +98,7 @@ class App extends Component{
                     <Route path={"admin"} element={<AdminPanel/>}/>
                     <Route path={"post/:id"} element={<Thread/>}/>
                     <Route path={"terms"} element={<Terms/>}/>
+                    <Route path={"editor"} element={<Editor/>}/>
                 </Routes>
             </Router>
         </>
