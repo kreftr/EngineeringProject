@@ -243,6 +243,7 @@ function Search(){
                                     )})
                             : inputType === "project" || inputType === "category" ?
                                 projects.map((project, key) => {
+                                    console.log(project)
                                     return(
                                         <Card  key={key} className={"mt-3 ml-2 mr-2 flex-box"}>
                                             { project.projectPhoto ?

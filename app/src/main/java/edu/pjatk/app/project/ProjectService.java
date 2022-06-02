@@ -491,21 +491,17 @@ public class ProjectService {
 
     public List<FullProjectResponse> getTopRatedProjects(){
 
-        List<FullProjectResponse> allProjects = this.getAllNonPrivateProjects();
-
+        List<FullProjectResponse> allProjects = getAllNonPrivateProjects();
         if (allProjects.isEmpty()) return Collections.emptyList();
-        else {
-            allProjects.sort(Comparator.comparing(FullProjectResponse::getNumberOfVotes).reversed());
 
-            List<FullProjectResponse> top10 = new ArrayList<>();
-            for (int i = 0; i < 10; i++) {
-                if(allProjects.size() > i) top10.add(allProjects.get(i));
-            }
+        allProjects.sort(Comparator.comparing(FullProjectResponse::getNumberOfVotes).reversed());
 
-            top10.sort(Comparator.comparing(FullProjectResponse::getAverageRating).reversed());
+        List<FullProjectResponse> top10 = new ArrayList<>(allProjects.stream().limit(10).toList());
 
-            return top10;
-        }
+        top10.sort(Comparator.comparing(FullProjectResponse::getAverageRating).reversed());
+
+        return top10;
+
     }
 
     public List<FullProjectResponse> getRandomRecommendedProjects(){
@@ -564,7 +560,7 @@ public class ProjectService {
         if (userOptional.isEmpty()) { return Collections.emptyList(); }
         User user = userOptional.get();
 
-        List<Long> allProjectsIds = recomendationService.monthlyRecomendationIds(user).subList(0,4);  // 5 first
+        List<Long> allProjectsIds = recomendationService.monthlyRecomendationIds(user).stream().limit(5).toList();
         List<Project> projects = new ArrayList<>(Collections.emptyList());
         for (Long id: allProjectsIds) {
             Optional<Project> optionalProject = projectRepository.getProjectById(id);
