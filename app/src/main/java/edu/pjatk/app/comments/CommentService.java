@@ -101,17 +101,17 @@ public class CommentService {
         //format date to Pattern
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         
-        if(!comments.get().isEmpty() && comments.isPresent()) {
-            String userPhoto;
-            for(Comment c : comments.get()) {
-                
-                //try to get Photo filename and handle error
-                try {
+        if (comments.isPresent()) {
+
+            for (Comment c : comments.get()) {
+
+                String userPhoto;
+                if (c.getUserr().getProfile().getPhoto() != null) {
                     userPhoto = c.getUserr().getProfile().getPhoto().getFileName();
-                } catch (NullPointerException e) {
+                } else {
                     userPhoto = null;
                 }
-                
+
                 commentResponses.add(
                         new CommentResponse(
                                 c.getId(), c.getText(), c.getDatee().format(formatter),
@@ -134,14 +134,13 @@ public class CommentService {
         //format date to Pattern
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-        if(!comments.get().isEmpty() && comments.isPresent()) {
-            String userPhoto;
-            for(Comment c : comments.get()) {
+        if (comments.isPresent()) {
 
-                //try to get Photo filename and handle error
-                try {
+            for (Comment c : comments.get()) {
+                String userPhoto;
+                if (c.getUserr().getProfile().getPhoto() != null) {
                     userPhoto = c.getUserr().getProfile().getPhoto().getFileName();
-                } catch (NullPointerException e) {
+                } else {
                     userPhoto = null;
                 }
 

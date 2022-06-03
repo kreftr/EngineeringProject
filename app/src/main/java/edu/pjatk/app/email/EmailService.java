@@ -16,30 +16,13 @@ import java.nio.file.Paths;
 
 
 @Service
-public class EmailService implements EmailSender {
+public class EmailService {
 
     private final JavaMailSender javaMailSender;
 
     @Autowired
     public EmailService(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
-    }
-
-
-    @Override
-    @Async
-    public void send(String recipient, String content) {
-        try {
-            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
-            helper.setText(content, true);
-            helper.setTo(recipient);
-            helper.setSubject("Default text");
-            helper.setFrom("noreply@engineeringproject.com");
-            javaMailSender.send(mimeMessage);
-        } catch (MessagingException e) {
-            throw new IllegalStateException("Failed to send email");
-        }
     }
 
     @Async

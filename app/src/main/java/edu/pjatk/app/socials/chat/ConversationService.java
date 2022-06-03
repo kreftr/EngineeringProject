@@ -1,5 +1,6 @@
 package edu.pjatk.app.socials.chat;
 
+import edu.pjatk.app.photo.Photo;
 import edu.pjatk.app.request.MessageRequest;
 import edu.pjatk.app.response.ConversationResponse;
 import edu.pjatk.app.response.MessageResponse;
@@ -58,8 +59,15 @@ public class ConversationService {
         Optional<User> optional_target_user = userService.findUserById(user_id);
         if (optional_target_user.isEmpty()) { return Optional.empty(); }
 
+        String photoUrl;
+        if (optional_target_user.get().getProfile().getPhoto() != null) {
+            photoUrl = optional_target_user.get().getProfile().getPhoto().getFileName();
+        } else {
+            photoUrl = null;
+        }
+
         return Optional.of(new ConversationResponse(conversationOptional.get().getId(), user_id,
-                optional_target_user.get().getUsername(), optional_target_user.get().getProfile().getPhoto().getFileName()));
+                optional_target_user.get().getUsername(), photoUrl));
     }
 
     public List<Conversation> getAllUserConversations(){
@@ -116,7 +124,14 @@ public class ConversationService {
     public MessageRequest appendDateUsernameAndPhoto(MessageRequest message) {
         Optional<User> author = userService.findUserById(message.getAuthor_id());
         if (author.isPresent()) {
-            message.setPhotoPath(author.get().getProfile().getPhoto().getFileName());
+            String photoUrl;
+            if (author.get().getProfile().getPhoto() != null) {
+                photoUrl = author.get().getProfile().getPhoto().getFileName();
+            } else {
+                photoUrl = null;
+            }
+
+            message.setPhotoPath(photoUrl);
             message.setAuthor_nickname(author.get().getUsername());
             message.setMessageDate(LocalDateTime.now());
         }
@@ -136,9 +151,16 @@ public class ConversationService {
         List<MessageResponse> messageResponses = new ArrayList<>();
         for (Message message: optionalMessages.get()) {
             MessageResponse tempResponse;
+
+            String photoUrl;
+            if (message.getUser().getProfile().getPhoto() != null) {
+                photoUrl = message.getUser().getProfile().getPhoto().getFileName();
+            } else {
+                photoUrl = null;
+            }
+
             tempResponse = new MessageResponse(message.getContent(), message.getConversation().getId(),
-                    message.getUser().getUsername(), message.getUser().getId(),
-                    message.getUser().getProfile().getPhoto().getFileName(), message.getMessage_date());
+                    message.getUser().getUsername(), message.getUser().getId(), photoUrl, message.getMessage_date());
             messageResponses.add(tempResponse);
         }
 
@@ -182,14 +204,16 @@ public class ConversationService {
             );
             if (conversations.isEmpty()) return Collections.emptyList();
             else {
-                String photoUrl;
                 for (Conversation c : conversations.get()){
                     if (c.getFirst_user().equals(loggedUser.get())){
-                        try {
+
+                        String photoUrl;
+                        if (c.getSecond_user().getProfile().getPhoto() != null) {
                             photoUrl = c.getSecond_user().getProfile().getPhoto().getFileName();
-                        } catch (NullPointerException e){
+                        } else {
                             photoUrl = null;
                         }
+
                         listToReturn.add(
                                 new ConversationResponse(
                                         c.getId(),
@@ -200,11 +224,13 @@ public class ConversationService {
                         );
                     }
                     else {
-                        try {
+                        String photoUrl;
+                        if (c.getFirst_user().getProfile().getPhoto() != null) {
                             photoUrl = c.getFirst_user().getProfile().getPhoto().getFileName();
-                        } catch (NullPointerException e){
+                        } else {
                             photoUrl = null;
                         }
+
                         listToReturn.add(
                                 new ConversationResponse(
                                         c.getId(),

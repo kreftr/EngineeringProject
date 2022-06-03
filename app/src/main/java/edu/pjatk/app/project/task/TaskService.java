@@ -23,11 +23,11 @@ import java.util.*;
 @Service
 public class TaskService {
 
-    private TaskRepository taskRepository;
-    private UserService userService;
-    private ProjectRepository projectRepository;
-    private ParticipantService participantService;
-    private TeamService teamService;
+    private final TaskRepository taskRepository;
+    private final UserService userService;
+    private final ProjectRepository projectRepository;
+    private final ParticipantService participantService;
+    private final TeamService teamService;
 
     @Autowired
     public TaskService(TaskRepository taskRepository, UserService userService, ProjectRepository projectRepository,
@@ -66,16 +66,42 @@ public class TaskService {
                     Long participantId, teamId;
 
                     for (Task task : tasks.get()){
-                        try { profilePhoto = task.getParticipant().getUser().getProfile().getPhoto().getFileName(); }
-                        catch (NullPointerException e) { profilePhoto = null; }
-                        try { username = task.getParticipant().getUser().getUsername(); }
-                        catch (NullPointerException e) { username = null; }
-                        try { teamName = task.getTeam().getName(); }
-                        catch (NullPointerException e) { teamName = null; }
-                        try { participantId = task.getParticipant().getId(); }
-                        catch (NullPointerException e) { participantId = null; }
-                        try { teamId = task.getTeam().getId(); }
-                        catch (NullPointerException e) { teamId = null; }
+
+                        // profile photo
+                        if (task.getParticipant().getUser().getProfile().getPhoto() != null) {
+                            profilePhoto = task.getParticipant().getUser().getProfile().getPhoto().getFileName();
+                        } else {
+                            profilePhoto = null;
+                        }
+
+                        // username
+                        if (task.getParticipant().getUser() != null) {
+                            username = task.getParticipant().getUser().getUsername();
+                        } else {
+                            username = null;
+                        }
+
+                        // team name
+                        if (task.getTeam() != null) {
+                            teamName = task.getTeam().getName();
+                        } else {
+                            teamName = null;
+                        }
+
+                        // participant id
+                        if (task.getParticipant() != null) {
+                            participantId = task.getParticipant().getId();
+                        } else {
+                            participantId = null;
+                        }
+
+                        // team id
+                        if (task.getTeam() != null) {
+                            teamId = task.getTeam().getId();
+                        } else {
+                            teamId = null;
+                        }
+
                         taskResponses.add(
                                 new TaskResponse(
                                         task.getId(), task.getName(), task.getDescription(), task.getStatus().toString(),

@@ -64,13 +64,25 @@ public class ProjectService {
             String projectPhoto, authorPhoto, ytLink, gitLink, fbLink, kickLink;
             Set<String> categories = new HashSet<>();
 
-            try { projectPhoto = project.getPhoto().getFileName(); } catch (NullPointerException e) { projectPhoto = null;}
-            try { authorPhoto = project.getCreator().getProfile().getPhoto().getFileName(); }
-            catch (NullPointerException e) { authorPhoto = null;}
-            try { ytLink = project.getYoutube_link(); } catch (NullPointerException e) { ytLink = null;}
-            try { gitLink = project.getGithub_link(); } catch (NullPointerException e) { gitLink = null;}
-            try { fbLink = project.getFacebook_link(); } catch (NullPointerException e) { fbLink = null;}
-            try { kickLink = project.getKickstarter_link(); } catch (NullPointerException e) { kickLink = null;}
+            // project photo
+            if (project.getPhoto() != null) {
+                projectPhoto = project.getPhoto().getFileName();
+            } else {
+                projectPhoto = null;
+            }
+
+            // author photo
+            if (project.getCreator().getProfile().getPhoto() != null) {
+                authorPhoto = project.getCreator().getProfile().getPhoto().getFileName();
+            } else {
+                authorPhoto = null;
+            }
+
+            // links
+            ytLink = project.getYoutube_link();
+            gitLink = project.getGithub_link();
+            fbLink = project.getFacebook_link();
+            kickLink = project.getKickstarter_link();
 
             for (Category c : project.getCategories()){
                 categories.add(c.getTitle());
@@ -112,11 +124,19 @@ public class ProjectService {
             String projectPhoto, authorPhoto;
 
             for (Project p : projectList.get()){
-
                 Set<String> categories = new HashSet<>();
-                try { projectPhoto = p.getPhoto().getFileName(); } catch (NullPointerException e) { projectPhoto = null;}
-                try { authorPhoto = p.getCreator().getProfile().getPhoto().getFileName(); }
-                catch (NullPointerException e) { authorPhoto = null;}
+
+                if (p.getPhoto() != null) {
+                    projectPhoto = p.getPhoto().getFileName();
+                } else {
+                    projectPhoto = null;
+                }
+
+                if (p.getCreator().getProfile().getPhoto() != null) {
+                    authorPhoto = p.getCreator().getProfile().getPhoto().getFileName();
+                } else {
+                    authorPhoto = null;
+                }
 
                 for (Category c : p.getCategories()){
                     categories.add(c.getTitle());
@@ -147,9 +167,18 @@ public class ProjectService {
             for (Project p : projectList.get()) {
                 if(p.getProject_access().toString() != "PRIVATE") {
                     Set<String> categories = new HashSet<>();
-                    try { projectPhoto = p.getPhoto().getFileName(); } catch (NullPointerException e) { projectPhoto = null;}
-                    try { authorPhoto = p.getCreator().getProfile().getPhoto().getFileName(); }
-                    catch (NullPointerException e) { authorPhoto = null;}
+
+                    if (p.getPhoto() != null) {
+                        projectPhoto = p.getPhoto().getFileName();
+                    } else {
+                        projectPhoto = null;
+                    }
+
+                    if (p.getCreator().getProfile().getPhoto() != null) {
+                        authorPhoto = p.getCreator().getProfile().getPhoto().getFileName();
+                    } else {
+                        authorPhoto = null;
+                    }
 
                     for (Category c : p.getCategories()){
                         categories.add(c.getTitle());
@@ -181,9 +210,17 @@ public class ProjectService {
             for (Project p : projectList.get()){
 
                 Set<String> categories = new HashSet<>();
-                try { projectPhoto = p.getPhoto().getFileName(); } catch (NullPointerException e) { projectPhoto = null;}
-                try { authorPhoto = p.getCreator().getProfile().getPhoto().getFileName(); }
-                catch (NullPointerException e) { authorPhoto = null;}
+                if (p.getPhoto() != null) {
+                    projectPhoto = p.getPhoto().getFileName();
+                } else {
+                    projectPhoto = null;
+                }
+
+                if (p.getCreator().getProfile().getPhoto() != null) {
+                    authorPhoto = p.getCreator().getProfile().getPhoto().getFileName();
+                } else {
+                    authorPhoto = null;
+                }
 
                 for (Category c : p.getCategories()){
                     categories.add(c.getTitle());
@@ -220,9 +257,17 @@ public class ProjectService {
 
             for (Project p : projects.get()){
                 Set<String> categories = new HashSet<>();
-                try { projectPhoto = p.getPhoto().getFileName(); } catch (NullPointerException e) { projectPhoto = null;}
-                try { authorPhoto = p.getCreator().getProfile().getPhoto().getFileName(); }
-                catch (NullPointerException e) { authorPhoto = null;}
+                if (p.getPhoto() != null) {
+                    projectPhoto = p.getPhoto().getFileName();
+                } else {
+                    projectPhoto = null;
+                }
+
+                if (p.getCreator().getProfile().getPhoto() != null) {
+                    authorPhoto = p.getCreator().getProfile().getPhoto().getFileName();
+                } else {
+                    authorPhoto = null;
+                }
 
                 for (Category c : p.getCategories()){
                     categories.add(c.getTitle());
@@ -267,9 +312,17 @@ public class ProjectService {
                     Set<String> categories = new HashSet<>();
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-                    try { projectPhoto = p.getPhoto().getFileName(); } catch (NullPointerException e) { projectPhoto = null;}
-                    try { authorPhoto = p.getCreator().getProfile().getPhoto().getFileName(); }
-                    catch (NullPointerException e) { authorPhoto = null;}
+                    if (p.getPhoto() != null) {
+                        projectPhoto = p.getPhoto().getFileName();
+                    } else {
+                        projectPhoto = null;
+                    }
+
+                    if (p.getCreator().getProfile().getPhoto() != null) {
+                        authorPhoto = p.getCreator().getProfile().getPhoto().getFileName();
+                    } else {
+                        authorPhoto = null;
+                    }
 
                     for (Category c : p.getCategories()){
                         categories.add(c.getTitle());
@@ -305,13 +358,25 @@ public class ProjectService {
                 String projectPhoto, authorPhoto, ytLink, gitLink, fbLink, kickLink;
                 Set<String> categories = new HashSet<>();
 
-                try { projectPhoto = project.getPhoto().getFileName(); } catch (NullPointerException e) { projectPhoto = null;}
-                try { authorPhoto = project.getCreator().getProfile().getPhoto().getFileName(); }
-                catch (NullPointerException e) { authorPhoto = null;}
-                try { ytLink = project.getYoutube_link(); } catch (NullPointerException e) { ytLink = null;}
-                try { gitLink = project.getGithub_link(); } catch (NullPointerException e) { gitLink = null;}
-                try { fbLink = project.getFacebook_link(); } catch (NullPointerException e) { fbLink = null;}
-                try { kickLink = project.getKickstarter_link(); } catch (NullPointerException e) { kickLink = null;}
+                // project photo
+                if (project.getPhoto() != null) {
+                    projectPhoto = project.getPhoto().getFileName();
+                } else {
+                    projectPhoto = null;
+                }
+
+                // author photo
+                if (project.getCreator().getProfile().getPhoto() != null) {
+                    authorPhoto = project.getCreator().getProfile().getPhoto().getFileName();
+                } else {
+                    authorPhoto = null;
+                }
+
+                // links
+                ytLink = project.getYoutube_link();
+                gitLink = project.getGithub_link();
+                fbLink = project.getFacebook_link();
+                kickLink = project.getKickstarter_link();
 
                 for (Category c : project.getCategories()){
                     categories.add(c.getTitle());
@@ -359,9 +424,17 @@ public class ProjectService {
             for (Project p : projectList.get()){
 
                 Set<String> categories = new HashSet<>();
-                try { projectPhoto = p.getPhoto().getFileName(); } catch (NullPointerException e) { projectPhoto = null;}
-                try { authorPhoto = p.getCreator().getProfile().getPhoto().getFileName(); }
-                catch (NullPointerException e) { authorPhoto = null;}
+                if (p.getPhoto() != null) {
+                    projectPhoto = p.getPhoto().getFileName();
+                } else {
+                    projectPhoto = null;
+                }
+
+                if (p.getCreator().getProfile().getPhoto() != null) {
+                    authorPhoto = p.getCreator().getProfile().getPhoto().getFileName();
+                } else {
+                    authorPhoto = null;
+                }
 
                 for (Category c : p.getCategories()){
                     categories.add(c.getTitle());
@@ -638,9 +711,12 @@ public class ProjectService {
             String profilePhoto;
 
             for (File f : project.get().getFiles()){
-                try {
+                if (f.getUser().getProfile().getPhoto() != null) {
                     profilePhoto = f.getUser().getProfile().getPhoto().getFileName();
-                } catch (NullPointerException e) { profilePhoto = null; }
+                } else {
+                    profilePhoto = null;
+                }
+
                 fileResponses.add(new FileResponse(f.getId(), f.getName(), f.getUrl(), f.getUser().getId(),
                         f.getUser().getUsername(), profilePhoto, f.getSize(),
                         f.getUploadDate().format(formatter)));
@@ -732,9 +808,12 @@ public class ProjectService {
             Set<ProjectJoinRequestResponse> pending = new HashSet<>();
 
             for (Participant p : participants.get()){
-                try {
-                    profilePhoto =  p.getUser().getProfile().getPhoto().getFileName();
-                } catch (NullPointerException e) { profilePhoto = null;  }
+                if (p.getUser().getProfile().getPhoto() != null) {
+                    profilePhoto = p.getUser().getProfile().getPhoto().getFileName();
+                } else {
+                    profilePhoto = null;
+                }
+
                 pending.add(new ProjectJoinRequestResponse(
                         p.getId(), p.getUser().getId(), p.getUser().getUsername(),
                         profilePhoto, p.getProject().getId(),
@@ -757,9 +836,12 @@ public class ProjectService {
         if (invitations.isPresent() && invitations.get().size() > 0){
             String projectPhoto;
             for (ProjectInvitation invitation : invitations.get()){
-                try {
-                    projectPhoto =  invitation.getProject().getPhoto().getFileName();
-                } catch (NullPointerException e) { projectPhoto = null;  }
+                if (invitation.getProject().getPhoto() != null) {
+                    projectPhoto = invitation.getProject().getPhoto().getFileName();
+                } else {
+                    projectPhoto = null;
+                }
+
                 invitationResponses.add(
                         new InvitationResponse(invitation.getId(), invitation.getProject().getId(),
                                 projectPhoto, invitation.getProject().getProject_name())
@@ -786,9 +868,18 @@ public class ProjectService {
 
             for (Participant participant : participantOf.get()){
                 Set<String> categories = new HashSet<>();
-                try { projectPhoto = participant.getProject().getPhoto().getFileName(); } catch (NullPointerException e) { projectPhoto = null;}
-                try { authorPhoto = participant.getProject().getCreator().getProfile().getPhoto().getFileName(); }
-                catch (NullPointerException e) { authorPhoto = null;}
+
+                if (participant.getProject().getPhoto() != null) {
+                    projectPhoto = participant.getProject().getPhoto().getFileName();
+                } else {
+                    projectPhoto = null;
+                }
+
+                if (participant.getProject().getCreator().getProfile().getPhoto() != null) {
+                    authorPhoto = participant.getProject().getCreator().getProfile().getPhoto().getFileName();
+                } else {
+                    authorPhoto = null;
+                }
 
                 for (Category c : participant.getProject().getCategories()){
                     categories.add(c.getTitle());
@@ -820,8 +911,12 @@ public class ProjectService {
 
             for (Participant participant : project.get().getParticipants()){
                 if (!participant.isPending()){
-                    try { profilePhoto = participant.getUser().getProfile().getPhoto().getFileName(); }
-                    catch (NullPointerException e) { profilePhoto = null; }
+                    if (participant.getUser().getProfile().getPhoto() != null) {
+                        profilePhoto = participant.getUser().getProfile().getPhoto().getFileName();
+                    } else {
+                        profilePhoto = null;
+                    }
+
                     members.add(new MemberResponse(participant.getUser().getId(), participant.getUser().getUsername(),
                             profilePhoto, participant.getParticipantRole().toString())
                     );
