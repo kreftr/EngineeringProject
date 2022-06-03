@@ -2,19 +2,23 @@ import {Badge, Col, Image, ListGroup, Row} from "react-bootstrap";
 import default_project_picture from "../assets/images/default_project_picture.jpg";
 import default_profile_picture from "../assets/images/default_profile_picture.jpg";
 import "./HomePage.css";
-import React from "react";
+import React, {useEffect} from "react";
 import {FaStar} from "react-icons/all";
 
 
 function ShownProjets(props){
 
+    useEffect(() => {
+        console.log(props.project.authorPhoto)
+    }, [])
+
     function profilePhoto(){
         return (
             <a href={`/profile/${props.project.authorId}`}>
-                {props.project.authorPhoto.file_name ?
+                { props.project.authorPhoto ?
                     <Image
                         className={"HOMEPAGE-project-avatar"}
-                        src={`http://localhost:8080/photo?filename=${props.project.authorPhoto.file_name}`}
+                        src={`http://localhost:8080/photo?filename=${props.project.authorPhoto}`}
                         width="50px" height="50px" rounded={true}/>
                     :
                     <Image className={"HOMEPAGE-project-avatar"} src={default_profile_picture} width="50px" height="50px" rounded={true}/>

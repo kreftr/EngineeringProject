@@ -57,7 +57,7 @@ public class ProjectRepository {
     public List<Long> randomUnicalId(Integer numberOfProjects, List<Long> projectIds, List<Long> blacklist){
         List<Long> uniqueIdList = new ArrayList<>();
         Random random = new Random();
-        if (projectIds.size()<= 10) {
+        if (projectIds.size() <= numberOfProjects) {
             uniqueIdList = projectIds;
             return uniqueIdList;
         }
@@ -77,14 +77,14 @@ public class ProjectRepository {
         }
     }
 
-    public Optional<List<Project>> getRandomRecommendedProjects10(){
+    public Optional<List<Project>> getRandomRecommendedProjects(int projectQuantity){
         List<Long> blacklist = new ArrayList<>();
         List<Long> projectIds = entityManager.createQuery(
                 "SELECT project.id FROM Project project WHERE project.project_access<>'PRIVATE'", Long.class
                 ).getResultList();
 
         Optional projects;
-        List<Long> selectedProjects = randomUnicalId(10, projectIds, blacklist);
+        List<Long> selectedProjects = randomUnicalId(projectQuantity, projectIds, blacklist);
         try {
             projects = Optional.of(entityManager.createQuery(
                             "SELECT project FROM Project project WHERE project.id IN (:selectedProjects)", Project.class)

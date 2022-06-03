@@ -42,9 +42,13 @@ public class RegistrationService {
     }
 
 
-    //TODO: Token validity should be read from the configuration file
     @Transactional
     public void registerUser(RegistrationRequest request){
+
+        if (userService.findUserByUsername(request.getUsername()).isPresent() ||
+                userService.findUserByEmail(request.getEmail()).isPresent()) {
+            return;
+        }
 
         Profile profile = new Profile();
         profileService.saveProfile(profile);

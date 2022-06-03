@@ -579,13 +579,13 @@ public class ProjectService {
 
     public List<FullProjectResponse> getRandomRecommendedProjects(){
 
-        Optional<List<Project>> allProjects = projectRepository.getRandomRecommendedProjects10();
+        Optional<List<Project>> allProjects = projectRepository.getRandomRecommendedProjects(5);
         if (allProjects.isEmpty()) return Collections.emptyList();
 
-        List<Project> random10 = allProjects.get();
-        List<FullProjectResponse> random10Response = new ArrayList<>();
+        List<Project> randomProjects = allProjects.get();
+        List<FullProjectResponse> randomResponse = new ArrayList<>();
 
-        for (Project project: random10) {
+        for (Project project: randomProjects) {
             //Return average rating if there is more than one vote
             float averageRating = (project.getRatings().size() > 0 ?
                     ((Integer) project.getRatings().stream().mapToInt(Rating::getValue).sum()).floatValue()/project.getRatings().size()
@@ -612,7 +612,7 @@ public class ProjectService {
 
             String userPhoto = "";
             if (project.getCreator().getProfile().getPhoto() != null) {
-                userPhoto = project.getCreator().getProfile().getPhoto().toString();
+                userPhoto = project.getCreator().getProfile().getPhoto().getFileName();
             }
 
             FullProjectResponse projectResponse = new FullProjectResponse(
@@ -624,9 +624,9 @@ public class ProjectService {
                     averageRating, numberOfVotes, participants
             );
             System.out.println();
-            random10Response.add(projectResponse);
+            randomResponse.add(projectResponse);
         }
-        return random10Response;
+        return randomResponse;
     }
     public List<FullProjectResponse> getRecommendedProjects(Long userId){
         Optional<User> userOptional = userService.findUserById(userId);
@@ -671,7 +671,7 @@ public class ProjectService {
 
             String userPhoto = "";
             if (project.getCreator().getProfile().getPhoto() != null) {
-                userPhoto = project.getCreator().getProfile().getPhoto().toString();
+                userPhoto = project.getCreator().getProfile().getPhoto().getFileName();
             }
 
             FullProjectResponse projectResponse = new FullProjectResponse(
