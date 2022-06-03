@@ -4,13 +4,13 @@ import edu.pjatk.app.email.EmailService;
 import edu.pjatk.app.email.activation_token.ActivationToken;
 import edu.pjatk.app.email.activation_token.ActivationTokenService;
 import edu.pjatk.app.request.RegistrationRequest;
+import edu.pjatk.app.security.config.JwtProperties;
 import edu.pjatk.app.user.User;
 import edu.pjatk.app.user.UserRole;
 import edu.pjatk.app.user.UserService;
 import edu.pjatk.app.user.profile.Profile;
 import edu.pjatk.app.user.profile.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +20,6 @@ import java.util.UUID;
 
 @Service
 public class RegistrationService {
-
-    @Value("${tokens.activation-token.validity}")
-    private int activationTokenValidity;
 
     private final UserService userService;
     private final ProfileService profileService;
@@ -40,7 +37,6 @@ public class RegistrationService {
         this.emailService = emailService;
         this.passwordEncoder = passwordEncoder;
     }
-
 
     @Transactional
     public void registerUser(RegistrationRequest request){
@@ -62,7 +58,7 @@ public class RegistrationService {
 
         activationTokenService.saveActivationToken(
                 new ActivationToken(token, LocalDateTime.now(),
-                        LocalDateTime.now().plusDays(activationTokenValidity), user)
+                        LocalDateTime.now().plusDays(JwtProperties.EXPIRATION_TIME), user)
         );
 
         emailService.send(request.getEmail(), "Account activation", emailService.emailBuilder(

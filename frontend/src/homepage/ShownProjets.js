@@ -8,9 +8,6 @@ import {FaStar} from "react-icons/all";
 
 function ShownProjets(props){
 
-    useEffect(() => {
-        console.log(props.project.authorPhoto)
-    }, [])
 
     function profilePhoto(){
         return (
