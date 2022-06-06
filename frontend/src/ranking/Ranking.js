@@ -13,7 +13,6 @@ function Ranking(){
         axios.get(`http://localhost:8080/project/ranking`
         ).then(response => {
             setBest(response.data)
-            console.log(best)
         }).catch(err => {
             console.log(err.response)
         })

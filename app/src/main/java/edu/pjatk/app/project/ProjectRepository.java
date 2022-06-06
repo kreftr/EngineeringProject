@@ -130,7 +130,7 @@ public class ProjectRepository {
         Optional<List<Project>> projects;
         try {
             projects =  Optional.of(entityManager.createQuery(
-                            "select project from Project project where project.project_name like :project_name and project.project_access <> 'PRIVATE'", Project.class)
+                            "select project from Project project where project.project_name like concat('%',:project_name,'%') and project.project_access <> 'PRIVATE'", Project.class)
                     .setParameter("project_name", project_name+"%").getResultList());
         }
         catch (NoResultException noResultException){
@@ -168,7 +168,7 @@ public class ProjectRepository {
     public Optional<List<Project>> getProjectsByTitleWithPagination(String projectTitle, int pageNumber, int pageSize){
         Optional<List<Project>> projects;
         try {
-            Query query = entityManager.createQuery("select project from Project project where project.project_name like :project_name and project.project_access <> 'PRIVATE'");
+            Query query = entityManager.createQuery("select project from Project project where project.project_name like concat('%',:project_name,'%') and project.project_access <> 'PRIVATE'");
             query.setParameter("project_name", projectTitle+"%");
             query.setFirstResult((pageNumber-1) * pageSize);
             query.setMaxResults(pageSize);
@@ -184,7 +184,7 @@ public class ProjectRepository {
         Optional<Long> projectsNumber;
         try {
             projectsNumber =  Optional.of(entityManager.createQuery(
-                            "select count(project.id) from Project project where project.project_name like :project_name and project.project_access <> 'PRIVATE'", Long.class)
+                            "select count(project.id) from Project project where project.project_name like concat('%',:project_name,'%') and project.project_access <> 'PRIVATE'", Long.class)
                     .setParameter("project_name", projectTitle+"%").getSingleResult());
         }
         catch (NoResultException noResultException){

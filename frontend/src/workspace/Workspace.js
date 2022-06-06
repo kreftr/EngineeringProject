@@ -204,10 +204,9 @@ function Workspace(){
                                             </Col>
                                             <Col className={"WORKSPACE-center-searchbar"}>
                                                 <center>
-                                                    <Form>
-                                                        <Form.Control type="text" placeholder="Search task"
-                                                                      onChange={(e) => setTaskTermSearch(e.target.value)}/>
-                                                    </Form>
+                                                    <Form.Control type="text" placeholder="Search task"
+                                                                  onChange={(e) => setTaskTermSearch(e.target.value)}
+                                                    />
                                                 </center>
                                             </Col>
                                         </Row>
@@ -293,10 +292,9 @@ function Workspace(){
                                             </Col>
                                             <Col className={"WORKSPACE-center-searchbar"}>
                                                 <center>
-                                                    <Form>
-                                                        <Form.Control type="text" placeholder="Search team"
-                                                                      onChange={(e) => setTeamTermSearch(e.target.value)}/>
-                                                    </Form>
+                                                    <Form.Control type="text" placeholder="Search team"
+                                                                  onChange={(e) => setTeamTermSearch(e.target.value)}
+                                                    />
                                                 </center>
                                             </Col>
                                         </Row>
@@ -331,10 +329,9 @@ function Workspace(){
                                             </Col>
                                             <Col className={"WORKSPACE-center-searchbar"}>
                                                 <center>
-                                                    <Form>
-                                                        <Form.Control type="text" placeholder="Search member"
-                                                                      onChange={(e) => setMemberTermSearch(e.target.value)}/>
-                                                    </Form>
+                                                    <Form.Control type="text" placeholder="Search member"
+                                                                  onChange={(e) => setMemberTermSearch(e.target.value)}
+                                                    />
                                                 </center>
                                             </Col>
                                         </Row>

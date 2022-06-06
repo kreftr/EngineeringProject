@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -92,6 +93,7 @@ public class ProjectService {
             float averageRating = (project.getRatings().size() > 0 ?
                     project.getRatings().stream().collect(Collectors.summingInt(Rating::getValue)).floatValue()/project.getRatings().size()
                     : 0);
+            averageRating = (float) (Math.round(averageRating * Math.pow(10, 2)) / Math.pow(10, 2));
             int numberOfVotes = project.getRatings().size();
 
             //Return IDs of project members
@@ -386,6 +388,7 @@ public class ProjectService {
                 float averageRating = (project.getRatings().size() > 0 ?
                         project.getRatings().stream().collect(Collectors.summingInt(Rating::getValue)).floatValue()/project.getRatings().size()
                         : 0);
+                averageRating = (float) (Math.round(averageRating * Math.pow(10, 2)) / Math.pow(10, 2));
                 int numberOfVotes = project.getRatings().size();
 
                 //Return IDs of project members
@@ -590,6 +593,7 @@ public class ProjectService {
             float averageRating = (project.getRatings().size() > 0 ?
                     ((Integer) project.getRatings().stream().mapToInt(Rating::getValue).sum()).floatValue()/project.getRatings().size()
                     : 0);
+            averageRating = (float) (Math.round(averageRating * Math.pow(10, 2)) / Math.pow(10, 2));
             int numberOfVotes = project.getRatings().size();
 
             //Return IDs of project members
@@ -649,6 +653,7 @@ public class ProjectService {
             float averageRating = (project.getRatings().size() > 0 ?
                     ((Integer) project.getRatings().stream().mapToInt(Rating::getValue).sum()).floatValue()/project.getRatings().size()
                     : 0);
+            averageRating = (float) (Math.round(averageRating * Math.pow(10, 2)) / Math.pow(10, 2));
             int numberOfVotes = project.getRatings().size();
 
             //Return IDs of project members
