@@ -202,29 +202,6 @@ public class ProjectRepository {
     public void deleteProject(Long id){
         Project project = entityManager.find(Project.class, id);
         entityManager.remove(project);
-        Project testProject = entityManager.find(Project.class, id);
-        System.out.println(testProject);
-    }
-
-    @Transactional
-    public void editProjectName(Long id, String project_name) {
-        Project project = entityManager.find(Project.class, id);
-        project.setProject_name(project_name);
-        entityManager.persist(project);
-    }
-
-    @Transactional
-    public void editProjectCategory(Long id, String project_category) {
-        Project project = entityManager.find(Project.class, id);
-        project.setProject_name(project_category);
-        entityManager.persist(project);
-    }
-
-    @Transactional
-    public void editProjectStatus(Long id, String project_status) {
-        Project project = entityManager.find(Project.class, id);
-        project.setProject_name(project_status);
-        entityManager.persist(project);
     }
 
 }

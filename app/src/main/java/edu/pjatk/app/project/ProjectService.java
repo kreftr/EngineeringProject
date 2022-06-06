@@ -500,8 +500,11 @@ public class ProjectService {
         );
         Photo projectPhoto = (photo != null ? photoService.uploadPhoto(photo) : null);
         Optional<Project> projectToEdit = projectRepository.getProjectById(id);
-        if (loggedUser.isPresent() && projectToEdit.isPresent() && (projectToEdit.get().getCreator().equals(
-                loggedUser.get().getUsername()) || loggedUser.get().getUserRole().equals(UserRole.ADMIN)))
+
+        if (loggedUser.isEmpty() || projectToEdit.isEmpty()) { return; }
+
+        if ( projectToEdit.get().getCreator().getUsername().equals(
+                loggedUser.get().getUsername()) || loggedUser.get().getUserRole().equals(UserRole.ADMIN))
         {
             Set<Category> categories = new HashSet<>();
             for (String category : projectRequest.getCategory()){
@@ -627,7 +630,6 @@ public class ProjectService {
                     project.getCreator().getUsername(), userPhoto,
                     averageRating, numberOfVotes, participants
             );
-            System.out.println();
             randomResponse.add(projectResponse);
         }
         return randomResponse;
@@ -1008,7 +1010,6 @@ public class ProjectService {
 
         Set<Participant> participants = new HashSet<>(project.get().getParticipants());
         participants.retainAll(loggedUser.get().getParticipants());
-        System.out.println();
         //Check if user is not already in project
         if (loggedUser.isPresent() && participants.size() == 0){
 
@@ -1083,24 +1084,4 @@ public class ProjectService {
         projectRepository.deleteProject(id);
     }
 
-    public void editProjectName(Long id, String project_name) {
-        Optional<Project> project = projectRepository.getProjectById(id);
-        if (project.isPresent()){
-            projectRepository.editProjectName(id, project_name);
-        }
-    }
-
-    public void editProjectCategory(Long id, String project_category) {
-        Optional<Project> project = projectRepository.getProjectById(id);
-        if (project.isPresent()){
-            projectRepository.editProjectCategory(id, project_category);
-        }
-    }
-
-    public void editProjectStatus(Long id, String project_status) {
-        Optional<Project> project = projectRepository.getProjectById(id);
-        if (project.isPresent()){
-            projectRepository.editProjectStatus(id, project_status);
-        }
-    }
 }

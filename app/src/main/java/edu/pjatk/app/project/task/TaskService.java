@@ -302,7 +302,6 @@ public class TaskService {
                 else return false;
 
             } else if (project.isPresent() && task.get().getTeam() != null){
-                System.out.println("4");
                 if (loggedParticipant.get().getTeams().contains(task.get().getTeam())
                         || !loggedParticipant.get().getParticipantRole().equals("PARTICIPANT")){
                     task.get().setStatus(TaskStatus.IN_PROGRESS);

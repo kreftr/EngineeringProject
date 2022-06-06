@@ -169,7 +169,6 @@ public class ProjectController {
     public ResponseEntity<?> editProject(@RequestPart ProjectRequest projectRequest,
                                          @RequestPart(required = false) MultipartFile projectPhoto,
                                          @PathVariable Long id) {
-
         projectService.editProject(projectRequest, projectPhoto, id);
         return new ResponseEntity<>(new ResponseMessage("Project edited!"), HttpStatus.OK);
     }
@@ -414,31 +413,5 @@ public class ProjectController {
                 new ResponseMessage("Project deleted!"), HttpStatus.OK
         );
     }
-
-    @PostMapping(value = "/editProjectName/{id}/{project_name}")
-    public ResponseEntity<?> editProjectName(@PathVariable long id, @PathVariable String project_name) {
-        projectService.editProjectName(id, project_name);
-        return new ResponseEntity<>(
-                new ResponseMessage("Project name change is complete"), HttpStatus.OK
-        );
-    }
-
-    @PostMapping(value = "/editProjectCategory/{id}/{project_category}")
-    public ResponseEntity<?> editProjectCategory(@PathVariable long id, @PathVariable String project_category) {
-        projectService.editProjectCategory(id, project_category);
-        return new ResponseEntity<>(
-                new ResponseMessage("Project category change is complete"), HttpStatus.OK
-        );
-    }
-
-    @PostMapping(value = "/editProjectStatus/{id}/{project_status}")
-    public ResponseEntity<?> editProjectStatus(@PathVariable long id, @PathVariable String project_status) {
-        projectService.editProjectStatus(id, project_status);
-        return new ResponseEntity<>(
-                new ResponseMessage("Project status change is complete"), HttpStatus.OK
-        );
-    }
-
-    //--------------------------
 
 }
