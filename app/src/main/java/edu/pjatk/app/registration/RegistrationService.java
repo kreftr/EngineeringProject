@@ -11,6 +11,7 @@ import edu.pjatk.app.user.UserService;
 import edu.pjatk.app.user.profile.Profile;
 import edu.pjatk.app.user.profile.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,9 @@ public class RegistrationService {
     private final ActivationTokenService activationTokenService;
     private final EmailService emailService;
     private final BCryptPasswordEncoder passwordEncoder;
+
+    @Value("${tokens.activation-token.validity}")
+    private int activationTokenValidity;
 
     @Autowired
     public RegistrationService(UserService userService, ProfileService profileService,
@@ -58,7 +62,7 @@ public class RegistrationService {
 
         activationTokenService.saveActivationToken(
                 new ActivationToken(token, LocalDateTime.now(),
-                        LocalDateTime.now().plusDays(JwtProperties.EXPIRATION_TIME), user)
+                        LocalDateTime.now().plusDays(activationTokenValidity), user)
         );
 
         emailService.send(request.getEmail(), "Account activation", emailService.emailBuilder(

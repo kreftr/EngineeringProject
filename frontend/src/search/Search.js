@@ -243,13 +243,12 @@ function Search(){
                                     )})
                             : inputType === "project" || inputType === "category" ?
                                 projects.map((project, key) => {
-                                    console.log(project)
                                     return(
                                         <Card  key={key} className={"mt-3 ml-2 mr-2 flex-box"}>
                                             { project.projectPhoto ?
-                                                <Card.Img style={{width:"250px", height:"250px", margin:"auto"}} variant="top" src={`http://localhost:8080/photo?filename=${project.projectPhoto}`} />
+                                                <Card.Img style={{width:"160px", height:"160px", margin:"auto", marginTop:"15px"}} variant="top" src={`http://localhost:8080/photo?filename=${project.projectPhoto}`} />
                                                 :
-                                                <Card.Img style={{width:"250px", height:"250px", margin:"auto"}} variant="top" src={default_project_picture} />
+                                                <Card.Img style={{width:"160px", height:"160px", margin:"auto", marginTop:"15px"}} variant="top" src={default_project_picture} />
                                             }
                                             <Card.Body>
                                                 <Card.Title>
@@ -259,11 +258,11 @@ function Search(){
                                                 </Card.Title>
                                                 <Card.Text>
                                                     <div className={"SEARCH-intro-height"}>
-                                                        {project.introduction.slice(0,150)+"..."}
+                                                        {project.introduction}
                                                     </div>
                                                 </Card.Text>
                                                 <Row className={"mr-2 ml-2"}>
-                                                    <Button href={`/project/${project.projectId}`} className={"align-self: flex-end;"} variant="primary">View</Button>
+                                                    <Button style={{marginTop:"20px"}} href={`/project/${project.projectId}`} className={"align-self: flex-end;"} variant="primary">View</Button>
                                                 </Row>
                                             </Card.Body>
                                         </Card>

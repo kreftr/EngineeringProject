@@ -45,7 +45,7 @@ public class Project {
     private String github_link;
     private String kickstarter_link;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "project_category",
             joinColumns = {@JoinColumn(name = "project_id")},

@@ -42,7 +42,7 @@ function RankedProject(props){
                     </Badge>
                     <h3 className={"RANKEDPROJECT-author-text"}>Author: {profilePhoto()}</h3>
                     <h3 className={"RANKEDPROJECT-votes-text"}>Votes: {props.project.numberOfVotes}</h3>
-                    <ListGroup.Item className={"PROJECT-catergory-list"}>
+                    <ListGroup.Item className={"PROJECT-category-list"}>
                         {
                             props.project.categories.sort().map((category, key) =>
                                 <Badge key={key} className={"mr-1"} bg="primary">{category}</Badge>
