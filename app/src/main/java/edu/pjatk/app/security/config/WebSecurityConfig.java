@@ -1,10 +1,13 @@
 package edu.pjatk.app.security.config;
 
+import edu.pjatk.app.facebook.FacebookConnectionSignup;
+import edu.pjatk.app.facebook.FacebookSignInAdapter;
 import edu.pjatk.app.security.UserDetailsServiceImp;
 import edu.pjatk.app.security.filter.JwtAuthenticationFilter;
 import edu.pjatk.app.security.filter.JwtAuthorizationFilter;
 import edu.pjatk.app.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -14,10 +17,17 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.social.connect.Connection;
+import org.springframework.social.connect.ConnectionFactoryLocator;
+import org.springframework.social.connect.UsersConnectionRepository;
+import org.springframework.social.connect.mem.InMemoryUsersConnectionRepository;
+import org.springframework.social.connect.support.ConnectionFactoryRegistry;
+import org.springframework.social.connect.web.ProviderSignInController;
+import org.springframework.social.facebook.api.Facebook;
+import org.springframework.social.facebook.connect.FacebookConnectionFactory;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-
 
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -25,7 +35,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsServiceImp userDetailsServiceImp;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserService userService;
-
+    
+    @Autowired
+    private FacebookConnectionSignup facebookConnectionSignup;
+    
+    @Value("${spring.social.facebook.appSecret}")
+    String appSecret;
+    @Value("${spring.social.facebook.appId}")
+    String appId;
+    
     @Autowired
     public WebSecurityConfig(UserDetailsServiceImp userDetailsServiceImp, BCryptPasswordEncoder bCryptPasswordEncoder,
                              UserService userService) {
@@ -62,6 +80,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.DELETE, "/report").hasRole("ADMIN")
                 .antMatchers("/post/**", "/post/getRecentPosts", "/comment/getPostComments/*", "/comment/getProjectComments/*",
                         "/task/**","/conversation/**", "/file/**").permitAll()
+                .antMatchers("/login*", "/signin/**", "/signup/**").permitAll()
                 .anyRequest().authenticated();
     }
 
@@ -91,6 +110,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         provider.setPasswordEncoder(bCryptPasswordEncoder);
         provider.setUserDetailsService(userDetailsServiceImp);
         return provider;
+    }
+
+    @Bean
+    public ProviderSignInController providerSignInController() {
+        ConnectionFactoryLocator connectionFactoryLocator = connectionFactoryLocator();
+        UsersConnectionRepository usersConnectionRepository = getUsersConnectionRepository(connectionFactoryLocator);
+        ((InMemoryUsersConnectionRepository) usersConnectionRepository).setConnectionSignUp(facebookConnectionSignup);
+        return new ProviderSignInController(connectionFactoryLocator, usersConnectionRepository, new FacebookSignInAdapter());
+    }
+    
+    private ConnectionFactoryLocator connectionFactoryLocator() {
+        ConnectionFactoryRegistry registry = new ConnectionFactoryRegistry();
+        registry.addConnectionFactory(new FacebookConnectionFactory(appId, appSecret));
+        return registry;
+    }
+
+    private UsersConnectionRepository getUsersConnectionRepository(ConnectionFactoryLocator
+                                                                           connectionFactoryLocator) {
+        return new InMemoryUsersConnectionRepository(connectionFactoryLocator);
     }
 
 }
