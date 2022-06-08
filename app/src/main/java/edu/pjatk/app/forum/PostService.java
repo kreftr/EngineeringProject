@@ -1,11 +1,14 @@
 package edu.pjatk.app.forum;
 
+import edu.pjatk.app.WebApp;
 import edu.pjatk.app.request.PostRequest;
 import edu.pjatk.app.request.ProjectRequest;
 import edu.pjatk.app.response.PostResponse;
 import edu.pjatk.app.user.User;
 import edu.pjatk.app.user.UserService;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -19,6 +22,7 @@ import java.util.*;
 public class PostService {
     private final PostRepository postRepository;
     private final UserService userService;
+    private static final Logger LOGGER = LogManager.getLogger(WebApp.class);
     
     @Autowired
     public PostService(PostRepository postRepository, UserService userService) {
@@ -38,6 +42,7 @@ public class PostService {
                 LocalDateTime.now(), postRequest.getText()
         );
         postRepository.addPost(post);
+        LOGGER.info("New Post : "+ post.getTitle() + ",User id:" + post.getUserr().getId() + "," + post.getDatee() + "," + post.getText());
     }
     
     @Transactional
@@ -56,6 +61,7 @@ public class PostService {
     
     public void updatePost(Post post) {
         postRepository.updatePost(post);
+        LOGGER.info("Edited Post : "+ post.getTitle() + "," + post.getUserr().getId() + "," + post.getDatee() + "," + post.getText());
     }
     
     public Optional<PostResponse> findPostById(Long id) {

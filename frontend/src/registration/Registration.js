@@ -1,7 +1,8 @@
 import {Col, Row, Container, Form, Button, Alert, Spinner} from "react-bootstrap";
 import "./Registration.css"
-import {useState} from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 function Registration(){
 
@@ -13,6 +14,19 @@ function Registration(){
     const [loading, setLoading] = useState(false);
     const [responseMessage,setResponseMessage] = useState();
     const [responseCode, setResponseCode] = useState();
+
+    const [userIP, setUserIP] = useState(null);
+
+
+    useEffect(() => {
+        axios.get(`https://geolocation-db.com/json/`)
+            .then(response => {
+                setUserIP(response.data['IPv4'])
+            })
+            .catch(err => {
+                console.log(err.response)
+            })
+    }, [])
 
     async function handleSubmit(e){
         e.preventDefault()
@@ -29,7 +43,8 @@ function Registration(){
                 "username": username,
                 "email": email,
                 "password": password,
-                "confirmPassword": confirmPassword
+                "confirmPassword": confirmPassword,
+                "userIP": userIP
             })
             .then(response => {
                 setResponseMessage(response.data.message)

@@ -32,5 +32,6 @@ public class RegistrationRequest {
     private String password;
     @NotBlank(message ="{validation.registration.password-confirmation.notBlank}")
     private String confirmPassword;
+    private String userIP;
 
 }

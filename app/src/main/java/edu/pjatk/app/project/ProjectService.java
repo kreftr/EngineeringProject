@@ -1,5 +1,6 @@
 package edu.pjatk.app.project;
 
+import edu.pjatk.app.WebApp;
 import edu.pjatk.app.file.File;
 import edu.pjatk.app.photo.Photo;
 import edu.pjatk.app.photo.PhotoService;
@@ -16,6 +17,8 @@ import edu.pjatk.app.response.project.*;
 import edu.pjatk.app.user.User;
 import edu.pjatk.app.user.UserRole;
 import edu.pjatk.app.user.UserService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -38,6 +41,7 @@ public class ProjectService {
     private final ProjectInvitationService projectInvitationService;
     private final ParticipantService participantService;
     private final RecomendationService recomendationService;
+    private static final Logger LOGGER = LogManager.getLogger(WebApp.class);
 
     @Autowired
     public ProjectService(ProjectRepository projectRepository, CategoryService categoryService,
@@ -488,6 +492,8 @@ public class ProjectService {
 
             //Add project creator as participant with OWNER Role
             project.getParticipants().add(new Participant(loggedUser.get(), project, false, ParticipantRole.OWNER));
+            LOGGER.info("New Project : "+ project.getProject_name() + ",Description:" + project.getProject_description() + "," +project.getCreation_date() + "," + project.getCreator().getId() + ",Project introduction" + project.getProject_introduction());
+
             projectRepository.update(project);
         }
     }
@@ -518,6 +524,7 @@ public class ProjectService {
                     projectRequest.getKickstarterLink(), loggedUser.get(), projectPhoto
             );
             project.setId(id);
+            LOGGER.info("Edited Project : "+ project.getProject_name() + ",Description:" + project.getProject_description() + "," +project.getCreation_date() + "," + project.getCreator().getId() + ",Project introduction" + project.getProject_introduction());
             projectRepository.update(project);
         }
     }

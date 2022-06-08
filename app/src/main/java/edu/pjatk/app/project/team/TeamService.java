@@ -1,5 +1,6 @@
 package edu.pjatk.app.project.team;
 
+import edu.pjatk.app.WebApp;
 import edu.pjatk.app.project.Project;
 import edu.pjatk.app.project.ProjectRepository;
 import edu.pjatk.app.project.participant.Participant;
@@ -10,6 +11,8 @@ import edu.pjatk.app.response.project.MemberResponse;
 import edu.pjatk.app.response.project.TeamResponse;
 import edu.pjatk.app.user.User;
 import edu.pjatk.app.user.UserService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -24,6 +27,7 @@ public class TeamService {
     private final UserService userService;
     private final ParticipantService participantService;
     private final ProjectRepository projectRepository;
+    private static final Logger LOGGER = LogManager.getLogger(WebApp.class);
 
     @Autowired
     public TeamService(TeamRepository teamRepository, UserService userService, ParticipantService participantService,
@@ -61,7 +65,7 @@ public class TeamService {
 
                 teamRepository.add(new Team(teamRequest.getName(), teamRequest.getDescription(),
                         participantsTeam, project.get()));
-
+                LOGGER.info("New Team : "+ teamRequest.getName() + "," + teamRequest.getDescription() + ",Users in team:" + participantsTeam + ",Project id:" + project.get());
                 return true;
             }
             else return false;
@@ -87,6 +91,7 @@ public class TeamService {
                 team.get().setName(teamRequest.getName());
                 team.get().setDescription(teamRequest.getDescription());
                 teamRepository.update(team.get());
+                LOGGER.info("Edited Team : "+ teamRequest.getName() + "," + teamRequest.getDescription() + "Project id:" + team.get().getProject().getId());
                 return true;
             }
             else return false;
@@ -192,6 +197,7 @@ public class TeamService {
 
                 team.get().getParticipants().add(userToAddParticipant.get());
                 teamRepository.update(team.get());
+                LOGGER.info("Edited Team added user to team : "+ team.get().getName() + "," + team.get().getDescription() + ",Users in team:" +  team.get().getParticipants() + ",Project id:" + team.get().getProject().getId());
                 return true;
             }
             else return false;
@@ -223,6 +229,7 @@ public class TeamService {
 
                 team.get().getParticipants().remove(userToRemoveParticipant.get());
                 teamRepository.update(team.get());
+                LOGGER.info("Edited Team removed user from team : "+ team.get().getName() + "," + team.get().getDescription() + ",Users in team:" +  team.get().getParticipants() + ",Project id:" + team.get().getProject().getId());
                 return true;
             }
             else return false;

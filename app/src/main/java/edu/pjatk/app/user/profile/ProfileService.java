@@ -1,5 +1,6 @@
 package edu.pjatk.app.user.profile;
 
+import edu.pjatk.app.WebApp;
 import edu.pjatk.app.photo.Photo;
 import edu.pjatk.app.photo.PhotoService;
 import edu.pjatk.app.project.category.Category;
@@ -10,6 +11,8 @@ import edu.pjatk.app.response.profile.MiniProfileResponse;
 import edu.pjatk.app.user.User;
 import edu.pjatk.app.user.UserRole;
 import edu.pjatk.app.user.UserService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,6 +29,7 @@ public class ProfileService {
     private final PhotoService photoService;
     private final UserService userService;
     private final CategoryService categoryService;
+    private static final Logger LOGGER = LogManager.getLogger(WebApp.class);
 
     @Autowired
     public ProfileService(ProfileRepository profileRepository, PhotoService photoService, UserService userService,
@@ -37,6 +41,7 @@ public class ProfileService {
     }
 
     public void saveProfile(Profile profile) {
+        LOGGER.info("Edited profile : "+ profile.getName() + "," + profile.getSurname() + "," + profile.getBio() + "," + profile.getId());
         profileRepository.save(profile);
     }
 
@@ -88,7 +93,7 @@ public class ProfileService {
                 userProfile.setPhoto(newProfilePhoto);
             }
         }
-
+        LOGGER.info("Edited profile : "+ userProfile.getName() + "," + userProfile.getSurname() + "," + userProfile.getBio() + "," + userProfile.getId());
         profileRepository.update(userProfile);
     }
 

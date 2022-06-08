@@ -1,5 +1,6 @@
 package edu.pjatk.app.user;
 
+import edu.pjatk.app.WebApp;
 import edu.pjatk.app.email.EmailService;
 import edu.pjatk.app.email.activation_token.ActivationTokenService;
 import edu.pjatk.app.photo.PhotoService;
@@ -8,6 +9,8 @@ import edu.pjatk.app.socials.chat.Conversation;
 import edu.pjatk.app.socials.chat.ConversationService;
 import edu.pjatk.app.socials.friends.Friend;
 import edu.pjatk.app.socials.friends.FriendService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,6 +31,7 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final ConversationService conversationService;
     private final FriendService friendService;
+    private static final Logger LOGGER = LogManager.getLogger(WebApp.class);
 
 
     @Autowired
@@ -45,6 +49,7 @@ public class UserService {
 
     public void saveUser(User user){
         userRepository.save(user);
+        LOGGER.info("Saved user : "+ user.getUsername() + "," + user.getId());
     }
 
     public void activateUser(User user){
@@ -81,6 +86,7 @@ public class UserService {
 
     public void updateUser(User user) {
         userRepository.update(user);
+        LOGGER.info("Updated user : "+ user.getUsername() + "," + user.getId());
     }
 
     @Transactional

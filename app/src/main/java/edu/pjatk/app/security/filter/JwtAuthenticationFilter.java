@@ -3,9 +3,12 @@ package edu.pjatk.app.security.filter;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.pjatk.app.WebApp;
 import edu.pjatk.app.request.LoginRequest;
 import edu.pjatk.app.security.config.JwtProperties;
 import edu.pjatk.app.security.UserPrincipal;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,6 +26,7 @@ import java.util.Date;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private AuthenticationManager authenticationManager;
+    private static final Logger LOGGER = LogManager.getLogger(WebApp.class);
 
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager){
         this.authenticationManager = authenticationManager;
@@ -47,6 +51,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         );
 
         Authentication authentication = authenticationManager.authenticate(authenticationToken);
+        LOGGER.info("New logging : "+ loginRequest.getUsername());
 
         return authentication;
     }
