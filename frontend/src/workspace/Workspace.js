@@ -406,7 +406,7 @@ function Workspace(){
                                             <Row>
                                                 <Col className={"col-2"}></Col>
                                                 <Col className={"col-12"}>
-                                                    <Share/>
+                                                    <Share projectId={id}/>
                                                 </Col>
                                                 <Col className={"col-2"}></Col>
                                             </Row>
