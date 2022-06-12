@@ -9,6 +9,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import {useParams} from "react-router-dom";
 import ProjectComment from "./ProjectComment";
+import {Alert} from "@mui/material";
 
 function ProjectView(){
 
@@ -23,7 +24,13 @@ function ProjectView(){
     const [reasoning, setReasoning] = useState("");
 
     const [comments, setComments] = useState([]);
-
+    const [responseMessage, setResponseMessage] = useState();
+    const [responseCode, setResponseCode] = useState();
+    const [showComment, setShowComment] = useState(false);
+    const handleCloseComment = () => setShowComment(false);
+    const handleShowComment = () => setShowComment(true);
+    const [text, setText] = useState(null);
+    
     useEffect(() => {
         axios.get(`http://localhost:8080/project/getProjectById/${id}`, {
         }).then(response => {
@@ -73,7 +80,38 @@ function ProjectView(){
                 window.alert(err.response.data.message)
             });
     }
-
+    
+    function commentSubmit(e) {
+        e.preventDefault();
+        axios.post(`http://localhost:8080/comment/createCommentProject/${id}`, {
+            "text": text
+        }, {headers:{
+                'Authorization':Cookies.get("authorization")
+            }})
+            .then(response => {
+                setResponseCode(response.status)
+                setResponseMessage(response.data.message)
+                axios.get(`http://localhost:8080/project/getProjectById/${id}`, {
+                }).then(response => {
+                    setProject(response.data)
+                    handleCloseComment()
+                }).catch(err => {
+                    if (err.response.status === 404)  setResponseMessage("Project not found");
+                    else setResponseMessage("Server error!");
+                })
+                axios.get(`http://localhost:8080/comment/getProjectComments/${id}`, {
+                }).then(response => {
+                    setComments(response.data)
+                    handleCloseComment()
+                }).catch(err => {
+                    console.log(err.response)
+                })
+            }).catch(err => {
+            console.log(err.response)
+            setResponseCode(err.response.status)
+        })
+        
+    }
 
     return(
         <Container className={"mt-5"}>
@@ -289,6 +327,62 @@ function ProjectView(){
                                     <h5 className={"mt-3"}>No comments found</h5>
                                 }
                             </Row>
+                            {Cookies.get("authorization") ?
+                                <>
+                                    <Button variant="primary" onClick={handleShowComment}>
+                                        Add Comment
+                                    </Button>
+                                </>
+                                :
+                                <></>
+                            }
+                            <Modal
+                                show={showComment}
+                                onHide={handleCloseComment}
+                                backdrop="static"
+                            >
+                                <Modal.Header closeButton>
+                                    <Modal.Title></Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>
+                                    <Form onSubmit={commentSubmit}>
+                                        <Form.Group>
+                                            <Form.Label>Your comment:</Form.Label>
+                                            <Form.Control
+                                                as="textarea"
+                                                style={{ resize: 'none', height:'200px'}}
+                                                onChange={(e)=>{setText(e.target.value)}}
+                                                required>
+                                            </Form.Control>
+                                        </Form.Group>
+                                        <Row>
+                                            <Col className={"col-3"}/>
+                                            <Button variant="secondary" onClick={handleCloseComment} className={"g"}>
+                                                Close
+                                            </Button>
+                                            <Button type="submit" variant="primary" className={"g"}>
+                                                Save Changes
+                                            </Button>
+                                        </Row>
+                                    </Form>
+                                    {responseMessage && responseCode === 200 ?
+                                        <Alert variant={"success"}>
+                                            <center>Nice comment!</center>
+                                        </Alert>
+                                        : responseMessage ?
+                                            <Alert variant={"danger"}>
+                                                <center>
+                                                    {responseMessage}
+                                                </center>
+                                            </Alert>
+                                            :
+                                            <></>
+                                    }
+                                </Modal.Body>
+                                <Modal.Footer>
+
+                                </Modal.Footer>
+                            </Modal>
                         </div>
                         :
                         <h2>Project not found</h2>

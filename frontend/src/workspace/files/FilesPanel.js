@@ -130,10 +130,9 @@ function FilesPanel(props){
                 </Col>
                 <Col className={"WORKSPACE-center-searchbar"}>
                     <center>
-                        <Form>
-                            <Form.Control type="text" placeholder="Search file"
-                                          onChange={(e) => setFileTermSearch(e.target.value)}/>
-                        </Form>
+                        <Form.Control type="text" placeholder="Search file"
+                                      onChange={(e) => setFileTermSearch(e.target.value)}
+                        />
                     </center>
                 </Col>
             </Row>
@@ -143,21 +142,41 @@ function FilesPanel(props){
                     <input {...getInputProps()} />
                     { renderedObjects.length > 0 ?
                         <div className={"ml-5 WORKSPACE-file-section"}>
-                            { renderedObjects.map((file, key) =>
-                                typeof file === 'string' ?
-                                    <div>
-                                        <button className={"FILE-folder"}>
-                                            <FaFolderOpen color={"gray"} size={150} onClick={() => {
-                                                setRenderPath(renderPath => [...renderPath, file]);
-                                            }}/>
-                                            <h4>{file}</h4>
-                                        </button>
-                                    </div>
-                                    :
-                                    <div>
-                                        <File file={file} role={memberRole}/>
-                                    </div>
-                            )}
+                            { fileTermSearch === "" ?
+                                <>
+                                    {
+                                        renderedObjects.map((file, key) =>
+                                            typeof file === 'string' ?
+                                                <div>
+                                                    <button className={"FILE-folder"}>
+                                                        <FaFolderOpen color={"gray"} size={150} onClick={() => {
+                                                            setRenderPath(renderPath => [...renderPath, file]);
+                                                        }}/>
+                                                        <h4>{file}</h4>
+                                                    </button>
+                                                </div>
+                                                :
+                                                <div>
+                                                    <File file={file} role={memberRole}/>
+                                                </div>
+                                        )
+                                    }
+                                </>
+                                :
+                                <>
+                                    {
+                                        files.filter(f =>
+                                            f.fileName.toLowerCase().includes(fileTermSearch.toLowerCase())
+                                        ).map((foundFile) =>
+                                            <div>
+                                                <File file={foundFile} role={memberRole}/>
+                                            </div>
+                                        )
+                                    }
+                                </>
+                            }
+
+
                         </div>
                         :
                         <center>

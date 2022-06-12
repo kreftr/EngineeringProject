@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -64,13 +65,25 @@ public class ProjectService {
             String projectPhoto, authorPhoto, ytLink, gitLink, fbLink, kickLink;
             Set<String> categories = new HashSet<>();
 
-            try { projectPhoto = project.getPhoto().getFileName(); } catch (NullPointerException e) { projectPhoto = null;}
-            try { authorPhoto = project.getCreator().getProfile().getPhoto().getFileName(); }
-            catch (NullPointerException e) { authorPhoto = null;}
-            try { ytLink = project.getYoutube_link(); } catch (NullPointerException e) { ytLink = null;}
-            try { gitLink = project.getGithub_link(); } catch (NullPointerException e) { gitLink = null;}
-            try { fbLink = project.getFacebook_link(); } catch (NullPointerException e) { fbLink = null;}
-            try { kickLink = project.getKickstarter_link(); } catch (NullPointerException e) { kickLink = null;}
+            // project photo
+            if (project.getPhoto() != null) {
+                projectPhoto = project.getPhoto().getFileName();
+            } else {
+                projectPhoto = null;
+            }
+
+            // author photo
+            if (project.getCreator().getProfile().getPhoto() != null) {
+                authorPhoto = project.getCreator().getProfile().getPhoto().getFileName();
+            } else {
+                authorPhoto = null;
+            }
+
+            // links
+            ytLink = project.getYoutube_link();
+            gitLink = project.getGithub_link();
+            fbLink = project.getFacebook_link();
+            kickLink = project.getKickstarter_link();
 
             for (Category c : project.getCategories()){
                 categories.add(c.getTitle());
@@ -80,6 +93,7 @@ public class ProjectService {
             float averageRating = (project.getRatings().size() > 0 ?
                     project.getRatings().stream().collect(Collectors.summingInt(Rating::getValue)).floatValue()/project.getRatings().size()
                     : 0);
+            averageRating = (float) (Math.round(averageRating * Math.pow(10, 2)) / Math.pow(10, 2));
             int numberOfVotes = project.getRatings().size();
 
             //Return IDs of project members
@@ -112,11 +126,19 @@ public class ProjectService {
             String projectPhoto, authorPhoto;
 
             for (Project p : projectList.get()){
-
                 Set<String> categories = new HashSet<>();
-                try { projectPhoto = p.getPhoto().getFileName(); } catch (NullPointerException e) { projectPhoto = null;}
-                try { authorPhoto = p.getCreator().getProfile().getPhoto().getFileName(); }
-                catch (NullPointerException e) { authorPhoto = null;}
+
+                if (p.getPhoto() != null) {
+                    projectPhoto = p.getPhoto().getFileName();
+                } else {
+                    projectPhoto = null;
+                }
+
+                if (p.getCreator().getProfile().getPhoto() != null) {
+                    authorPhoto = p.getCreator().getProfile().getPhoto().getFileName();
+                } else {
+                    authorPhoto = null;
+                }
 
                 for (Category c : p.getCategories()){
                     categories.add(c.getTitle());
@@ -147,9 +169,18 @@ public class ProjectService {
             for (Project p : projectList.get()) {
                 if(p.getProject_access().toString() != "PRIVATE") {
                     Set<String> categories = new HashSet<>();
-                    try { projectPhoto = p.getPhoto().getFileName(); } catch (NullPointerException e) { projectPhoto = null;}
-                    try { authorPhoto = p.getCreator().getProfile().getPhoto().getFileName(); }
-                    catch (NullPointerException e) { authorPhoto = null;}
+
+                    if (p.getPhoto() != null) {
+                        projectPhoto = p.getPhoto().getFileName();
+                    } else {
+                        projectPhoto = null;
+                    }
+
+                    if (p.getCreator().getProfile().getPhoto() != null) {
+                        authorPhoto = p.getCreator().getProfile().getPhoto().getFileName();
+                    } else {
+                        authorPhoto = null;
+                    }
 
                     for (Category c : p.getCategories()){
                         categories.add(c.getTitle());
@@ -181,9 +212,17 @@ public class ProjectService {
             for (Project p : projectList.get()){
 
                 Set<String> categories = new HashSet<>();
-                try { projectPhoto = p.getPhoto().getFileName(); } catch (NullPointerException e) { projectPhoto = null;}
-                try { authorPhoto = p.getCreator().getProfile().getPhoto().getFileName(); }
-                catch (NullPointerException e) { authorPhoto = null;}
+                if (p.getPhoto() != null) {
+                    projectPhoto = p.getPhoto().getFileName();
+                } else {
+                    projectPhoto = null;
+                }
+
+                if (p.getCreator().getProfile().getPhoto() != null) {
+                    authorPhoto = p.getCreator().getProfile().getPhoto().getFileName();
+                } else {
+                    authorPhoto = null;
+                }
 
                 for (Category c : p.getCategories()){
                     categories.add(c.getTitle());
@@ -220,9 +259,17 @@ public class ProjectService {
 
             for (Project p : projects.get()){
                 Set<String> categories = new HashSet<>();
-                try { projectPhoto = p.getPhoto().getFileName(); } catch (NullPointerException e) { projectPhoto = null;}
-                try { authorPhoto = p.getCreator().getProfile().getPhoto().getFileName(); }
-                catch (NullPointerException e) { authorPhoto = null;}
+                if (p.getPhoto() != null) {
+                    projectPhoto = p.getPhoto().getFileName();
+                } else {
+                    projectPhoto = null;
+                }
+
+                if (p.getCreator().getProfile().getPhoto() != null) {
+                    authorPhoto = p.getCreator().getProfile().getPhoto().getFileName();
+                } else {
+                    authorPhoto = null;
+                }
 
                 for (Category c : p.getCategories()){
                     categories.add(c.getTitle());
@@ -267,9 +314,17 @@ public class ProjectService {
                     Set<String> categories = new HashSet<>();
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-                    try { projectPhoto = p.getPhoto().getFileName(); } catch (NullPointerException e) { projectPhoto = null;}
-                    try { authorPhoto = p.getCreator().getProfile().getPhoto().getFileName(); }
-                    catch (NullPointerException e) { authorPhoto = null;}
+                    if (p.getPhoto() != null) {
+                        projectPhoto = p.getPhoto().getFileName();
+                    } else {
+                        projectPhoto = null;
+                    }
+
+                    if (p.getCreator().getProfile().getPhoto() != null) {
+                        authorPhoto = p.getCreator().getProfile().getPhoto().getFileName();
+                    } else {
+                        authorPhoto = null;
+                    }
 
                     for (Category c : p.getCategories()){
                         categories.add(c.getTitle());
@@ -305,13 +360,25 @@ public class ProjectService {
                 String projectPhoto, authorPhoto, ytLink, gitLink, fbLink, kickLink;
                 Set<String> categories = new HashSet<>();
 
-                try { projectPhoto = project.getPhoto().getFileName(); } catch (NullPointerException e) { projectPhoto = null;}
-                try { authorPhoto = project.getCreator().getProfile().getPhoto().getFileName(); }
-                catch (NullPointerException e) { authorPhoto = null;}
-                try { ytLink = project.getYoutube_link(); } catch (NullPointerException e) { ytLink = null;}
-                try { gitLink = project.getGithub_link(); } catch (NullPointerException e) { gitLink = null;}
-                try { fbLink = project.getFacebook_link(); } catch (NullPointerException e) { fbLink = null;}
-                try { kickLink = project.getKickstarter_link(); } catch (NullPointerException e) { kickLink = null;}
+                // project photo
+                if (project.getPhoto() != null) {
+                    projectPhoto = project.getPhoto().getFileName();
+                } else {
+                    projectPhoto = null;
+                }
+
+                // author photo
+                if (project.getCreator().getProfile().getPhoto() != null) {
+                    authorPhoto = project.getCreator().getProfile().getPhoto().getFileName();
+                } else {
+                    authorPhoto = null;
+                }
+
+                // links
+                ytLink = project.getYoutube_link();
+                gitLink = project.getGithub_link();
+                fbLink = project.getFacebook_link();
+                kickLink = project.getKickstarter_link();
 
                 for (Category c : project.getCategories()){
                     categories.add(c.getTitle());
@@ -321,6 +388,7 @@ public class ProjectService {
                 float averageRating = (project.getRatings().size() > 0 ?
                         project.getRatings().stream().collect(Collectors.summingInt(Rating::getValue)).floatValue()/project.getRatings().size()
                         : 0);
+                averageRating = (float) (Math.round(averageRating * Math.pow(10, 2)) / Math.pow(10, 2));
                 int numberOfVotes = project.getRatings().size();
 
                 //Return IDs of project members
@@ -359,9 +427,17 @@ public class ProjectService {
             for (Project p : projectList.get()){
 
                 Set<String> categories = new HashSet<>();
-                try { projectPhoto = p.getPhoto().getFileName(); } catch (NullPointerException e) { projectPhoto = null;}
-                try { authorPhoto = p.getCreator().getProfile().getPhoto().getFileName(); }
-                catch (NullPointerException e) { authorPhoto = null;}
+                if (p.getPhoto() != null) {
+                    projectPhoto = p.getPhoto().getFileName();
+                } else {
+                    projectPhoto = null;
+                }
+
+                if (p.getCreator().getProfile().getPhoto() != null) {
+                    authorPhoto = p.getCreator().getProfile().getPhoto().getFileName();
+                } else {
+                    authorPhoto = null;
+                }
 
                 for (Category c : p.getCategories()){
                     categories.add(c.getTitle());
@@ -424,8 +500,11 @@ public class ProjectService {
         );
         Photo projectPhoto = (photo != null ? photoService.uploadPhoto(photo) : null);
         Optional<Project> projectToEdit = projectRepository.getProjectById(id);
-        if (loggedUser.isPresent() && projectToEdit.isPresent() && (projectToEdit.get().getCreator().equals(
-                loggedUser.get().getUsername()) || loggedUser.get().getUserRole().equals(UserRole.ADMIN)))
+
+        if (loggedUser.isEmpty() || projectToEdit.isEmpty()) { return; }
+
+        if ( projectToEdit.get().getCreator().getUsername().equals(
+                loggedUser.get().getUsername()) || loggedUser.get().getUserRole().equals(UserRole.ADMIN))
         {
             Set<Category> categories = new HashSet<>();
             for (String category : projectRequest.getCategory()){
@@ -491,36 +570,33 @@ public class ProjectService {
 
     public List<FullProjectResponse> getTopRatedProjects(){
 
-        List<FullProjectResponse> allProjects = this.getAllNonPrivateProjects();
-
+        List<FullProjectResponse> allProjects = getAllNonPrivateProjects();
         if (allProjects.isEmpty()) return Collections.emptyList();
-        else {
-            allProjects.sort(Comparator.comparing(FullProjectResponse::getNumberOfVotes).reversed());
 
-            List<FullProjectResponse> top10 = new ArrayList<>();
-            for (int i = 0; i < 10; i++) {
-                if(allProjects.size() > i) top10.add(allProjects.get(i));
-            }
+        allProjects.sort(Comparator.comparing(FullProjectResponse::getNumberOfVotes).reversed());
 
-            top10.sort(Comparator.comparing(FullProjectResponse::getAverageRating).reversed());
+        List<FullProjectResponse> top10 = new ArrayList<>(allProjects.stream().limit(10).toList());
 
-            return top10;
-        }
+        top10.sort(Comparator.comparing(FullProjectResponse::getAverageRating).reversed());
+
+        return top10;
+
     }
 
     public List<FullProjectResponse> getRandomRecommendedProjects(){
 
-        Optional<List<Project>> allProjects = projectRepository.getRandomRecommendedProjects10();
+        Optional<List<Project>> allProjects = projectRepository.getRandomRecommendedProjects(5);
         if (allProjects.isEmpty()) return Collections.emptyList();
 
-        List<Project> random10 = allProjects.get();
-        List<FullProjectResponse> random10Response = new ArrayList<>();
+        List<Project> randomProjects = allProjects.get();
+        List<FullProjectResponse> randomResponse = new ArrayList<>();
 
-        for (Project project: random10) {
+        for (Project project: randomProjects) {
             //Return average rating if there is more than one vote
             float averageRating = (project.getRatings().size() > 0 ?
                     ((Integer) project.getRatings().stream().mapToInt(Rating::getValue).sum()).floatValue()/project.getRatings().size()
                     : 0);
+            averageRating = (float) (Math.round(averageRating * Math.pow(10, 2)) / Math.pow(10, 2));
             int numberOfVotes = project.getRatings().size();
 
             //Return IDs of project members
@@ -543,7 +619,7 @@ public class ProjectService {
 
             String userPhoto = "";
             if (project.getCreator().getProfile().getPhoto() != null) {
-                userPhoto = project.getCreator().getProfile().getPhoto().toString();
+                userPhoto = project.getCreator().getProfile().getPhoto().getFileName();
             }
 
             FullProjectResponse projectResponse = new FullProjectResponse(
@@ -554,17 +630,16 @@ public class ProjectService {
                     project.getCreator().getUsername(), userPhoto,
                     averageRating, numberOfVotes, participants
             );
-            System.out.println();
-            random10Response.add(projectResponse);
+            randomResponse.add(projectResponse);
         }
-        return random10Response;
+        return randomResponse;
     }
     public List<FullProjectResponse> getRecommendedProjects(Long userId){
         Optional<User> userOptional = userService.findUserById(userId);
         if (userOptional.isEmpty()) { return Collections.emptyList(); }
         User user = userOptional.get();
 
-        List<Long> allProjectsIds = recomendationService.monthlyRecomendationIds(user).subList(0,4);  // 5 first
+        List<Long> allProjectsIds = recomendationService.monthlyRecomendationIds(user).stream().limit(5).toList();
         List<Project> projects = new ArrayList<>(Collections.emptyList());
         for (Long id: allProjectsIds) {
             Optional<Project> optionalProject = projectRepository.getProjectById(id);
@@ -580,6 +655,7 @@ public class ProjectService {
             float averageRating = (project.getRatings().size() > 0 ?
                     ((Integer) project.getRatings().stream().mapToInt(Rating::getValue).sum()).floatValue()/project.getRatings().size()
                     : 0);
+            averageRating = (float) (Math.round(averageRating * Math.pow(10, 2)) / Math.pow(10, 2));
             int numberOfVotes = project.getRatings().size();
 
             //Return IDs of project members
@@ -602,7 +678,7 @@ public class ProjectService {
 
             String userPhoto = "";
             if (project.getCreator().getProfile().getPhoto() != null) {
-                userPhoto = project.getCreator().getProfile().getPhoto().toString();
+                userPhoto = project.getCreator().getProfile().getPhoto().getFileName();
             }
 
             FullProjectResponse projectResponse = new FullProjectResponse(
@@ -642,9 +718,12 @@ public class ProjectService {
             String profilePhoto;
 
             for (File f : project.get().getFiles()){
-                try {
+                if (f.getUser().getProfile().getPhoto() != null) {
                     profilePhoto = f.getUser().getProfile().getPhoto().getFileName();
-                } catch (NullPointerException e) { profilePhoto = null; }
+                } else {
+                    profilePhoto = null;
+                }
+
                 fileResponses.add(new FileResponse(f.getId(), f.getName(), f.getUrl(), f.getUser().getId(),
                         f.getUser().getUsername(), profilePhoto, f.getSize(),
                         f.getUploadDate().format(formatter)));
@@ -736,9 +815,12 @@ public class ProjectService {
             Set<ProjectJoinRequestResponse> pending = new HashSet<>();
 
             for (Participant p : participants.get()){
-                try {
-                    profilePhoto =  p.getUser().getProfile().getPhoto().getFileName();
-                } catch (NullPointerException e) { profilePhoto = null;  }
+                if (p.getUser().getProfile().getPhoto() != null) {
+                    profilePhoto = p.getUser().getProfile().getPhoto().getFileName();
+                } else {
+                    profilePhoto = null;
+                }
+
                 pending.add(new ProjectJoinRequestResponse(
                         p.getId(), p.getUser().getId(), p.getUser().getUsername(),
                         profilePhoto, p.getProject().getId(),
@@ -761,9 +843,12 @@ public class ProjectService {
         if (invitations.isPresent() && invitations.get().size() > 0){
             String projectPhoto;
             for (ProjectInvitation invitation : invitations.get()){
-                try {
-                    projectPhoto =  invitation.getProject().getPhoto().getFileName();
-                } catch (NullPointerException e) { projectPhoto = null;  }
+                if (invitation.getProject().getPhoto() != null) {
+                    projectPhoto = invitation.getProject().getPhoto().getFileName();
+                } else {
+                    projectPhoto = null;
+                }
+
                 invitationResponses.add(
                         new InvitationResponse(invitation.getId(), invitation.getProject().getId(),
                                 projectPhoto, invitation.getProject().getProject_name())
@@ -790,9 +875,18 @@ public class ProjectService {
 
             for (Participant participant : participantOf.get()){
                 Set<String> categories = new HashSet<>();
-                try { projectPhoto = participant.getProject().getPhoto().getFileName(); } catch (NullPointerException e) { projectPhoto = null;}
-                try { authorPhoto = participant.getProject().getCreator().getProfile().getPhoto().getFileName(); }
-                catch (NullPointerException e) { authorPhoto = null;}
+
+                if (participant.getProject().getPhoto() != null) {
+                    projectPhoto = participant.getProject().getPhoto().getFileName();
+                } else {
+                    projectPhoto = null;
+                }
+
+                if (participant.getProject().getCreator().getProfile().getPhoto() != null) {
+                    authorPhoto = participant.getProject().getCreator().getProfile().getPhoto().getFileName();
+                } else {
+                    authorPhoto = null;
+                }
 
                 for (Category c : participant.getProject().getCategories()){
                     categories.add(c.getTitle());
@@ -824,8 +918,12 @@ public class ProjectService {
 
             for (Participant participant : project.get().getParticipants()){
                 if (!participant.isPending()){
-                    try { profilePhoto = participant.getUser().getProfile().getPhoto().getFileName(); }
-                    catch (NullPointerException e) { profilePhoto = null; }
+                    if (participant.getUser().getProfile().getPhoto() != null) {
+                        profilePhoto = participant.getUser().getProfile().getPhoto().getFileName();
+                    } else {
+                        profilePhoto = null;
+                    }
+
                     members.add(new MemberResponse(participant.getUser().getId(), participant.getUser().getUsername(),
                             profilePhoto, participant.getParticipantRole().toString())
                     );
@@ -912,7 +1010,6 @@ public class ProjectService {
 
         Set<Participant> participants = new HashSet<>(project.get().getParticipants());
         participants.retainAll(loggedUser.get().getParticipants());
-        System.out.println();
         //Check if user is not already in project
         if (loggedUser.isPresent() && participants.size() == 0){
 
@@ -987,24 +1084,4 @@ public class ProjectService {
         projectRepository.deleteProject(id);
     }
 
-    public void editProjectName(Long id, String project_name) {
-        Optional<Project> project = projectRepository.getProjectById(id);
-        if (project.isPresent()){
-            projectRepository.editProjectName(id, project_name);
-        }
-    }
-
-    public void editProjectCategory(Long id, String project_category) {
-        Optional<Project> project = projectRepository.getProjectById(id);
-        if (project.isPresent()){
-            projectRepository.editProjectCategory(id, project_category);
-        }
-    }
-
-    public void editProjectStatus(Long id, String project_status) {
-        Optional<Project> project = projectRepository.getProjectById(id);
-        if (project.isPresent()){
-            projectRepository.editProjectStatus(id, project_status);
-        }
-    }
 }

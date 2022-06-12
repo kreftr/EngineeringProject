@@ -2,6 +2,7 @@ package edu.pjatk.app.project.participant;
 
 import edu.pjatk.app.project.Project;
 import edu.pjatk.app.project.Rating;
+import edu.pjatk.app.project.task.Task;
 import edu.pjatk.app.project.team.Team;
 import edu.pjatk.app.timestamp.Timestamp;
 import edu.pjatk.app.user.User;
@@ -41,6 +42,9 @@ public class Participant {
 
     @OneToMany(mappedBy = "participant", orphanRemoval = true)
     private List<Timestamp> timestamps = new ArrayList<>();
+
+    @OneToMany(mappedBy = "project", orphanRemoval = true)
+    private List<Task> tasks = new ArrayList<>();
 
     public Participant(User user, Project project, Boolean pending, ParticipantRole participantRole){
         this.user = user;

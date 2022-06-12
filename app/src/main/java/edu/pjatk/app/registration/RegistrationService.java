@@ -4,6 +4,7 @@ import edu.pjatk.app.email.EmailService;
 import edu.pjatk.app.email.activation_token.ActivationToken;
 import edu.pjatk.app.email.activation_token.ActivationTokenService;
 import edu.pjatk.app.request.RegistrationRequest;
+import edu.pjatk.app.security.config.JwtProperties;
 import edu.pjatk.app.user.User;
 import edu.pjatk.app.user.UserRole;
 import edu.pjatk.app.user.UserService;
@@ -21,14 +22,14 @@ import java.util.UUID;
 @Service
 public class RegistrationService {
 
-    @Value("${tokens.activation-token.validity}")
-    private int activationTokenValidity;
-
     private final UserService userService;
     private final ProfileService profileService;
     private final ActivationTokenService activationTokenService;
     private final EmailService emailService;
     private final BCryptPasswordEncoder passwordEncoder;
+
+    @Value("${tokens.activation-token.validity}")
+    private int activationTokenValidity;
 
     @Autowired
     public RegistrationService(UserService userService, ProfileService profileService,
@@ -41,10 +42,13 @@ public class RegistrationService {
         this.passwordEncoder = passwordEncoder;
     }
 
-
-    //TODO: Token validity should be read from the configuration file
     @Transactional
     public void registerUser(RegistrationRequest request){
+
+        if (userService.findUserByUsername(request.getUsername()).isPresent() ||
+                userService.findUserByEmail(request.getEmail()).isPresent()) {
+            return;
+        }
 
         Profile profile = new Profile();
         profileService.saveProfile(profile);

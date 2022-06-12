@@ -93,54 +93,60 @@ function Chat() {
         }
     }, false);
 
+
     return (
+
         <Container className={"mt-5 container"}>
-            { conversations ?
-                <Tab.Container>
-                    <Row>
-                        <Col className={"col-4"}>
-                            <Nav variant="pills" className="flex-column">
+            { conversations.length !== 0 ?
+                <></>
+                :
+                <>
+                    <h3>You have not added any friends to chat with. Add one to start chatting</h3>
+                </>
+            }
+
+            <Tab.Container>
+                <Row>
+                    <Col className={"col-4"}>
+                        <Nav variant="pills" className="flex-column">
+                            {
+                                conversations.map((conversation, key) =>
+                                    <Nav.Item key={key} onClick={() => {
+                                        setActiveConversation(conversation);
+                                    }}
+                                    >
+                                        <Nav.Link eventKey={conversation.conversationId}>
+                                            <Conversation conversation={conversation}/>
+                                        </Nav.Link>
+                                    </Nav.Item>
+                                )
+                            }
+                        </Nav>
+                    </Col>
+                    <Col className={"col-8"}>
+                        { activeConversation !== null ?
+                            <>
                                 {
-                                    conversations.map((conversation, key) =>
-                                        <Nav.Item key={key} onClick={() => {
-                                            setActiveConversation(conversation);
-                                        }}
-                                        >
-                                            <Nav.Link eventKey={conversation.conversationId}>
-                                                <Conversation conversation={conversation}/>
-                                            </Nav.Link>
-                                        </Nav.Item>
+                                    messages.map((message, key) =>
+                                        <ListGroupItem key={key}>
+                                            <Message message={message}/>
+                                        </ListGroupItem>
                                     )
                                 }
-                            </Nav>
-                        </Col>
-                        <Col className={"col-8"}>
-                            { activeConversation !== null ?
-                                <>
-                                    {
-                                        messages.map((message, key) =>
-                                            <ListGroupItem key={key}>
-                                                <Message message={message}/>
-                                            </ListGroupItem>
-                                        )
-                                    }
-                                    <input className={"CHAT-input mt-4"} id={"message_sender_input"} type="text"
-                                           onChange={event => setInputValue(event.target.value)}
-                                           placeholder={"Write message"}
-                                           onKeyDown={ event => {
-                                               if (event.key === 'Enter') { sendMessage(inputValue) }
-                                           }}
-                                    />
-                                </>
-                                :
-                                <></>
-                            }
-                        </Col>
-                    </Row>
-                </Tab.Container>
-                :
-                <></>
-            }
+                                <input className={"CHAT-input mt-4"} id={"message_sender_input"} type="text"
+                                       onChange={event => setInputValue(event.target.value)}
+                                       placeholder={"Write message"}
+                                       onKeyDown={ event => {
+                                           if (event.key === 'Enter') { sendMessage(inputValue) }
+                                       }}
+                                />
+                            </>
+                            :
+                            <></>
+                        }
+                    </Col>
+                </Row>
+            </Tab.Container>
         </Container>
     );
 }

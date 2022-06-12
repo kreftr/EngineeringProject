@@ -135,14 +135,14 @@ public class FriendService {
             for (Friend f : friendList.get()){
                 if (user.get().equals(f.getFirstUser())) {
 
-                    if(conversationService.getConversationByUserId(f.getSecondUser().getId()).isPresent()){
+                    if (conversationService.getConversationByUserId(f.getSecondUser().getId()).isPresent()){
                         conversationId = conversationService.getConversationByUserId(f.getSecondUser().getId()).get().getId();
                     }
                     else conversationId = null;
 
-                    try {
+                    if (f.getSecondUser().getProfile().getPhoto() != null) {
                         photoUrl = f.getSecondUser().getProfile().getPhoto().getFileName();
-                    } catch (NullPointerException n){
+                    } else {
                         photoUrl = null;
                     }
 
@@ -157,14 +157,14 @@ public class FriendService {
                 }
                 else {
 
-                    if(conversationService.getConversationByUserId(f.getFirstUser().getId()).isPresent()){
+                    if (conversationService.getConversationByUserId(f.getFirstUser().getId()).isPresent()){
                         conversationId = conversationService.getConversationByUserId(f.getFirstUser().getId()).get().getId();
                     }
                     else conversationId = null;
 
-                    try {
+                    if (f.getFirstUser().getProfile().getPhoto() != null) {
                         photoUrl = f.getFirstUser().getProfile().getPhoto().getFileName();
-                    } catch (NullPointerException n){
+                    } else {
                         photoUrl = null;
                     }
 
@@ -198,11 +198,12 @@ public class FriendService {
             List<FriendResponse> listToReturn = new ArrayList<>();
             String photoUrl;
             for (Friend f : pendingList.get()){
-                try {
+                if (f.getFirstUser().getProfile().getPhoto() != null) {
                     photoUrl = f.getFirstUser().getProfile().getPhoto().getFileName();
-                } catch (NullPointerException n){
+                } else {
                     photoUrl = null;
                 }
+
                 listToReturn.add(
                         new FriendResponse(
                                 f.getFirstUser().getId(),

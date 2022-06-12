@@ -79,7 +79,7 @@ public class UserRepository {
         try {
             users = Optional.of(
                     entityManager.createQuery(
-                                    "SELECT user FROM User user WHERE user.username LIKE :username", User.class)
+                                    "SELECT user FROM User user WHERE user.username LIKE concat('%',:username,'%')", User.class)
                             .setParameter("username", username+"%").getResultList()
             );
         } catch (NoResultException noResultException){
@@ -92,7 +92,7 @@ public class UserRepository {
         Optional<Long> usersNumber;
         try {
             usersNumber = Optional.of(entityManager.createQuery(
-                    "select count(user.id) from User user where user.username like :username", Long.class)
+                    "select count(user.id) from User user where user.username like concat('%',:username,'%')", Long.class)
                     .setParameter("username", username+"%").getSingleResult()
             );
         } catch (NoResultException noResultException) {
@@ -104,7 +104,7 @@ public class UserRepository {
     public Optional<List<User>> getUsersByUsernameWithPagination(String username, int pageNumber, int pageSize) {
         Optional<List<User>> users;
         try {
-            Query query = entityManager.createQuery("select user from User user where user.username like :username");
+            Query query = entityManager.createQuery("select user from User user where user.username like concat('%',:username,'%')");
             query.setParameter("username", username+"%");
             query.setFirstResult((pageNumber-1) * pageSize);
             query.setMaxResults(pageSize);

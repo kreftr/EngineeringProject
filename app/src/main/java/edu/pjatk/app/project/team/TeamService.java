@@ -143,8 +143,12 @@ public class TeamService {
                     for (Team team : teams.get()){
 
                         for (Participant p : team.getParticipants()){
-                            try { profilePhoto = p.getUser().getProfile().getPhoto().getFileName(); }
-                            catch (NullPointerException e) { profilePhoto = null;}
+                            if (p.getUser().getProfile().getPhoto() != null) {
+                                profilePhoto = p.getUser().getProfile().getPhoto().getFileName();
+                            } else {
+                                profilePhoto = null;
+                            }
+
                             participants.add(
                                     new MemberResponse(p.getUser().getId(), p.getUser().getUsername(),
                                             profilePhoto, p.getParticipantRole().toString())

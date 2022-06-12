@@ -47,7 +47,7 @@ public class PostService {
     
     public boolean deletePostById(Long id) {
         Optional<Post> post = postRepository.getPostById(id);
-        if(!post.isEmpty()) {
+        if (post.isPresent()) {
             postRepository.deletePost(post.get());
             return true;
         }
@@ -61,13 +61,16 @@ public class PostService {
     public Optional<PostResponse> findPostById(Long id) {
         Optional<Post> post = postRepository.getPostById(id);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        
+
+        if (post.isEmpty()) { return Optional.empty(); }
+
         String userPhoto;
-        try {
+        if (post.get().getUserr().getProfile().getPhoto() != null) {
             userPhoto = post.get().getUserr().getProfile().getPhoto().getFileName();
-        } catch (NullPointerException e ) {
+        } else {
             userPhoto = null;
         }
+
         return Optional.of(new PostResponse(post.get().getId(), post.get().getTitle(), post.get().getText(),
                 post.get().getDatee().format(formatter), post.get().getUserr().getId(), post.get().getUserr().getUsername(), userPhoto));
     }
@@ -89,14 +92,16 @@ public class PostService {
         Optional<List<Post>> posts = postRepository.getAllPosts();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         
-        if(!posts.get().isEmpty() && posts.isPresent()) {
-            String userPhoto;
+        if (posts.isPresent()) {
             for (Post p : posts.get()) {
-                try {
+
+                String userPhoto;
+                if (p.getUserr().getProfile().getPhoto() != null) {
                     userPhoto = p.getUserr().getProfile().getPhoto().getFileName();
-                } catch (NullPointerException e) {
+                } else {
                     userPhoto = null;
                 }
+
                 postResponses.add(
                         new PostResponse(
                                 p.getId(), p.getTitle(), p.getText(), p.getDatee().format(formatter),
@@ -115,14 +120,16 @@ public class PostService {
         Optional<List<Post>> posts = postRepository.getRecentPosts();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-        if(!posts.get().isEmpty() && posts.isPresent()) {
-            String userPhoto;
+        if (posts.isPresent()) {
             for (Post p : posts.get()) {
-                try {
+
+                String userPhoto;
+                if (p.getUserr().getProfile().getPhoto() != null) {
                     userPhoto = p.getUserr().getProfile().getPhoto().getFileName();
-                } catch (NullPointerException e) {
+                } else {
                     userPhoto = null;
                 }
+
                 postResponses.add(
                         new PostResponse(
                                 p.getId(), p.getTitle(), p.getText(), p.getDatee().format(formatter),

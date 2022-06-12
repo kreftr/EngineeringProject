@@ -43,7 +43,7 @@ function Member(props){
     return(
         <ListGroupItem className={"mt-3"}>
             <Row>
-                <Col className={"col-7 MEMBER-container"}>
+                <Col className={"col-10 MEMBER-container"}>
                     <a href={`/profile/${props.member.userId}`}>
                         { props.member.profilePhoto ?
                             <Image src={`http://localhost:8080/photo?filename=${props.member.profilePhoto}`}
@@ -54,23 +54,22 @@ function Member(props){
                         }
                     </a>
                     <h1 className={"ml-3 MEMBER-username"}>{props.member.username}</h1>
-                    { props.member.projectRole === "OWNER" ?
-                        <h2 className={"ml-3 MEMBER-username"}>
-                            <Badge pill={true} bg="danger">{props.member.projectRole}</Badge>
-                        </h2>
-                        : props.member.projectRole === "MODERATOR" ?
-                        <h2 className={"ml-3 MEMBER-username"}>
-                            <Badge pill={true} bg="primary">{props.member.projectRole}</Badge>
-                        </h2>
-                        :
-                        <h2 className={"ml-3 MEMBER-username"}>
-                            <Badge pill={true} bg="secondary">{props.member.projectRole}</Badge>
-                        </h2>
-                    }
                 </Col>
-                <Col className={"col-5 MEMBER-username"}>
+                <Col className={"col-2 MEMBER-button"}>
                     <Row>
-
+                        { props.member.projectRole === "OWNER" ?
+                            <h2 className={"ml-3 MEMBER-role"}>
+                                <Badge pill={true} bg="danger">{props.member.projectRole}</Badge>
+                            </h2>
+                            : props.member.projectRole === "MODERATOR" ?
+                                <h2 className={"ml-3 MEMBER-role"}>
+                                    <Badge pill={true} bg="primary">{props.member.projectRole}</Badge>
+                                </h2>
+                                :
+                                <h2 className={"ml-3 MEMBER-role"}>
+                                    <Badge pill={true} bg="secondary">{props.member.projectRole}</Badge>
+                                </h2>
+                        }
                         { props.role === "OWNER" && props.member.projectRole === "PARTICIPANT" ?
                             <Col>
                                 <Button variant={"primary"} onClick={() => {promote();}}>Promote</Button>

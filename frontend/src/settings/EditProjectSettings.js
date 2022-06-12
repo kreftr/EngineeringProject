@@ -1,18 +1,17 @@
 import React, {useEffect, useState} from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
-import {Alert, Button, Col, FloatingLabel, Form, FormControl, Image, InputGroup, Modal, Row} from "react-bootstrap";
+import {Button, Col, FloatingLabel, Form, FormControl, Image, InputGroup, Row} from "react-bootstrap";
 import default_project_picture from "../assets/images/default_project_picture.jpg";
 import {FaFacebookSquare, FaGithubSquare, FaKickstarter, FaYoutube} from "react-icons/all";
 import {useParams} from "react-router-dom";
-import project from "../project/Project";
 
 
 function EditProjectSettings(){
 
     const {id} = useParams();
 
-    const [img, setImg] = useState();
+    const [img, setImg] = useState(null);
     const [title, setTitle] = useState();
     const [introduction, setIntroduction] = useState();
     const [access, setAccess] = useState();
@@ -60,7 +59,6 @@ function EditProjectSettings(){
 
         e.preventDefault();
 
-        let photo = document.getElementById("fileChooser").files[0]
         let bodyFormData = new FormData();
         bodyFormData.append("projectRequest", new Blob(
             [JSON.stringify({
@@ -75,7 +73,9 @@ function EditProjectSettings(){
                 "kickstarterLink":kickstarterLink
             })],
             { type: "application/json"}))
-        bodyFormData.append("projectPhoto", photo);
+
+        let fileChooserPhoto = document.getElementById("fileChooser").files[0]
+        bodyFormData.append("projectPhoto", fileChooserPhoto);
 
         await axios.post(`http://localhost:8080/project/editProject/${id}`, bodyFormData, {headers:{
                 'Authorization': Cookies.get("authorization")
@@ -84,6 +84,8 @@ function EditProjectSettings(){
             console.log(err.response)
             console.log(err)
         })
+
+        window.location.replace("/projects");
     }
 
     function handleCategories(e){
@@ -104,8 +106,17 @@ function EditProjectSettings(){
                                 <Image className={"PROJECT_LIST-create-project-pic"}
                                        src={default_project_picture} width={325} height={325}/>
                                 :
-                                <Image className={"PROJECT_LIST-create-project-pic"}
-                                       src={img} width={325} height={325}/>
+                                <>
+                                    { !img.startsWith("blob") ?
+                                        <Image className={"PROJECT_LIST-create-project-pic"}
+                                               src={`http://localhost:8080/photo?filename=${img}`} width={325} height={325}
+                                        />
+                                        :
+                                        <Image className={"PROJECT_LIST-create-project-pic"}
+                                               src={`${img}`} width={325} height={325}
+                                        />
+                                    }
+                                </>
                             }
                         </Row>
                         <Row>
@@ -145,7 +156,6 @@ function EditProjectSettings(){
                             placeholder="Description"
                             style={{ resize: 'none', height: '300px' }}
                             onChange={(e)=>{setDescription(e.target.value)}}
-                            required
                         />
                     </FloatingLabel>
                 </Row>

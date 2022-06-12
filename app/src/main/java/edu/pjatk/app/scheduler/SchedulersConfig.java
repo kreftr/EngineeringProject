@@ -103,10 +103,10 @@ public class SchedulersConfig {
 
                 String recommendedLink = recomendationService.getRecomendedProjectLink(user.get());
 
-                emailService.send(user.get().getEmail(), "We got something that may interest you",
-                        "Hi " + user.get().getUsername() + ". We found project suitable for your " +
-                                "interests. Click link below if you want to know more about it" + "\n" + recommendedLink
-                );
+                emailService.send(user.get().getEmail(), "We got something that may interest you", emailService.emailBuilder(
+                                user.get().getUsername(), recommendedLink, "email_project_notification.html"
+                        ));
+
             }
         }
     }
