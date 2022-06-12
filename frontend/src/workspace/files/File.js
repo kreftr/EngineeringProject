@@ -1,4 +1,4 @@
-import {FaFileAlt, FaFileDownload, FaFileImage, FaFileInvoice, FaRegFilePdf, FaTrashAlt} from "react-icons/fa";
+import {FaFileAlt, FaFileDownload, FaFileInvoice, FaTrashAlt} from "react-icons/fa";
 import {Button, Col, Image, Modal, Row} from "react-bootstrap";
 import "./File.css"
 import axios from "axios";
@@ -36,16 +36,6 @@ function File(props){
         })
     }
 
-    function open() {
-        axios.post(`http://localhost:8080/file/toggleLock/${props.file.fileId}/${true}`,
-            {
-                headers:{'Authorization': Cookies.get("authorization")}
-            }).then(() => {
-        }).catch(err => {
-            console.log(err.response)
-        })
-    }
-
     return (
         <div className={"FILE-center mb-2 mt-4"}>
             { show ?
@@ -64,15 +54,20 @@ function File(props){
                         }
                         {props.file.username}
                         <h5>Size: {props.file.size}B</h5>
+                        <h5>Status: {props.file.locked}</h5>
                         <h5>Upload Date: </h5>
                             {props.file.uploadDate}
                     </Modal.Body>
                     <Modal.Footer>
                         <Row>
                             <Col>
-                                <Button variant="primary" onClick={() => {open();}}>
-                                    <FaFileInvoice size={20}/>
-                                </Button>
+                                { props.file.locked === "UNLOCKED" && props.file.fileName.includes(".txt") ?
+                                    <Button variant="primary" onClick={() => {window.location.replace(`/editor/${props.file.fileId}`);}}>
+                                        <FaFileInvoice size={20}/>
+                                    </Button>
+                                    :
+                                    <></>
+                                }
                             </Col>
                             <Col>
                                 { props.role === "OWNER" || props.role === "MODERATOR" || props.file.userId === Cookies.get("userId") ?

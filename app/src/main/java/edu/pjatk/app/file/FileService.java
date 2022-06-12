@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -66,7 +67,6 @@ public class FileService {
         }
     }
 
-
     public void toggleFileLock(File file, Boolean isLocked){
         try {
             file.setIsLocked(isLocked);
@@ -79,6 +79,12 @@ public class FileService {
         catch (Exception e){
             System.out.println(e);
         }
+    }
+
+    public void editTextFile(Long fileId, String content) throws IOException {
+        Optional<File> file = fileRepository.findById(fileId);
+        Path path = Paths.get(pathToFiles + file.get().getUrl());
+        Files.writeString(path, content);
     }
 
 }

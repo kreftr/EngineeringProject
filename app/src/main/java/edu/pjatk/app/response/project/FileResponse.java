@@ -17,5 +17,6 @@ public class FileResponse {
     private String profilePhoto;
     private Long size;
     private String uploadDate;
+    private String locked;
 
 }

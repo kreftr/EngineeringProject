@@ -6,6 +6,7 @@ import edu.pjatk.app.project.ProjectService;
 import edu.pjatk.app.project.participant.Participant;
 import edu.pjatk.app.project.participant.ParticipantRole;
 import edu.pjatk.app.project.participant.ParticipantService;
+import edu.pjatk.app.request.ContentRequest;
 import edu.pjatk.app.response.ResponseMessage;
 import edu.pjatk.app.user.User;
 import edu.pjatk.app.user.UserService;
@@ -191,6 +192,38 @@ public class FileController {
             );
         }
 
+    }
+
+    @GetMapping(value = "/isLocked")
+    public ResponseEntity isLocked(@RequestParam Long fileId) {
+        Optional<File> file = fileService.findFileById(fileId);
+        if (file.isPresent()) {
+            return new ResponseEntity(file.get().getIsLocked(), HttpStatus.OK);
+        }
+        else  {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping(value = "/edit", params = "fileId")
+    public ResponseEntity editTextFile(@RequestParam Long fileId, @RequestBody ContentRequest request) throws IOException {
+        Optional<File> file = fileService.findFileById(fileId);
+        if (file.isEmpty()) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+        else {
+            Optional<Participant> participant = participantService.getParticipantByUsernameAndProjectId(
+                    SecurityContextHolder.getContext().getAuthentication().getName(),
+                    file.get().getProject().getId()
+            );
+            if (participant.isEmpty()) {
+                return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+            }
+            else {
+                fileService.editTextFile(fileId, request.getContent());
+                return new ResponseEntity(HttpStatus.OK);
+            }
+        }
     }
 
 }

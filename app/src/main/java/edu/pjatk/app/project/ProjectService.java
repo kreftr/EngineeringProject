@@ -726,7 +726,7 @@ public class ProjectService {
 
                 fileResponses.add(new FileResponse(f.getId(), f.getName(), f.getUrl(), f.getUser().getId(),
                         f.getUser().getUsername(), profilePhoto, f.getSize(),
-                        f.getUploadDate().format(formatter)));
+                        f.getUploadDate().format(formatter), f.getIsLocked() ? "LOCKED" : "UNLOCKED"));
             }
             return fileResponses;
         }

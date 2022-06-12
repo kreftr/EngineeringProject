@@ -98,7 +98,7 @@ class App extends Component{
                     <Route path={"admin"} element={<AdminPanel/>}/>
                     <Route path={"post/:id"} element={<Thread/>}/>
                     <Route path={"terms"} element={<Terms/>}/>
-                    <Route path={"editor"} element={<Editor/>}/>
+                    <Route path={"editor/:id"} element={<Editor/>}/>
                 </Routes>
             </Router>
         </>
