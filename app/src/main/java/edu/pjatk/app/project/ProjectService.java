@@ -498,10 +498,14 @@ public class ProjectService {
         Optional<User> loggedUser = userService.findUserByUsername(
                 SecurityContextHolder.getContext().getAuthentication().getName()
         );
-        Photo projectPhoto = (photo != null ? photoService.uploadPhoto(photo) : null);
+
         Optional<Project> projectToEdit = projectRepository.getProjectById(id);
 
         if (loggedUser.isEmpty() || projectToEdit.isEmpty()) { return; }
+
+        Photo projectPhoto;
+        if (photo != null) { projectPhoto = photoService.uploadPhoto(photo); }
+        else { projectPhoto = projectToEdit.get().getPhoto(); }
 
         if ( projectToEdit.get().getCreator().getUsername().equals(
                 loggedUser.get().getUsername()) || loggedUser.get().getUserRole().equals(UserRole.ADMIN))

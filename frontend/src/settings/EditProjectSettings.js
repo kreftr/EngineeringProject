@@ -77,15 +77,15 @@ function EditProjectSettings(){
         let fileChooserPhoto = document.getElementById("fileChooser").files[0]
         bodyFormData.append("projectPhoto", fileChooserPhoto);
 
-        await axios.post(`http://localhost:8080/project/editProject/${id}`, bodyFormData, {headers:{
+        await axios.post(`http://localhost:8080/project/editProject/${id}`, bodyFormData, { headers:{
                 'Authorization': Cookies.get("authorization")
             }})
         .catch(err => {
             console.log(err.response)
             console.log(err)
-        })
-
-        window.location.replace("/projects");
+        }).finally(() => {
+                window.location.replace("/projects")
+            })
     }
 
     function handleCategories(e){
