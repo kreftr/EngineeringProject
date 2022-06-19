@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -50,8 +53,12 @@ public class EmailService {
             htmlToString = htmlToString.replace("%REASONING%", reasoning);
             htmlToString = htmlToString.replace("%DATE%", date);
             return htmlToString;
-        } catch (Exception e){
+        } catch (FileNotFoundException e){
             return "Error: " + e.getMessage();
+        } catch (URISyntaxException e){
+            return "Error: " + e.getMessage();
+        } catch (IOException e){
+            return "Error " + e.getMessage();
         }
     }
 
@@ -64,7 +71,11 @@ public class EmailService {
             htmlToString = htmlToString.replace("%USERNAME%", username);
             htmlToString = htmlToString.replace("%LINK%", activationLink);
             return htmlToString;
-        } catch (Exception e){
+        } catch (FileNotFoundException e){
+            return activationLink + "\n" + "Error: " + e.getMessage();
+        } catch (URISyntaxException e){
+            return activationLink + "\n" + "Error: " + e.getMessage();
+        } catch (IOException e){
             return activationLink + "\n" + "Error: " + e.getMessage();
         }
     }
