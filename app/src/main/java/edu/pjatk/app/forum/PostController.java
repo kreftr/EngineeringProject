@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -40,9 +41,9 @@ public class PostController {
         );
     }
 
-    @RequestMapping(params = "id", method = RequestMethod.GET)
-    public ResponseEntity getPost(@RequestParam Long id){
-        Optional<PostResponse> post = postService.findPostById(id);
+    @GetMapping(value = "/getPost/{postId}")
+    public ResponseEntity getPost(@PathVariable Long postId){
+        Optional<PostResponse> post = postService.findPostById(postId);
         if (post.isEmpty()){
             return new ResponseEntity(
                     new ResponseMessage("Post does not exist"), HttpStatus.NOT_FOUND
