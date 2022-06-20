@@ -69,22 +69,15 @@ public class FileController {
 
             if (participant.isPresent()) {
 
-                if (file.isEmpty()){
+                if (fileService.uploadFile(file, fullPath, project.get(), loggedUser.get())!=null){
                     return new ResponseEntity(
-                            new ResponseMessage("File is empty!"), HttpStatus.BAD_REQUEST
+                            new ResponseMessage("File uploaded!"), HttpStatus.OK
                     );
                 }
-                else {
-                    if (fileService.uploadFile(file, fullPath, project.get(), loggedUser.get())!=null){
-                        return new ResponseEntity(
-                                new ResponseMessage("File uploaded!"), HttpStatus.OK
-                        );
-                    }
-                    else{
-                        return new ResponseEntity(
-                                new ResponseMessage("Couldn't upload file"), HttpStatus.INTERNAL_SERVER_ERROR
-                        );
-                    }
+                else{
+                    return new ResponseEntity(
+                            new ResponseMessage("Couldn't upload file"), HttpStatus.INTERNAL_SERVER_ERROR
+                    );
                 }
 
             }

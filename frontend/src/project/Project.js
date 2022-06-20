@@ -32,7 +32,8 @@ function Project(props){
                 </Col>
                 <Col className={"col-6 PROJECT-content-section"}>
                     <h2>{props.project.title.slice(0,22)}</h2>
-                    <div className={"PROJECT-introduction"}>{props.project.introduction.slice(0,150)+"..."}</div>
+                    <div className={"PROJECT-introduction"}>
+                        {props.project.introduction.length > 150 ? props.project.introduction.slice(0,150)+"..." : props.project.introduction}</div>
                 </Col>
                 <Col className={"col-3 PROJECT-button-section b"}>
                     <a href={`/project/${props.project.projectId}`}>

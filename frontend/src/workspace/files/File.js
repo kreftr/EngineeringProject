@@ -62,7 +62,7 @@ function File(props){
                         <Row>
                             <Col>
                                 { props.file.locked === "UNLOCKED" && props.file.fileName.includes(".txt") ?
-                                    <Button variant="primary" onClick={() => {window.location.replace(`/editor/${props.file.fileId}`);}}>
+                                    <Button className={"FILE-button"} variant="primary" onClick={() => {window.location.replace(`/editor/${props.file.fileId}`);}}>
                                         <FaFileInvoice size={20}/>
                                     </Button>
                                     :
@@ -71,7 +71,7 @@ function File(props){
                             </Col>
                             <Col>
                                 { props.role === "OWNER" || props.role === "MODERATOR" || props.file.userId === Cookies.get("userId") ?
-                                    <Button variant="danger" onClick={() => {remove();}}>
+                                    <Button className={"FILE-button"} variant="danger" onClick={() => {remove();}}>
                                         <FaTrashAlt size={20}/>
                                     </Button>
                                     :
@@ -79,7 +79,7 @@ function File(props){
                                 }
                             </Col>
                             <Col>
-                                <Button variant="primary" onClick={() => {download();}}>
+                                <Button className={"FILE-button"} variant="primary" onClick={() => {download();}}>
                                     <FaFileDownload size={20}/>
                                 </Button>
                             </Col>

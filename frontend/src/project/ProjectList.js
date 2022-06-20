@@ -281,7 +281,6 @@ function ProjectList(){
                                                     placeholder="Description"
                                                     style={{ resize: 'none', height: '300px' }}
                                                     onChange={(e)=>{setDescription(e.target.value)}}
-                                                    required
                                                 />
                                             </FloatingLabel>
                                         </Row>
