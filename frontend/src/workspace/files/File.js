@@ -70,13 +70,13 @@ function File(props){
                     <Modal.Footer>
                         <Row>
                             <Col>
-                                <Button variant="primary" onClick={() => {open();}}>
+                                <Button className={"FILE-button"} variant="primary" onClick={() => {open();}}>
                                     <FaFileInvoice size={20}/>
                                 </Button>
                             </Col>
                             <Col>
                                 { props.role === "OWNER" || props.role === "MODERATOR" || props.file.userId === Cookies.get("userId") ?
-                                    <Button variant="danger" onClick={() => {remove();}}>
+                                    <Button className={"FILE-button"} variant="danger" onClick={() => {remove();}}>
                                         <FaTrashAlt size={20}/>
                                     </Button>
                                     :
@@ -84,7 +84,7 @@ function File(props){
                                 }
                             </Col>
                             <Col>
-                                <Button variant="primary" onClick={() => {download();}}>
+                                <Button className={"FILE-button"} variant="primary" onClick={() => {download();}}>
                                     <FaFileDownload size={20}/>
                                 </Button>
                             </Col>
