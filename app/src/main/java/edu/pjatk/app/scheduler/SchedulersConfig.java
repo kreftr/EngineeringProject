@@ -153,7 +153,7 @@ public class SchedulersConfig {
             File upload_destination = new File(backups_folder_path + "/uploads");
             FileUtils.copyDirectory(upload_source, upload_destination);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 
