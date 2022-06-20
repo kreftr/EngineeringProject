@@ -93,6 +93,7 @@ public class CommentService {
         commentRepository.deleteComment(id);
     }
     
+    //get all post's comments
     @Transactional
     public Set<CommentResponse> getAllCommentsByPostId(Long postId) {
         Set<CommentResponse> commentResponses = new HashSet<>();
@@ -126,6 +127,7 @@ public class CommentService {
         }
     }
     
+    //get all project's comments
     @Transactional
     public Set<CommentResponse> getAllCommentsByProjectId(Long projectId) {
         Set<CommentResponse> commentResponses = new HashSet<>();

@@ -11,8 +11,7 @@ import java.util.Set;
 @Getter
 @Setter
 public class ProfileEditRequest {
-
-    //TODO: Add polish letters to regex żźćó...
+    
     @Pattern(regexp = "(^$)|^[a-zA-Z]+$", message = "{validation.profile.name.regex}")
     @Size(max = 20, message = "{validation.profile.name.size}")
     private String name;
