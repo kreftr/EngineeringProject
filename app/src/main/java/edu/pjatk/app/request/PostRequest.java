@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 public class PostRequest {
-    @Size(min = 3, max = 24, message = "{forum.post.username.size}")
+    @Size(min = 3, max = 24, message = "{forum.post.title.size}")
     private String title;
     private String text;
 }
