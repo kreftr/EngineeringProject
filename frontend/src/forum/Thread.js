@@ -56,7 +56,7 @@ function Thread(props) {
     
     useEffect( () => {
         //Load post informations (PostResponse)
-        axios.get(`http://localhost:8080/post?id=${id}`, {
+        axios.get(`http://localhost:8080/post/getPost/${id}`, {
         }).then(response => {
                 setPost(response.data);
             }).catch(err => {
