@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
-import {Button, Col, FloatingLabel, Form, FormControl, Image, InputGroup, Row} from "react-bootstrap";
+import {Alert, Button, Col, FloatingLabel, Form, FormControl, Image, InputGroup, Row} from "react-bootstrap";
 import default_project_picture from "../assets/images/default_project_picture.jpg";
 import {FaFacebookSquare, FaGithubSquare, FaKickstarter, FaYoutube} from "react-icons/all";
 import {useParams} from "react-router-dom";
@@ -10,6 +10,9 @@ import {useParams} from "react-router-dom";
 function EditProjectSettings(){
 
     const {id} = useParams();
+
+    const [projectCreationMessage, setProjectCreationMessage] = useState()
+    const [responseCode, setResponseCode] = useState()
 
     const [img, setImg] = useState(null);
     const [title, setTitle] = useState();
@@ -80,12 +83,15 @@ function EditProjectSettings(){
         await axios.post(`http://localhost:8080/project/editProject/${id}`, bodyFormData, { headers:{
                 'Authorization': Cookies.get("authorization")
             }})
+            .then(() => {
+            window.location.replace("/projects")
+        })
         .catch(err => {
+            setResponseCode(err.response.status)
+            if (err.response.status === 400) setProjectCreationMessage("*"+err.response.data.error)
+            else setProjectCreationMessage("SERVER ERROR!")
             console.log(err.response)
-            console.log(err)
-        }).finally(() => {
-                window.location.replace("/projects")
-            })
+        })
     }
 
     function handleCategories(e){
@@ -232,7 +238,24 @@ function EditProjectSettings(){
                         </Button>
                     </Col>
                 </Row>
-                <Row className={"mt-3"}></Row>
+                <Row className={"mt-3"}>
+                    <hr/>
+                    { projectCreationMessage && responseCode === 400 ?
+                        <Alert variant={"danger"}>
+                            <center>
+                                {projectCreationMessage}
+                            </center>
+                        </Alert>
+                        : projectCreationMessage ?
+                            <Alert variant={"danger"}>
+                                <center>
+                                    {projectCreationMessage}
+                                </center>
+                            </Alert>
+                            :
+                            <></>
+                    }
+                </Row>
             </Form>
     );
 }

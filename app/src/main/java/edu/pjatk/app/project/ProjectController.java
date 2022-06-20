@@ -166,7 +166,7 @@ public class ProjectController {
     }
 
     @PostMapping(value = "/editProject/{id}", consumes = {"multipart/form-data"})
-    public ResponseEntity<?> editProject(@RequestPart ProjectRequest projectRequest,
+    public ResponseEntity<?> editProject(@Valid @RequestPart ProjectRequest projectRequest,
                                          @RequestPart(required = false) MultipartFile projectPhoto,
                                          @PathVariable Long id) {
         projectService.editProject(projectRequest, projectPhoto, id);
