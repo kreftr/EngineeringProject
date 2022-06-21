@@ -3,8 +3,14 @@ package edu.pjatk.app.user;
 import edu.pjatk.app.email.EmailService;
 import edu.pjatk.app.email.activation_token.ActivationTokenService;
 import edu.pjatk.app.photo.PhotoService;
+import edu.pjatk.app.project.Project;
+import edu.pjatk.app.project.ProjectRepository;
 import edu.pjatk.app.project.task.Task;
+import edu.pjatk.app.project.task.TaskService;
+import edu.pjatk.app.project.team.Team;
+import edu.pjatk.app.project.team.TeamService;
 import edu.pjatk.app.request.PasswordChangeRequest;
+import edu.pjatk.app.response.TaskResponse;
 import edu.pjatk.app.socials.chat.Conversation;
 import edu.pjatk.app.socials.chat.ConversationService;
 import edu.pjatk.app.socials.friends.Friend;
@@ -16,9 +22,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -29,18 +33,25 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final ConversationService conversationService;
     private final FriendService friendService;
+    private final TaskService taskService;
+    private final ProjectRepository projectRepository;
+    private final TeamService teamService;
 
 
     @Autowired
     public UserService(UserRepository userRepository, ActivationTokenService activationTokenService,
                        PhotoService photoService, BCryptPasswordEncoder passwordEncoder,
-                       @Lazy ConversationService conversationService, @Lazy FriendService friendService){
+                       @Lazy ConversationService conversationService, @Lazy FriendService friendService,
+                       @Lazy TaskService taskService, ProjectRepository projectRepository, @Lazy TeamService teamService){
         this.userRepository = userRepository;
         this.activationTokenService = activationTokenService;
         this.photoService = photoService;
         this.passwordEncoder = passwordEncoder;
         this.conversationService = conversationService;
         this.friendService = friendService;
+        this.taskService = taskService;
+        this.projectRepository = projectRepository;
+        this.teamService = teamService;
     }
 
 
@@ -71,6 +82,22 @@ public class UserService {
         Optional<List<Friend>> friends = friendService.getAllFriendsByUserId(user.getId());
         if (friends.isPresent() && !friends.get().isEmpty()){
             for (Friend friend : friends.get()) friendService.removeFriend(friend);
+        }
+
+        //delete all tasks in every project for user
+        Optional<List<Project>> allUserProjectsOptional = projectRepository.getAllProjectsUserParticipateIn(user.getId());
+        if (allUserProjectsOptional.isPresent()) {
+            for (Project userProject : allUserProjectsOptional.get()) {
+                Set<TaskResponse> participantTasks = taskService.getAllProjectTasksForParticipant(userProject.getId(), user.getId());
+                for (TaskResponse userTasks : participantTasks) {
+                    taskService.removeTask(userTasks.getId());
+                }
+
+                // remove from teams
+                for (Team projectTeam: userProject.getTeams()) {
+                    teamService.removeMember(projectTeam.getId(), user.getId(), userProject.getId());
+                }
+            }
         }
 
         //Remove user's categories
@@ -104,6 +131,25 @@ public class UserService {
         if (friends.isPresent() && !friends.get().isEmpty()){
             for (Friend friend : friends.get()) friendService.removeFriend(friend);
         }
+
+        //delete all tasks in every project for user
+        Optional<List<Project>> allUserProjectsOptional = projectRepository.getAllProjectsUserParticipateIn(user.getId());
+        if (allUserProjectsOptional.isPresent()) {
+            for (Project userProject : allUserProjectsOptional.get()) {
+                Set<TaskResponse> participantTasks = taskService.getAllProjectTasksForParticipant(userProject.getId(), user.getId());
+                for (TaskResponse userTasks : participantTasks) {
+                    taskService.removeTask(userTasks.getId());
+                }
+
+                // remove from teams
+                for (Team projectTeam: userProject.getTeams()) {
+                    teamService.removeMember(projectTeam.getId(), user.getId(), userProject.getId());
+                }
+
+            }
+        }
+
+
 
         //Remove user's categories
         user.getProfile().setCategories(Collections.emptySet());

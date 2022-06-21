@@ -165,6 +165,20 @@ public class ProjectRepository {
         return project;
     }
 
+//    "select participant.project from Participant participant where :userId MEMBER OF participant.user.id", Project.class)
+    public Optional<List<Project>> getAllProjectsUserParticipateIn(Long userId) {
+        Optional<List<Project>> projects;
+        try {
+            projects =  Optional.of(entityManager.createQuery(
+                            "select participant.project from Participant participant where participant.user.id = :userId", Project.class)
+                    .setParameter("userId", userId).getResultList());
+        }
+        catch (NoResultException noResultException){
+            projects = Optional.empty();
+        }
+        return projects;
+    }
+
     public Optional<List<Project>> getProjectsByTitleWithPagination(String projectTitle, int pageNumber, int pageSize){
         Optional<List<Project>> projects;
         try {

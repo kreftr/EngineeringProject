@@ -44,6 +44,37 @@ public class TaskRepository {
         return tasks;
     }
 
+    public Optional<List<Task>> getAllByUserIdAndProjectId(Long projectId, Long userId) {
+        Optional tasks;
+        try {
+            tasks = Optional.of(
+                    entityManager.createQuery("SELECT task FROM Task task WHERE task.project.id=:projectId AND task.participant.user.id=:userId", Task.class).
+                            setParameter("projectId", projectId)
+                            .setParameter("userId", userId)
+                                .getResultList()
+            );
+        } catch (NoResultException e) {
+            tasks = Optional.empty();
+        }
+        return tasks;
+    }
+
+    public Optional<List<Task>> getAllByUserIdAndTeamId(Long projectId, Long teamId) {
+        Optional tasks;
+        try {
+            tasks = Optional.of(
+                    entityManager.createQuery("SELECT task FROM Task task WHERE task.project.id=:projectId AND task.team.id=:teamId", Task.class).
+                            setParameter("projectId", projectId)
+                            .setParameter("teamId", teamId)
+                            .getResultList()
+            );
+        } catch (NoResultException e) {
+            tasks = Optional.empty();
+        }
+        return tasks;
+    }
+
+
     public Optional<Task> getById(Long taskId){
         Optional tasks;
         try {
