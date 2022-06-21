@@ -25,6 +25,7 @@ public class UserController {
 
     @PostMapping("/deleteAccount")
     public ResponseEntity deleteAccount(){
+
         userService.removeCurrentlyLoggedUser();
         return new ResponseEntity(new ResponseMessage("Account has been deleted"), HttpStatus.OK);
     }

@@ -67,48 +67,61 @@ public class TaskService {
 
                     for (Task task : tasks.get()){
 
-                        // profile photo
-                        if (task.getParticipant().getUser().getProfile().getPhoto() != null) {
-                            profilePhoto = task.getParticipant().getUser().getProfile().getPhoto().getFileName();
-                        } else {
-                            profilePhoto = null;
+                        // task for team
+                        if (task.getParticipant() == null) {
+                            taskResponses.add(
+                                    new TaskResponse(
+                                            task.getId(), task.getName(), task.getDescription(), task.getStatus().toString(),
+                                            task.getCreationDate().format(formatter), task.getExpirationDate().format(formatter),
+                                            null, null, null, task.getTeam().getId(), task.getTeam().getName()
+                                    )
+                            );
+                        }
+                        else {
+                            // profile photo
+                            if (task.getParticipant().getUser().getProfile().getPhoto() != null) {
+                                profilePhoto = task.getParticipant().getUser().getProfile().getPhoto().getFileName();
+                            } else {
+                                profilePhoto = null;
+                            }
+
+                            // username
+                            if (task.getParticipant().getUser() != null) {
+                                username = task.getParticipant().getUser().getUsername();
+                            } else {
+                                username = null;
+                            }
+
+                            // team name
+                            if (task.getTeam() != null) {
+                                teamName = task.getTeam().getName();
+                            } else {
+                                teamName = null;
+                            }
+
+                            // participant id
+                            if (task.getParticipant() != null) {
+                                participantId = task.getParticipant().getId();
+                            } else {
+                                participantId = null;
+                            }
+
+                            // team id
+                            if (task.getTeam() != null) {
+                                teamId = task.getTeam().getId();
+                            } else {
+                                teamId = null;
+                            }
+
+                            taskResponses.add(
+                                    new TaskResponse(
+                                            task.getId(), task.getName(), task.getDescription(), task.getStatus().toString(),
+                                            task.getCreationDate().format(formatter), task.getExpirationDate().format(formatter),
+                                            participantId, username, profilePhoto, teamId, teamName
+                                    )
+                            );
                         }
 
-                        // username
-                        if (task.getParticipant().getUser() != null) {
-                            username = task.getParticipant().getUser().getUsername();
-                        } else {
-                            username = null;
-                        }
-
-                        // team name
-                        if (task.getTeam() != null) {
-                            teamName = task.getTeam().getName();
-                        } else {
-                            teamName = null;
-                        }
-
-                        // participant id
-                        if (task.getParticipant() != null) {
-                            participantId = task.getParticipant().getId();
-                        } else {
-                            participantId = null;
-                        }
-
-                        // team id
-                        if (task.getTeam() != null) {
-                            teamId = task.getTeam().getId();
-                        } else {
-                            teamId = null;
-                        }
-
-                        taskResponses.add(
-                                new TaskResponse(
-                                        task.getId(), task.getName(), task.getDescription(), task.getStatus().toString(),
-                                        task.getCreationDate().format(formatter), task.getExpirationDate().format(formatter),
-                                        participantId, username, profilePhoto, teamId, teamName
-                                )
-                        );
                     }
                     return taskResponses;
                 }
