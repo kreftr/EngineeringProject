@@ -8,6 +8,7 @@ import edu.pjatk.app.project.participant.ParticipantService;
 import edu.pjatk.app.project.team.Team;
 import edu.pjatk.app.project.team.TeamService;
 import edu.pjatk.app.request.TaskRequest;
+import org.springframework.context.annotation.Lazy;
 import edu.pjatk.app.response.TaskResponse;
 import edu.pjatk.app.user.User;
 import edu.pjatk.app.user.UserService;
@@ -31,13 +32,14 @@ public class TaskService {
 
     @Autowired
     public TaskService(TaskRepository taskRepository, UserService userService, ProjectRepository projectRepository,
-                       ParticipantService participantService, TeamService teamService){
+                       ParticipantService participantService, @Lazy TeamService teamService){
         this.taskRepository = taskRepository;
         this.userService = userService;
         this.projectRepository = projectRepository;
         this.participantService = participantService;
         this.teamService = teamService;
     }
+
 
 
     public Set<TaskResponse> getAllProjectTasks(Long projectId){
@@ -67,48 +69,61 @@ public class TaskService {
 
                     for (Task task : tasks.get()){
 
-                        // profile photo
-                        if (task.getParticipant().getUser().getProfile().getPhoto() != null) {
-                            profilePhoto = task.getParticipant().getUser().getProfile().getPhoto().getFileName();
-                        } else {
-                            profilePhoto = null;
+                        // task for team
+                        if (task.getParticipant() == null) {
+                            taskResponses.add(
+                                    new TaskResponse(
+                                            task.getId(), task.getName(), task.getDescription(), task.getStatus().toString(),
+                                            task.getCreationDate().format(formatter), task.getExpirationDate().format(formatter),
+                                            null, null, null, task.getTeam().getId(), task.getTeam().getName()
+                                    )
+                            );
+                        }
+                        else {
+                            // profile photo
+                            if (task.getParticipant().getUser().getProfile().getPhoto() != null) {
+                                profilePhoto = task.getParticipant().getUser().getProfile().getPhoto().getFileName();
+                            } else {
+                                profilePhoto = null;
+                            }
+
+                            // username
+                            if (task.getParticipant().getUser() != null) {
+                                username = task.getParticipant().getUser().getUsername();
+                            } else {
+                                username = null;
+                            }
+
+                            // team name
+                            if (task.getTeam() != null) {
+                                teamName = task.getTeam().getName();
+                            } else {
+                                teamName = null;
+                            }
+
+                            // participant id
+                            if (task.getParticipant() != null) {
+                                participantId = task.getParticipant().getId();
+                            } else {
+                                participantId = null;
+                            }
+
+                            // team id
+                            if (task.getTeam() != null) {
+                                teamId = task.getTeam().getId();
+                            } else {
+                                teamId = null;
+                            }
+
+                            taskResponses.add(
+                                    new TaskResponse(
+                                            task.getId(), task.getName(), task.getDescription(), task.getStatus().toString(),
+                                            task.getCreationDate().format(formatter), task.getExpirationDate().format(formatter),
+                                            participantId, username, profilePhoto, teamId, teamName
+                                    )
+                            );
                         }
 
-                        // username
-                        if (task.getParticipant().getUser() != null) {
-                            username = task.getParticipant().getUser().getUsername();
-                        } else {
-                            username = null;
-                        }
-
-                        // team name
-                        if (task.getTeam() != null) {
-                            teamName = task.getTeam().getName();
-                        } else {
-                            teamName = null;
-                        }
-
-                        // participant id
-                        if (task.getParticipant() != null) {
-                            participantId = task.getParticipant().getId();
-                        } else {
-                            participantId = null;
-                        }
-
-                        // team id
-                        if (task.getTeam() != null) {
-                            teamId = task.getTeam().getId();
-                        } else {
-                            teamId = null;
-                        }
-
-                        taskResponses.add(
-                                new TaskResponse(
-                                        task.getId(), task.getName(), task.getDescription(), task.getStatus().toString(),
-                                        task.getCreationDate().format(formatter), task.getExpirationDate().format(formatter),
-                                        participantId, username, profilePhoto, teamId, teamName
-                                )
-                        );
                     }
                     return taskResponses;
                 }
@@ -117,6 +132,49 @@ public class TaskService {
             else return Collections.emptySet();
         }
         else return Collections.emptySet();
+    }
+
+    @Transactional
+    public Set<TaskResponse> getAllProjectTasksForParticipant(Long projectId, Long userId) {
+        Optional<List<Task>> participantTasks = taskRepository.getAllByUserIdAndProjectId(projectId, userId);
+        if (participantTasks.isPresent() && participantTasks.get().size() > 0) {
+
+            Set<TaskResponse> taskResponses = new HashSet<>();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            for (Task task : participantTasks.get()) {
+                taskResponses.add(
+                        new TaskResponse(
+                                task.getId(), task.getName(), task.getDescription(), task.getStatus().toString(),
+                                task.getCreationDate().format(formatter), task.getExpirationDate().format(formatter),
+                                task.getParticipant().getId(), task.getParticipant().getUser().getUsername(),
+                                task.getParticipant().getUser().getProfile().getPhoto().getFileName(), null, null
+                        )
+                );
+            }
+            return taskResponses;
+        }
+        return Collections.emptySet();
+    }
+
+    @Transactional
+    public Set<TaskResponse> getAllProjectTasksForTeam(Long projectId, Long teamId){
+        Optional<List<Task>> teamTasks = taskRepository.getAllByUserIdAndTeamId(projectId, teamId);
+        if (teamTasks.isPresent() && teamTasks.get().size() > 0) {
+
+            Set<TaskResponse> taskResponses = new HashSet<>();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            for (Task task : teamTasks.get()) {
+                taskResponses.add(
+                        new TaskResponse(
+                                task.getId(), task.getName(), task.getDescription(), task.getStatus().toString(),
+                                task.getCreationDate().format(formatter), task.getExpirationDate().format(formatter),
+                                null, null, null, task.getTeam().getId(), task.getTeam().getName()
+                        )
+                );
+            }
+            return taskResponses;
+        }
+        return Collections.emptySet();
     }
 
     @Transactional

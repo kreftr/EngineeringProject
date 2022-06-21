@@ -5,7 +5,10 @@ import edu.pjatk.app.project.ProjectRepository;
 import edu.pjatk.app.project.participant.Participant;
 import edu.pjatk.app.project.participant.ParticipantRole;
 import edu.pjatk.app.project.participant.ParticipantService;
+import edu.pjatk.app.project.task.Task;
+import edu.pjatk.app.project.task.TaskService;
 import edu.pjatk.app.request.TeamRequest;
+import edu.pjatk.app.response.TaskResponse;
 import edu.pjatk.app.response.project.MemberResponse;
 import edu.pjatk.app.response.project.TeamResponse;
 import edu.pjatk.app.user.User;
@@ -24,14 +27,16 @@ public class TeamService {
     private final UserService userService;
     private final ParticipantService participantService;
     private final ProjectRepository projectRepository;
+    private final TaskService taskService;
 
     @Autowired
     public TeamService(TeamRepository teamRepository, UserService userService, ParticipantService participantService,
-                       ProjectRepository projectRepository){
+                       ProjectRepository projectRepository, TaskService taskService){
         this.teamRepository = teamRepository;
         this.userService = userService;
         this.participantService = participantService;
         this.projectRepository = projectRepository;
+        this.taskService = taskService;
     }
 
 
@@ -108,6 +113,12 @@ public class TeamService {
             );
 
             if (participant.isPresent() && !participant.get().getParticipantRole().equals(ParticipantRole.PARTICIPANT)){
+                // delete all tasks for project
+                Set<TaskResponse> teamTasks = taskService.getAllProjectTasksForTeam(team.get().getProject().getId() ,teamId);
+                for (TaskResponse teamTaskResponse: teamTasks) {
+                    taskService.removeTask(teamTaskResponse.getId());
+                }
+
                 teamRepository.remove(team.get());
                 return true;
             }

@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.context.annotation.Lazy;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
@@ -43,7 +44,7 @@ public class ProjectService {
     public ProjectService(ProjectRepository projectRepository, CategoryService categoryService,
                           UserService userService, PhotoService photoService,
                           ProjectInvitationService projectInvitationService,
-                          ParticipantService participantService,
+                          @Lazy ParticipantService participantService,
                           RecomendationService recomendationService) {
         this.projectRepository = projectRepository;
         this.categoryService = categoryService;
@@ -54,6 +55,9 @@ public class ProjectService {
         this.recomendationService = recomendationService;
     }
 
+    public Optional<Project> getProjectObjectById(Long id) {
+        return projectRepository.getProjectById(id);
+    }
 
     public Optional<FullProjectResponse> getProjectById(Long id) {
 
@@ -1083,9 +1087,7 @@ public class ProjectService {
         }
     }
 
-
     public void deleteProject(Long id) {
         projectRepository.deleteProject(id);
     }
-
 }

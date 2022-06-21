@@ -47,7 +47,7 @@ function TaskPanel(props){
         e.preventDefault()
         let dateString = date.addHours(1).toISOString().substring(0,16);
 
-        if (participant && t === null){
+        if (participant !== null){
             axios.post("http://localhost:8080/task/addForParticipant", {
                 "projectId": id,
                 "name": name,
@@ -62,7 +62,7 @@ function TaskPanel(props){
                 console.log(err.response)
             })
         }
-        else if (t && participant === null){
+        else if (t !== null){
             axios.post("http://localhost:8080/task/addForTeam", {
                     "projectId": id,
                     "name": name,

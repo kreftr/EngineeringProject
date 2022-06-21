@@ -1,5 +1,7 @@
 package edu.pjatk.app.user;
 
+import edu.pjatk.app.comments.Comment;
+import edu.pjatk.app.forum.Post;
 import edu.pjatk.app.project.participant.Participant;
 import edu.pjatk.app.user.profile.Profile;
 import lombok.Getter;
@@ -53,4 +55,9 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE}, orphanRemoval = true)
     private Set<Participant> participants = new HashSet<>();
 
+    @OneToOne(mappedBy = "userr", cascade = CascadeType.REMOVE)
+    private Comment comment;
+
+    @OneToOne(mappedBy = "userr", cascade = CascadeType.REMOVE)
+    private Post post;
 }

@@ -25,7 +25,7 @@ public class Comment {
 
     private LocalDateTime datee;
     
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, orphanRemoval = true, cascade = {CascadeType.ALL})
     @JoinColumn(name = "userr")
     private User userr;
     
