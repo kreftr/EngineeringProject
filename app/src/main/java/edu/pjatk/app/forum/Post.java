@@ -23,7 +23,7 @@ public class Post {
     @Size(min = 3, max = 24)
     private String title;
     
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, orphanRemoval = true, cascade = {CascadeType.ALL})
     @JoinColumn(name = "userr")
     private User userr;
 
