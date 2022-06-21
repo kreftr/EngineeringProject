@@ -8,6 +8,7 @@ import Member from "./Member";
 import {FaCalendarPlus} from "react-icons/all";
 import {FaUserFriends, FaUserPlus} from "react-icons/fa";
 import InvitePanel from "./InvitePanel";
+import OwnershipTransfer from "./OwnershipTransfer";
 import TeamPanel from "./team/TeamPanel";
 import Team from "./team/Team";
 import TaskPanel from "./task/TaskPanel";
@@ -53,6 +54,9 @@ function Workspace(){
     const [timestampList, setTimestampList] = useState(undefined)
     const [timestampButtonText, setTimestampButtonText] = useState("Start")
     const [timeStart, setTimeStart] = useState(null)
+
+    // Transfer ownership section
+    const [transferOwnership, setTransferOwnership] = useState(false);
 
     function handleTimestampButton() {
         setTimerStarted(timerStarted => !timerStarted)
@@ -100,7 +104,6 @@ function Workspace(){
             console.log(err.response)
         })
     }
-
 
     useEffect(() => {
 
@@ -326,6 +329,24 @@ function Workspace(){
                                                     :
                                                     <></>
                                                 }
+                                                { memberRole === 'OWNER' ?
+                                                    <center>
+                                                        <Button className={"ml-2"} variant={"warning"} onClick={() => { setTransferOwnership(true)}}>
+                                                            <h6 className={"WORKSPACE-center-upload-button"}>
+                                                                <FaUserPlus className={"mr-2"} size={35}/>
+                                                                Transfer Ownership
+                                                            </h6>
+                                                        </Button>
+                                                        <Modal
+                                                            show={transferOwnership}
+                                                        onHide={() => {setTransferOwnership(false)}}>
+                                                            <OwnershipTransfer members={members} projectId={id}/>
+                                                        </Modal>
+                                                    </center>
+                                                    :
+                                                    <></>
+                                                }
+
                                             </Col>
                                             <Col className={"WORKSPACE-center-searchbar"}>
                                                 <center>

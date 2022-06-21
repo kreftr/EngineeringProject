@@ -50,7 +50,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/user/findUserById/*", "/categories/getAll", "/project/getAllProjects/*",
                         "/project/getProjectById/*", "/project/getProjectByName/*", "/project/getProjectByCategory/*",
                         "/project/getProjectByNameWithPagination/*", "/project/getProjectsNumberByTitle/*", "/p").permitAll()
-                .antMatchers(HttpMethod.POST, "/login").permitAll()
+                .antMatchers(HttpMethod.POST, "/login", "/project/transferOwnership/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/profile", "/photo", "/project/getAllProjects/*",
                         "/project/ranking", "/project/randomRecommended", "/profile/*", "/profile/**").permitAll()
                 .antMatchers(HttpMethod.POST,  "/profile", "/photo", "/report").hasAnyRole("USER", "ADMIN")

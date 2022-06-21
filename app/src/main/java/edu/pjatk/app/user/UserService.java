@@ -3,6 +3,7 @@ package edu.pjatk.app.user;
 import edu.pjatk.app.email.EmailService;
 import edu.pjatk.app.email.activation_token.ActivationTokenService;
 import edu.pjatk.app.photo.PhotoService;
+import edu.pjatk.app.project.task.Task;
 import edu.pjatk.app.request.PasswordChangeRequest;
 import edu.pjatk.app.socials.chat.Conversation;
 import edu.pjatk.app.socials.chat.ConversationService;
@@ -107,7 +108,6 @@ public class UserService {
         //Remove user's categories
         user.getProfile().setCategories(Collections.emptySet());
         userRepository.update(user);
-
         userRepository.remove(user);
     }
 

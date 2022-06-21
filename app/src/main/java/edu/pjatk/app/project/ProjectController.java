@@ -1,6 +1,8 @@
 package edu.pjatk.app.project;
 
 
+import edu.pjatk.app.project.participant.ParticipantRepository;
+import edu.pjatk.app.project.participant.ParticipantService;
 import edu.pjatk.app.request.ProjectRequest;
 import edu.pjatk.app.response.ResponseMessage;
 
@@ -10,12 +12,14 @@ import edu.pjatk.app.response.project.FullProjectResponse;
 import edu.pjatk.app.response.project.InvitationResponse;
 import edu.pjatk.app.response.project.MiniProjectResponse;
 import edu.pjatk.app.response.project.ProjectJoinRequestResponse;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -25,13 +29,15 @@ import java.util.Set;
 @RestController
 @RequestMapping("/project")
 public class ProjectController {
-
     private final ProjectService projectService;
+    private final ParticipantService participantService;
 
     @Autowired
-    private ProjectController(ProjectService projectService){
+    private ProjectController(ProjectService projectService, ParticipantService participantService){
         this.projectService = projectService;
+        this.participantService = participantService;
     }
+
 
     //------Projects section endpoints------
 
@@ -412,6 +418,17 @@ public class ProjectController {
         return new ResponseEntity<>(
                 new ResponseMessage("Project deleted!"), HttpStatus.OK
         );
+    }
+
+    @PostMapping(value = "/transferOwnership/{projectId}/{newOwnerId}")
+    public ResponseEntity<?> transferOwnership(@PathVariable Long projectId, @PathVariable Long newOwnerId){
+        boolean isOwnershipTransferred = participantService.transferOwnership(projectId, newOwnerId);
+        if (isOwnershipTransferred) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
     }
 
 }

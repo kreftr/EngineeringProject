@@ -1,0 +1,36 @@
+.OWNERSHIP-members-select {
+    overflow: scroll;
+    height: 250px;
+    /* Hide scrollbar for IE, Edge and Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.OWNERSHIP-members-add {
+    overflow: scroll;
+    height: 500px;
+    /* Hide scrollbar for IE, Edge and Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.OWNERSHIP-description-resize {
+    resize: none;
+}
+
+.example::-webkit-scrollbar {
+    display: none;
+}
+
+.OWNERSHIP-test {
+    display: flex;
+    align-items: center;
+}
+
+.OWNERSHIP-description{
+    word-break: break-word;
+}
+
+.OWNERSHIP-header-button {
+    overflow: visible;
+}
