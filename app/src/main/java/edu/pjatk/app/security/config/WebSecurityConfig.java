@@ -1,7 +1,5 @@
 package edu.pjatk.app.security.config;
 
-import edu.pjatk.app.facebook.FacebookConnectionSignup;
-import edu.pjatk.app.facebook.FacebookSignInAdapter;
 import edu.pjatk.app.security.UserDetailsServiceImp;
 import edu.pjatk.app.security.filter.JwtAuthenticationFilter;
 import edu.pjatk.app.security.filter.JwtAuthorizationFilter;
@@ -35,14 +33,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsServiceImp userDetailsServiceImp;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserService userService;
-    
-    @Autowired
-    private FacebookConnectionSignup facebookConnectionSignup;
-    
-    @Value("${spring.social.facebook.appSecret}")
-    String appSecret;
-    @Value("${spring.social.facebook.appId}")
-    String appId;
     
     @Autowired
     public WebSecurityConfig(UserDetailsServiceImp userDetailsServiceImp, BCryptPasswordEncoder bCryptPasswordEncoder,
@@ -113,24 +103,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         provider.setUserDetailsService(userDetailsServiceImp);
         return provider;
     }
-
-    @Bean
-    public ProviderSignInController providerSignInController() {
-        ConnectionFactoryLocator connectionFactoryLocator = connectionFactoryLocator();
-        UsersConnectionRepository usersConnectionRepository = getUsersConnectionRepository(connectionFactoryLocator);
-        ((InMemoryUsersConnectionRepository) usersConnectionRepository).setConnectionSignUp(facebookConnectionSignup);
-        return new ProviderSignInController(connectionFactoryLocator, usersConnectionRepository, new FacebookSignInAdapter());
-    }
-    
-    private ConnectionFactoryLocator connectionFactoryLocator() {
-        ConnectionFactoryRegistry registry = new ConnectionFactoryRegistry();
-        registry.addConnectionFactory(new FacebookConnectionFactory(appId, appSecret));
-        return registry;
-    }
-
-    private UsersConnectionRepository getUsersConnectionRepository(ConnectionFactoryLocator
-                                                                           connectionFactoryLocator) {
-        return new InMemoryUsersConnectionRepository(connectionFactoryLocator);
-    }
-
 }
