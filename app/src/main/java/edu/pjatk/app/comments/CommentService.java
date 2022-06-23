@@ -95,8 +95,8 @@ public class CommentService {
     
     //get all post's comments
     @Transactional
-    public Set<CommentResponse> getAllCommentsByPostId(Long postId) {
-        Set<CommentResponse> commentResponses = new HashSet<>();
+    public List<CommentResponse> getAllCommentsByPostId(Long postId) {
+        List<CommentResponse> commentResponses = new ArrayList<>();
         Optional<List<Comment>> comments = commentRepository.getAllCommentsByPost(postId);
         
         //format date to Pattern
@@ -123,14 +123,14 @@ public class CommentService {
             }
             return commentResponses;
         } else {
-            return Collections.emptySet();
+            return Collections.emptyList();
         }
     }
     
     //get all project's comments
     @Transactional
-    public Set<CommentResponse> getAllCommentsByProjectId(Long projectId) {
-        Set<CommentResponse> commentResponses = new HashSet<>();
+    public List<CommentResponse> getAllCommentsByProjectId(Long projectId) {
+        List<CommentResponse> commentResponses = new ArrayList<>();
         Optional<List<Comment>> comments = commentRepository.getAllCommentsByProject(projectId);
 
         //format date to Pattern
@@ -156,6 +156,6 @@ public class CommentService {
                 
             }
             return commentResponses;
-        } else return Collections.emptySet();
+        } else return Collections.emptyList();
     }
 }

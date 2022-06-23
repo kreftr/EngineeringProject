@@ -39,7 +39,7 @@ public class CommentRepository {
         Optional<List<Comment>> comments;
         try {
             comments = Optional.of(entityManager.createQuery(
-                            "SELECT comment FROM Comment comment WHERE comment.post_id = :post_id", Comment.class)
+                            "SELECT comment FROM Comment comment WHERE comment.post_id = :post_id ORDER BY comment.datee ASC", Comment.class)
                     .setParameter("post_id", post_id).getResultList());
         } catch (NoResultException noResultException) {
             comments = Optional.empty();
@@ -51,7 +51,7 @@ public class CommentRepository {
         Optional<List<Comment>> comments;
         try {
             comments = Optional.of(entityManager.createQuery(
-                            "SELECT comment FROM Comment comment WHERE comment.project_id = :project_id", Comment.class)
+                            "SELECT comment FROM Comment comment WHERE comment.project_id = :project_id ORDER BY comment.datee ASC", Comment.class)
                     .setParameter("project_id", project_id).getResultList());
         } catch (NoResultException noResultException) {
             comments = Optional.empty();

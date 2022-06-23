@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -60,7 +61,7 @@ public class CommentController {
     
     @GetMapping(value = "/getProjectComments/{projectId}")
     public ResponseEntity<?> getProjectComments(@PathVariable Long projectId) {
-        Set<CommentResponse> allComments = commentService.getAllCommentsByProjectId(projectId);
+        List<CommentResponse> allComments = commentService.getAllCommentsByProjectId(projectId);
         if(allComments.isEmpty()) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
@@ -71,7 +72,7 @@ public class CommentController {
 
     @GetMapping(value = "/getPostComments/{postId}")
     public ResponseEntity<?> getPostComments(@PathVariable Long postId) {
-        Set<CommentResponse> allComments = commentService.getAllCommentsByPostId(postId);
+        List<CommentResponse> allComments = commentService.getAllCommentsByPostId(postId);
         if(allComments.isEmpty()) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
