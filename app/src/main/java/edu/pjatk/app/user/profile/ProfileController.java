@@ -36,7 +36,7 @@ public class ProfileController {
         Optional<FullProfileResponse> profile = profileService.findProfileById(id);
         if (profile.isEmpty()){
             return new ResponseEntity(
-                    new ResponseMessage("Profile not found"), HttpStatus.NOT_FOUND
+                    new ResponseMessage("Profile not found"), HttpStatus.NO_CONTENT
             );
         }
         else {

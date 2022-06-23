@@ -30,7 +30,7 @@ function Editor() {
                     window.history.back();
                 }
                 else {
-                    axios.post(`http://localhost:8080/file/toggleLock/${id}/${true}`,
+                    axios.post(`http://localhost:8080/file/toggleLock/${id}/${true}`,{},
                         {headers:{'Authorization': Cookies.get("authorization")}
                         }).then(() => {
                     }).catch(err => {
@@ -60,9 +60,9 @@ function Editor() {
     }, [quill]);
 
     function unlock() {
-        axios.post(`http://localhost:8080/file/toggleLock/${id}/${false}`,
+        axios.post(`http://localhost:8080/file/toggleLock/${id}/${false}`, {},
             {headers:{'Authorization': Cookies.get("authorization")}
-            }).then((response) => {
+        }).then((response) => {
             window.history.back();
         }).catch(err => {
             console.log(err.response)
@@ -73,11 +73,10 @@ function Editor() {
         axios.post(`http://localhost:8080/file/edit?fileId=${id}`, {"content":content},
             {headers: {'Authorization': Cookies.get("authorization")}
         }).then(response => {
-            setMessage("File has been successfully saved");
+            unlock();
         }).catch(err => {
             setMessage("Error, file couldn't be saved");
         })
-        unlock();
     }
 
     return(

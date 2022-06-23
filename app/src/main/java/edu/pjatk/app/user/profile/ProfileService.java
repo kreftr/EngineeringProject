@@ -11,7 +11,6 @@ import edu.pjatk.app.user.User;
 import edu.pjatk.app.user.UserRole;
 import edu.pjatk.app.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -69,27 +68,29 @@ public class ProfileService {
     @Transactional
     public void updateProfile(ProfileEditRequest editRequest, MultipartFile profilePhoto){
 
-        Profile userProfile = userService.findUserByUsername(
-                SecurityContextHolder.getContext().getAuthentication().getName()).get().getProfile();
-
-        userProfile.setName(editRequest.getName());
-        userProfile.setSurname(editRequest.getSurname());
-        userProfile.setBio(editRequest.getBio());
-        Set<Category> categories = new HashSet<>();
-        for (String category : editRequest.getCategories()){
-            categories.add(categoryService.getCategoryByTitle(category).get());
-        }
-        userProfile.setCategories(categories);
-
-        if (profilePhoto != null){
-            Photo newProfilePhoto = photoService.uploadPhoto(profilePhoto);
-            if (newProfilePhoto != null) {
-                if (userProfile.getPhoto() != null) photoService.removePhoto(userProfile.getPhoto());
-                userProfile.setPhoto(newProfilePhoto);
+        Optional<User> user = userService.findUserByUsername(
+                SecurityContextHolder.getContext().getAuthentication().getName());
+        if (user.isPresent()) {
+            Profile userProfile = user.get().getProfile();
+            userProfile.setName(editRequest.getName());
+            userProfile.setSurname(editRequest.getSurname());
+            userProfile.setBio(editRequest.getBio());
+            Set<Category> categories = new HashSet<>();
+            for (String category : editRequest.getCategories()) {
+                categories.add(categoryService.getCategoryByTitle(category).get());
             }
-        }
+            userProfile.setCategories(categories);
 
-        profileRepository.update(userProfile);
+            if (profilePhoto != null) {
+                Photo newProfilePhoto = photoService.uploadPhoto(profilePhoto);
+                if (newProfilePhoto != null) {
+                    if (userProfile.getPhoto() != null) photoService.removePhoto(userProfile.getPhoto());
+                    userProfile.setPhoto(newProfilePhoto);
+                }
+            }
+
+            profileRepository.update(userProfile);
+        }
     }
 
     public Optional<FullProfileResponse> findProfileById(Long user_id){

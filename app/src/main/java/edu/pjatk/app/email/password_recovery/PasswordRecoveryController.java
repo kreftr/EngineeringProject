@@ -35,7 +35,7 @@ public class PasswordRecoveryController {
 
         if (user.isEmpty()){
             return new ResponseEntity(
-                    new ResponseMessage("Email not found"), HttpStatus.NOT_FOUND);
+                    new ResponseMessage("Email not found"), HttpStatus.NO_CONTENT);
         }
         else if (passwordRecoveryService.tokenAlreadySent(user.get())){
             return new ResponseEntity(
@@ -55,7 +55,7 @@ public class PasswordRecoveryController {
                                         @Valid @RequestBody PasswordChangeRequest passwordChangeRequest){
 
         if (!passwordRecoveryService.tokenIsValid(token)){
-            return new ResponseEntity(new ResponseMessage("Invalid token"), HttpStatus.FORBIDDEN);
+            return new ResponseEntity(new ResponseMessage("Invalid token"), HttpStatus.UNAUTHORIZED);
         }
         else {
             passwordRecoveryService.resetPassword(token, passwordChangeRequest);

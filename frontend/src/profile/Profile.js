@@ -35,12 +35,12 @@ function Profile(){
             .then(response => {
                 setProfileCode(response.status);
                 setProfile(response.data);
+                if (response.status === 204) setMessage("Profile not found");
                 setLoading(false);
             })
             .catch(err => {
                 setProfileCode(err.response.status)
-                if (err.response.status === 404) setMessage("Profile not found");
-                else setMessage("Server error!");
+                setMessage("Server error!");
                 setLoading(false);
             })
 
