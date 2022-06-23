@@ -29,12 +29,13 @@ dependencies {
     implementation 'com.auth0:java-jwt:3.18.2'
     implementation 'commons-io:commons-io:2.11.0'
     implementation 'junit:junit:4.13.1'
-    implementation group: 'org.springframework.social', name: 'spring-social-twitter', version: '1.1.2.RELEASE'
     implementation 'org.assertj:assertj-core:3.22.0'
-
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
-
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    implementation 'org.springframework.social:spring-social-config:1.1.6.RELEASE'
+    implementation 'org.springframework.social:spring-social-facebook:2.0.3.RELEASE'
+    implementation 'org.springframework.social:spring-social-core:1.1.6.RELEASE'
 
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.postgresql:postgresql'

@@ -16,6 +16,7 @@ import Task from "./task/Task";
 import Clock from "./timestamps/Clock"
 import Timestamp from "./timestamps/Timestamp";
 import FilesPanel from "./files/FilesPanel"
+import Share from "./share/Share"
 
 
 function Workspace(){
@@ -181,6 +182,9 @@ function Workspace(){
                                     </Nav.Item>
                                     <Nav.Item>
                                         <Nav.Link className={"mb-3"} eventKey="clock">Clock</Nav.Link>
+                                    </Nav.Item>
+                                    <Nav.Item>
+                                        <Nav.Link className={"mb-3"} eventKey="share">Share</Nav.Link>
                                     </Nav.Item>
                                 </Nav>
                             </Col>
@@ -413,6 +417,17 @@ function Workspace(){
                                                             }
                                                         </Tab>
                                                     </Tabs>
+                                                </Col>
+                                                <Col className={"col-2"}></Col>
+                                            </Row>
+                                        </Container>
+                                    </Tab.Pane>
+                                    <Tab.Pane eventKey={"share"}>
+                                        <Container>
+                                            <Row>
+                                                <Col className={"col-2"}></Col>
+                                                <Col className={"col-12"}>
+                                                    <Share projectId={id}/>
                                                 </Col>
                                                 <Col className={"col-2"}></Col>
                                             </Row>

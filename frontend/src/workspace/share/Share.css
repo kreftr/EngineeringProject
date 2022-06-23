@@ -1,0 +1,8 @@
+.SHARE-button {
+    color: black;
+}
+
+.SHARE-button a {
+    color: white;
+    text-decoration: none
+}
