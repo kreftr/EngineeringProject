@@ -35,7 +35,7 @@ public class PasswordRecoveryController {
 
         if (user.isEmpty()){
             return new ResponseEntity(
-                    new ResponseMessage("Email not found"), HttpStatus.NO_CONTENT);
+                    new ResponseMessage("Email not found"), HttpStatus.NOT_FOUND);
         }
         else if (passwordRecoveryService.tokenAlreadySent(user.get())){
             return new ResponseEntity(

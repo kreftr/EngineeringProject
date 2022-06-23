@@ -11,7 +11,7 @@ import Cookies from "js-cookie";
 function Editor() {
 
     const {id} = useParams();
-    const { quill, quillRef } = useQuill({theme: "snow"});
+    const { quill, quillRef } = useQuill({theme: "snow", modules:{toolbar: false}});
 
     const [message, setMessage] = useState();
     const [show, setShow] = useState(false);
