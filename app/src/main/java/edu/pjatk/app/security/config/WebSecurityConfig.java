@@ -5,7 +5,6 @@ import edu.pjatk.app.security.filter.JwtAuthenticationFilter;
 import edu.pjatk.app.security.filter.JwtAuthorizationFilter;
 import edu.pjatk.app.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -60,7 +59,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/report").hasRole("ADMIN")
                 .antMatchers( "/blockade").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/report").hasRole("ADMIN")
-                .antMatchers("/post/**", "/post/getRecentPosts", "/comment/getPostComments/*", "/comment/getProjectComments/*",
+                .antMatchers("/post/getRecentPosts", "/comment/getPostComments/*", "/comment/getProjectComments/*",
                         "/task/**","/conversation/**", "/file/**").permitAll()
                 .antMatchers("/login*", "/signin/**", "/signup/**").permitAll()
                 .anyRequest().authenticated();
